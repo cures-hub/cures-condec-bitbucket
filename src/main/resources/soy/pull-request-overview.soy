@@ -1,0 +1,18 @@
+{namespace UHD.issues}
+
+
+/**
+ * @param objects
+ */
+{template .issueList}
+    <ul class="todo-list">
+        {foreach $todo in $objects}
+            <li data-todo-id="{$todo.id}">
+                <span>{$todo.text}</span>
+                <a class="remove" href="#">Remove</a>
+            </li>
+        {ifempty}
+            <li>You don't have any TODOs</li>
+        {/foreach}
+    </ul>
+{/template}

@@ -1,0 +1,37 @@
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="management.bitbucket"/>
+
+
+    <web-resource key="pr-overview-resources" name="Pull Request Overview Resources">
+
+        <transformation extension="soy">
+            <transformer key="soyTransformer"/>
+        </transformation>
+        <resource type="download" name="pull-request-overview.soy.js" location="/soy/pull-request-overview.soy"/>
+        <resource type="soy" name="pull-request-overview" location="/soy/pull-request-overview.soy"/>
+
+        <resource type="download" name="is-admin-merge-check" location="/js/is-admin-merge-check.js"/>
+
+
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>de.uhd.ifi.se.decision.bitbucket-web-api:pull-request-web-panels</dependency>
+    </web-resource>
+
+    <repository-merge-check key="isAdmin" class="bean:isAdminMergeCheck" configurable="false"/>
+
+    <client-web-panel key="comment-create-todo" location="bitbucket.pull-request.links">
+        <client-context-provider>UHD.ISSUES.callInitIssues</client-context-provider>
+        <resource name="view" type="soy" location="de.uhd.ifi.se.decision.management.bitbucket:pr-overview-resources/UHD.issues.issueList" />
+        <dependency>de.uhd.ifi.se.decision.management.bitbucket:pr-overview-resources</dependency>
+    </client-web-panel>
+
+</atlassian-plugin>
