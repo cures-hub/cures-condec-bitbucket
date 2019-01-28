@@ -109,6 +109,27 @@
             <artifactId>gson</artifactId>
             <version>2.2.2-atlassian-1</version>
         </dependency>
+        <!--REST-->
+        <dependency>
+            <groupId>com.atlassian.plugins.rest</groupId>
+            <artifactId>atlassian-rest-common</artifactId>
+            <version>1.0.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>activemq</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>20050407</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.atlassian.applinks</groupId>
+            <artifactId>applinks-api</artifactId>
+            <version>5.4.1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -136,7 +157,7 @@
 
                         <!-- Add package to export here -->
                         <Export-Package>
-                            de.uhd.ifi.se.decision.merge.checks.api,
+                            de.uhd.ifi.se.decision.management.bitbucket.merge.checks.api,
                         </Export-Package>
 
                         <!-- Add package import here -->

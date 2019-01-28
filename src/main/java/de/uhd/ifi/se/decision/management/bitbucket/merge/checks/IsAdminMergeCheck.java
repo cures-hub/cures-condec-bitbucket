@@ -1,4 +1,4 @@
-package de.uhd.ifi.se.decision.merge.checks;
+package de.uhd.ifi.se.decision.management.bitbucket.merge.checks;
 
 import com.atlassian.bitbucket.hook.repository.*;
 import com.atlassian.bitbucket.i18n.I18nService;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+
 
 @Component("isAdminMergeCheck")
 public class IsAdminMergeCheck implements RepositoryMergeCheck {
