@@ -1,6 +1,8 @@
 package de.uhd.ifi.se.decision.management.bitbucket.rest;
 
 
+import de.uhd.ifi.se.decision.management.bitbucket.oAuth.ApiLinkService;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -14,8 +16,8 @@ public class JsonIssueResource {
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response getDecisionKnowledgeElement() {
 		try {
-//			String jsonString=	de.uhd.ifi.se.decision.management.bitbucket.oAuth.ApiLinkService.makeGetRequestToJira(query, projectKey);
-			String jsonString="[{\"id\":\"1\",\"text\":\"aasdfasdfsdf\"}]";
+			String query="?filter=allopenissues";
+			String jsonString= ApiLinkService.makeGetRequestToJira(query);
 			return Response.status(Response.Status.OK).entity(jsonString).build();
 
 		} catch (Exception e) {

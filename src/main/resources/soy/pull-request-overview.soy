@@ -5,13 +5,27 @@
  * @param objects
  */
 {template .issueList}
-    <ul class="todo-list">
-        {foreach $todo in $objects}
-            <li data-todo-id="{$todo.id}">
-                <span>{$todo.text}</span>
-            </li>
+    <div class="todo-list">
+        {foreach $issueArray in $objects}
+    <table class="aui aui-table-sortable jsonImportTable">
+        <tr>
+        <th>Key</th>
+        <th>Summary</th>
+        <th>Description</th>
+        <th>Type</th>
+        </tr>
+            {foreach $issue in $issueArray}
+            <tr>
+                <td><a href="{$issue.url}">{$issue.key}</a></td>
+                <td>{$issue.summary}</td>
+                <td>{$issue.description}</td>
+                <td>{$issue.type}</td>
+            </tr>
+            {/foreach}
+        </table>
         {ifempty}
             <li>You don't have any TODOs</li>
         {/foreach}
-    </ul>
+    </div>
 {/template}
+
