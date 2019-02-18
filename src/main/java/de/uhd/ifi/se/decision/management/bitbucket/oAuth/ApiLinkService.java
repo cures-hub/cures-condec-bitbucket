@@ -9,58 +9,68 @@ import com.atlassian.sal.api.net.ResponseException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
 
 
 @Named("ComponentUtil")
 public class ApiLinkService {
 
-    @ComponentImport
-    static private ApplicationLinkService applicationLinkService;
+	@ComponentImport
+	static private ApplicationLinkService applicationLinkService;
 
-    @Inject
-    public ApiLinkService(ApplicationLinkService oApplicationLinkService) {
-        applicationLinkService = oApplicationLinkService;
-    }
+	@Inject
+	public ApiLinkService(ApplicationLinkService oApplicationLinkService) {
+		applicationLinkService = oApplicationLinkService;
+	}
 
-    static public String makeGetRequestToJira(String query) {
-        return getResponseFromJiraWithApplicationLink("rest/decisions/latest/decisions/getAllElementsMatchingQuery.json?resultType=ELEMENTS_QUERY_LINKED&query="+query);
-    }
-    static public String getCurrentActiveJiraProjects() {
-        return getResponseFromJiraWithApplicationLink("rest/api/2/project");
-    }
+	static public String makeGetRequestToJira(String query) {
+		//sanitise query
+		String encodedQuery = encodeUserInputQuery(query);
+		return getResponseFromJiraWithApplicationLink("rest/decisions/latest/decisions/getAllElementsMatchingQuery.json?resultType=ELEMENTS_QUERY_LINKED&query=" + encodedQuery);
+	}
 
-    private static String getResponseFromJiraWithApplicationLink(String jiraUrl){
-        String responseBody="";
-        try {
-            ApplicationLink jiraApplicationLink = applicationLinkService.getPrimaryApplicationLink(JiraApplicationType.class);
-            ApplicationLinkRequestFactory requestFactory = jiraApplicationLink.createAuthenticatedRequestFactory();
-            ApplicationLinkRequest request = requestFactory.createRequest(Request.MethodType.GET,
-                    jiraUrl);
-            request.addHeader("Content-Type", "application/json");
-            responseBody = request.executeAndReturn(new ApplicationLinkResponseHandler<String>()
-            {
-                public String credentialsRequired(final Response response) throws ResponseException
-                {
-                    return response.getResponseBodyAsString();
-                }
+	private static String getResponseFromJiraWithApplicationLink(String jiraUrl) {
+		String responseBody = "";
+		try {
+			ApplicationLink jiraApplicationLink = applicationLinkService.getPrimaryApplicationLink(JiraApplicationType.class);
+			ApplicationLinkRequestFactory requestFactory = jiraApplicationLink.createAuthenticatedRequestFactory();
+			ApplicationLinkRequest request = requestFactory.createRequest(Request.MethodType.GET,
+				jiraUrl);
+			request.addHeader("Content-Type", "application/json");
 
-                public String handle(final Response response) throws ResponseException
-                {
-                    return response.getResponseBodyAsString();
-                }
-            });
-        } catch (CredentialsRequiredException e ) {
-            e.printStackTrace();
-        }catch (ResponseException e){
+			responseBody = request.executeAndReturn(new ApplicationLinkResponseHandler<String>() {
+				public String credentialsRequired(final Response response) throws ResponseException {
+					return response.getResponseBodyAsString();
+				}
+
+				public String handle(final Response response) throws ResponseException {
+					return response.getResponseBodyAsString();
+				}
+			});
+		} catch (CredentialsRequiredException e) {
+			e.printStackTrace();
+		} catch (ResponseException e) {
 			e.printStackTrace();
 		}
-        return responseBody;
-    }
+		return responseBody;
+	}
 
-    public ApplicationLinkService getApplicationLinkService() {
-        return applicationLinkService;
-    }
+	public ApplicationLinkService getApplicationLinkService() {
+		return applicationLinkService;
+	}
 
+	private static String encodeUserInputQuery(String query) {
+		String encodedUrl = "";
+		try {
+			encodedUrl = URLEncoder.encode(query, "UTF-8");
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return encodedUrl;
+
+	}
 }
 
 
