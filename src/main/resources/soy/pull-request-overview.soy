@@ -3,9 +3,12 @@
 
 /**
  * @param objects
+ *
  */
 {template .issueList}
+
     <div class="todo-list">
+
         {foreach $issueArray in $objects}
     <table class="aui aui-table-sortable jsonImportTable">
         <tr>
@@ -24,7 +27,7 @@
             {/foreach}
         </table>
         {ifempty}
-            <li>You don't have any TODOs</li>
+            <p>There seems to be a problem with the connection to Jira or none of the commit message could be linked to a Jira issue. Continue with the merge on your own risk</p>
         {/foreach}
     </div>
 {/template}

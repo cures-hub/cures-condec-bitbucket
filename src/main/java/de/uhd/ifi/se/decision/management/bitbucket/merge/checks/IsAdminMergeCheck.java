@@ -6,6 +6,7 @@ import com.atlassian.bitbucket.permission.Permission;
 import com.atlassian.bitbucket.permission.PermissionService;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import com.google.gson.JsonArray;
 import de.uhd.ifi.se.decision.management.bitbucket.oAuth.ApiLinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ import javax.annotation.Nonnull;
 
 import com.atlassian.bitbucket.util.PageRequestImpl;
 import com.atlassian.bitbucket.util.Page;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.*;
 
@@ -48,15 +52,18 @@ public class IsAdminMergeCheck implements RepositoryMergeCheck {
 		String queryWithJiraIssues = "?jql=key in "+getJiraCallQuery(commits);
 		jiraQuery=queryWithJiraIssues;
 		String jsonString= ApiLinkService.makeGetRequestToJira(queryWithJiraIssues);
-		if (!permissionService.hasRepositoryPermission(repository, Permission.REPO_ADMIN)) {
+		Boolean hasSufficientDecisions=this.hasSufficientDecisions(jsonString);
+		if (!hasSufficientDecisions) {
 			String summaryMsg = i18nService.getMessage("mycompany.plugin.merge.check.notrepoadmin.summary",
-				"Only repository administrators may merge pull requests");
+				"There are not enough Decision Elements for each Commit");
 			String detailedMsg = i18nService.getText("mycompany.plugin.merge.check.notrepoadmin.detailed",
-				"The user merging the pull request must be an administrator of the target repository");
+				"Every Commit which is linked to a jira Ticket has to have at least one decision element linked");
 
 			return RepositoryHookResult.rejected(summaryMsg, detailedMsg);
+		}else{
+
+			return RepositoryHookResult.accepted();
 		}
-		return RepositoryHookResult.accepted();
 	}
 
 	public Iterable<Commit> getCommitsOfPullRequest(PullRequest pullRequest) {
@@ -93,6 +100,25 @@ public class IsAdminMergeCheck implements RepositoryMergeCheck {
 		// add )
 		query+=")";
 		return query;
+	}
+	private Boolean hasSufficientDecisions(String jsonString){
+		Boolean result=true;
+		try{
+			JSONArray topArray = new JSONArray(jsonString);
+			for (Object current: topArray){
+
+				JSONArray myCurrent= (JSONArray) current;
+				//child elements have to be more then 1
+				if(myCurrent.length()<2){
+					result=false;
+				}
+			}
+		}catch (Exception e){
+			return result;
+		}
+
+
+		return result;
 	}
 
 
