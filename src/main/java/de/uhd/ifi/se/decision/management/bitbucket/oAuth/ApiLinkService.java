@@ -49,10 +49,11 @@ public class ApiLinkService {
 				}
 			});
 		} catch (CredentialsRequiredException e) {
-			e.printStackTrace();
+			responseBody=e.getMessage();
 		} catch (ResponseException e) {
-			e.printStackTrace();
+			responseBody=e.getMessage();
 		}
+
 		return responseBody;
 	}
 

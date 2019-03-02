@@ -26,18 +26,33 @@
 		xhttp.send();
 
 	}
-
+	function showFlag(type, message) {
+		AJS.flag({
+			type: type,
+			close: "auto",
+			title: type.charAt(0).toUpperCase() + type.slice(1),
+			body: message
+		});
+	}
 	function getIssuesFromJira() {
+
 		var url = AJS.contextPath() + "/rest/jsonIssues/1.0/issueRest/getIssuesFromJira";
+
 		getJSON(url, function (error, data) {
 			if (error == null) {
-				var oIssues = JSON.parse(data);
-				if (oIssues.length > 0) {
-					$('.todo-list').replaceWith(UHD.issues.issueList({objects: oIssues}));
+				try{
+					var oIssues = JSON.parse(data);
+					if (oIssues.length > 0) {
+						$('.todo-list').replaceWith(UHD.issues.issueList({objects: oIssues}));
+					}
+				}catch (e) {
+					showFlag("error","A server error occured: "+data);
+					$('.todo-list').replaceWith("<div class'todo-list'><p>There seems to be a problem with the connection to Jira or none of the commit message could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
 				}
 			}
 		});
 	}
+
 
 	function checkIfListIsLoaded(iCounter) {
 		//check if inital List exists
@@ -51,5 +66,4 @@
 				}, 3000);
 		}
 	}
-
 }(AJS.$));
