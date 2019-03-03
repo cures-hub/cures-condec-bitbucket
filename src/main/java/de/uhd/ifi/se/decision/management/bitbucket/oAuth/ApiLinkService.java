@@ -27,7 +27,7 @@ public class ApiLinkService {
 	static public String makeGetRequestToJira(String query) {
 		//sanitise query
 		String encodedQuery = encodeUserInputQuery(query);
-		return getResponseFromJiraWithApplicationLink("rest/decisions/latest/decisions/getAllElementsMatchingQuery.json?resultType=ELEMENTS_QUERY_LINKED&query=" + encodedQuery);
+		return getResponseFromJiraWithApplicationLink("rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + encodedQuery+"&projectKey=");
 	}
 
 	private static String getResponseFromJiraWithApplicationLink(String jiraUrl) {
