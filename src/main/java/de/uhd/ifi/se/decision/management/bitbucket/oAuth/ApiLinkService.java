@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.*;
 
 
+
 @Named("ComponentUtil")
 public class ApiLinkService {
 
@@ -24,10 +25,13 @@ public class ApiLinkService {
 		applicationLinkService = oApplicationLinkService;
 	}
 
-	static public String makeGetRequestToJira(String query) {
+	static public String getDecisionKnowledgeFromJira(String query, String projectKey) {
 		//sanitise query
 		String encodedQuery = encodeUserInputQuery(query);
-		return getResponseFromJiraWithApplicationLink("rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + encodedQuery+"&projectKey=");
+		return getResponseFromJiraWithApplicationLink("rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + encodedQuery+"&projectKey="+projectKey);
+	}
+	static public String getCurrentActiveJiraProjects() {
+		return getResponseFromJiraWithApplicationLink("rest/api/2/project");
 	}
 
 	private static String getResponseFromJiraWithApplicationLink(String jiraUrl) {

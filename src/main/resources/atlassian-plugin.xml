@@ -20,7 +20,7 @@
         <resource type="download" name="pull-request-overview.soy.js" location="/soy/pull-request-overview.soy"/>
         <resource type="soy" name="pull-request-overview" location="/soy/pull-request-overview.soy"/>
 
-        <resource type="download" name="is-admin-merge-check" location="/js/is-admin-merge-check.js"/>
+        <resource type="download" name="is-admin-merge-check" location="/js/has-decision-knowledge-check.js"/>
 
 
         <dependency>com.atlassian.auiplugin:ajs</dependency>
@@ -29,9 +29,9 @@
 
     </web-resource>
 
-    <repository-merge-check key="isAdmin" class="bean:isAdminMergeCheck" configurable="false"/>
+    <repository-merge-check key="hasDecisionKnowledge" class="bean:hasDecisionKnowledgeCheck" configurable="false"/>
 
-    <client-web-panel key="comment-create-todo" location="bitbucket.pull-request.links">
+    <client-web-panel key="decision-knowledge-overview" location="bitbucket.pull-request.links">
         <client-context-provider>UHD.ISSUES.callInitIssues</client-context-provider>
         <resource name="view" type="soy" location="de.uhd.ifi.se.decision.management.bitbucket:pr-overview-resources/UHD.issues.issueList" />
         <dependency>de.uhd.ifi.se.decision.management.bitbucket:pr-overview-resources</dependency>

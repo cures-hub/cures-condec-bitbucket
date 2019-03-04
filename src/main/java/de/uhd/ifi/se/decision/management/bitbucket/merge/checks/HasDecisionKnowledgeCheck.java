@@ -7,7 +7,9 @@ import com.atlassian.bitbucket.permission.PermissionService;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import de.uhd.ifi.se.decision.management.bitbucket.oAuth.ApiLinkService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.atlassian.bitbucket.pull.PullRequest;
@@ -22,21 +24,22 @@ import com.atlassian.bitbucket.util.PageRequestImpl;
 import com.atlassian.bitbucket.util.Page;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.*;
 
-@Component("isAdminMergeCheck")
-public class IsAdminMergeCheck implements RepositoryMergeCheck {
+@Component("hasDecisionKnowledgeCheck")
+public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 
 	private final I18nService i18nService;
 	private final PermissionService permissionService;
 	private final CommitService commitService;
-	public static String jiraQuery;
+	public static String JIRA_QUERY;
+	public static String PROJECT_KEY;
+
 	@Autowired
-	public IsAdminMergeCheck(@ComponentImport I18nService i18nService,
-							 @ComponentImport PermissionService permissionService,
-							 @ComponentImport CommitService commitService) {
+	public HasDecisionKnowledgeCheck(@ComponentImport I18nService i18nService,
+									 @ComponentImport PermissionService permissionService,
+									 @ComponentImport CommitService commitService) {
 		this.i18nService = i18nService;
 		this.permissionService = permissionService;
 		this.commitService = commitService;
@@ -49,10 +52,12 @@ public class IsAdminMergeCheck implements RepositoryMergeCheck {
 		final PullRequest pullRequest = request.getPullRequest();
 		Repository repository = request.getPullRequest().getToRef().getRepository();
 		Iterable<Commit> commits = getCommitsOfPullRequest(pullRequest);
-		String queryWithJiraIssues = "?jql=key in "+getJiraCallQuery(commits);
-		jiraQuery=queryWithJiraIssues;
-		String jsonString= ApiLinkService.makeGetRequestToJira(queryWithJiraIssues);
-		Boolean hasSufficientDecisions=this.hasSufficientDecisions(jsonString);
+		String queryWithJiraIssues = "?jql=key in " + getJiraCallQuery(commits);
+		String projectString = ApiLinkService.getCurrentActiveJiraProjects();
+		JIRA_QUERY = queryWithJiraIssues;
+		PROJECT_KEY = getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, projectString);
+		String decisionKnowledgeIssueString = ApiLinkService.getDecisionKnowledgeFromJira(queryWithJiraIssues, PROJECT_KEY);
+		Boolean hasSufficientDecisions = this.hasSufficientDecisions(decisionKnowledgeIssueString);
 		if (!hasSufficientDecisions) {
 			String summaryMsg = i18nService.getMessage("mycompany.plugin.merge.check.notrepoadmin.summary",
 				"There are not enough Decision Elements for each Commit");
@@ -60,7 +65,7 @@ public class IsAdminMergeCheck implements RepositoryMergeCheck {
 				"Every Commit which is linked to a jira Ticket has to have at least one decision element linked");
 
 			return RepositoryHookResult.rejected(summaryMsg, detailedMsg);
-		}else{
+		} else {
 
 			return RepositoryHookResult.accepted();
 		}
@@ -74,7 +79,6 @@ public class IsAdminMergeCheck implements RepositoryMergeCheck {
 	}
 
 	/**
-	 *
 	 * @param commits
 	 * @return String "(TEST-5, TEST-7,etc...)"
 	 */
@@ -89,7 +93,7 @@ public class IsAdminMergeCheck implements RepositoryMergeCheck {
 			//Split message after first space
 			if (message.contains(" ")) {
 				String[] parts = message.split(" ");
-				query = query + parts[0]+",";
+				query = query + parts[0] + ",";
 			} else {
 				// todo error exception
 				return "";
@@ -98,22 +102,23 @@ public class IsAdminMergeCheck implements RepositoryMergeCheck {
 		//remove last ,
 		query = query.substring(0, query.length() - 1);
 		// add )
-		query+=")";
+		query += ")";
 		return query;
 	}
-	private Boolean hasSufficientDecisions(String jsonString){
-		Boolean result=true;
-		try{
-			JSONArray topArray = new JSONArray(jsonString);
-			for (Object current: topArray){
 
-				JSONArray myCurrent= (JSONArray) current;
+	private Boolean hasSufficientDecisions(String jsonString) {
+		Boolean result = true;
+		try {
+			JSONArray topArray = new JSONArray(jsonString);
+			for (Object current : topArray) {
+
+				JSONArray myCurrent = (JSONArray) current;
 				//child elements have to be more then 1
-				if(myCurrent.length()<2){
-					result=false;
+				if (myCurrent.length() < 2) {
+					result = false;
 				}
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
 			return result;
 		}
 
@@ -121,5 +126,31 @@ public class IsAdminMergeCheck implements RepositoryMergeCheck {
 		return result;
 	}
 
+	private String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, String projects) {
+		String selectedProject = "TEST";
+		try {
+			ArrayList<String> projectKeys = new ArrayList<String>();
+
+			JSONArray projectArray = new JSONArray(projects);
+			for (Object project : projectArray) {
+				JSONObject projectMap=(JSONObject)project;
+				String projectKey=(String)projectMap.get("key");
+				projectKeys.add(projectKey.toLowerCase());
+			}
+			for (Commit commit : commits) {
+				String message = commit.getMessage();
+				if (message.indexOf("-") > -1) {
+					String eventuallyProjectKey = message.split("-")[0];
+					if (projectKeys.contains(eventuallyProjectKey.toLowerCase())) {
+						selectedProject = eventuallyProjectKey.toUpperCase();
+					}
+				}
+			}
+		} catch (Exception e) {
+			return selectedProject;
+		}
+		return selectedProject;
+
+	}
 
 }
