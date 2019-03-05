@@ -63,7 +63,7 @@ public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 			String summaryMsg = i18nService.getMessage("mycompany.plugin.merge.check.notrepoadmin.summary",
 				"There are not enough Decision Elements for each Commit");
 			String detailedMsg = i18nService.getText("mycompany.plugin.merge.check.notrepoadmin.detailed",
-				"Every Commit which is linked to a jira Ticket has to have at least one decision element linked :"
+				"Every Commit which is linked to a jira Ticket has to have at least one issue and one decision linked :"
 					+ hasSufficientDecisions.get("resultString"));
 
 			return RepositoryHookResult.rejected(summaryMsg, detailedMsg);

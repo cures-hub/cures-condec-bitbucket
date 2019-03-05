@@ -37,13 +37,16 @@
 	function getIssuesFromJira() {
 
 		var url = AJS.contextPath() + "/rest/jsonIssues/1.0/issueRest/getIssuesFromJira";
-
+	//	openDialog();
 		getJSON(url, function (error, data) {
 			if (error == null) {
 				try{
 					var oIssues = JSON.parse(data);
 					if (oIssues.length > 0) {
-						$('.todo-list').replaceWith(UHD.issues.issueList({objects: oIssues}));
+						$('.todo-list').replaceWith("<button class='aui aui-button' id='showDecisionKnowledgeButton'>Show decision knowledge</button>");
+						$("#showDecisionKnowledgeButton").click(function(){
+							openDialog(oIssues);
+						})
 					}
 				}catch (e) {
 					showFlag("error","A server error occured: "+data);
@@ -51,6 +54,26 @@
 				}
 			}
 		});
+
+		function openDialog(oIssues) {
+			// Standard sizes are 400, 600, 800 and 960 pixels wide
+			var dialog = new AJS.Dialog({
+				width: 800,
+				height: 500,
+				id: "example-dialog",
+				closeOnOutsideClick: true
+			});
+			dialog.addHeader("Decision Knowledge");
+			dialog.addPanel("Panel 1", "<div id='decisionKnowledgeTableDiv'></div>", "panel-body");
+			$("#decisionKnowledgeTableDiv").replaceWith(UHD.issues.issueList({objects: oIssues}));
+			dialog.addButton("Close", function (dialog) {
+				dialog.hide();
+			});
+
+			dialog.gotoPage(0);
+			dialog.gotoPanel(0);
+			dialog.show();
+		}
 	}
 
 
@@ -66,4 +89,5 @@
 				}, 3000);
 		}
 	}
+
 }(AJS.$));
