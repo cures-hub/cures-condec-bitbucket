@@ -52,17 +52,19 @@ public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 		final PullRequest pullRequest = request.getPullRequest();
 		Repository repository = request.getPullRequest().getToRef().getRepository();
 		Iterable<Commit> commits = getCommitsOfPullRequest(pullRequest);
-		String queryWithJiraIssues = "?jql=key in " + getJiraCallQuery(commits);
+		String branchId = pullRequest.getTitle();
+		String queryWithJiraIssues = "?jql=key in " + getJiraCallQuery(commits, branchId);
 		String projectString = ApiLinkService.getCurrentActiveJiraProjects();
 		JIRA_QUERY = queryWithJiraIssues;
 		PROJECT_KEY = getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, projectString);
 		String decisionKnowledgeIssueString = ApiLinkService.getDecisionKnowledgeFromJira(queryWithJiraIssues, PROJECT_KEY);
-		Boolean hasSufficientDecisions = this.hasSufficientDecisions(decisionKnowledgeIssueString);
-		if (!hasSufficientDecisions) {
+		HashMap<String,String> hasSufficientDecisions = this.hasSufficientDecisions(decisionKnowledgeIssueString);
+		if (!Boolean.valueOf(hasSufficientDecisions.get("resultBoolean"))) {
 			String summaryMsg = i18nService.getMessage("mycompany.plugin.merge.check.notrepoadmin.summary",
 				"There are not enough Decision Elements for each Commit");
 			String detailedMsg = i18nService.getText("mycompany.plugin.merge.check.notrepoadmin.detailed",
-				"Every Commit which is linked to a jira Ticket has to have at least one decision element linked");
+				"Every Commit which is linked to a jira Ticket has to have at least one decision element linked :"
+					+ hasSufficientDecisions.get("resultString"));
 
 			return RepositoryHookResult.rejected(summaryMsg, detailedMsg);
 		} else {
@@ -82,7 +84,7 @@ public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 	 * @param commits
 	 * @return String "(TEST-5, TEST-7,etc...)"
 	 */
-	public String getJiraCallQuery(Iterable<Commit> commits) {
+	public String getJiraCallQuery(Iterable<Commit> commits, String branchId) {
 		String query = "(";
 		ArrayList<String> messageList = new ArrayList<String>();
 		for (Commit commit : commits) {
@@ -95,35 +97,57 @@ public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 				String[] parts = message.split(" ");
 				query = query + parts[0] + ",";
 			} else {
-				// todo error exception
-				return "";
+				// just dont split the particular ticket
 			}
 		}
-		//remove last ,
-		query = query.substring(0, query.length() - 1);
+
+		//add Branch ID
+		query += branchId;
 		// add )
 		query += ")";
 		return query;
 	}
 
-	private Boolean hasSufficientDecisions(String jsonString) {
-		Boolean result = true;
+	private HashMap<String,String> hasSufficientDecisions(String jsonString) {
+		HashMap<String,String> result=new HashMap<String, String>();
+		Boolean booleanResult = true;
+		String stringResult = "";
 		try {
 			JSONArray topArray = new JSONArray(jsonString);
 			for (Object current : topArray) {
 
 				JSONArray myCurrent = (JSONArray) current;
-				//child elements have to be more then 1
-				if (myCurrent.length() < 2) {
-					result = false;
+				Boolean tempResult = checkIfDecisionsExists(myCurrent);
+				if (!tempResult) {
+					JSONObject firstKey = (JSONObject) myCurrent.get(0);
+					stringResult += firstKey.get("key")+" ";
+					booleanResult = false;
 				}
 			}
 		} catch (Exception e) {
-			return result;
+			booleanResult =false;
 		}
-
-
+		result.put("resultBoolean", booleanResult.toString());
+		result.put("resultString", stringResult);
 		return result;
+	}
+
+	private Boolean checkIfDecisionsExists(JSONArray decisions) {
+		Boolean hasIssue = false;
+		Boolean hasDecision = false;
+		for (Object current : decisions) {
+			JSONObject currentObject = (JSONObject) current;
+			String type= (String)currentObject.get("type");
+			//Issue
+			if("issue".equals(type.toLowerCase())){
+				hasIssue=true;
+			}
+			//Decision
+			if("decision".equals(type.toLowerCase())){
+				hasDecision=true;
+			}
+		}
+		return hasIssue && hasDecision;
 	}
 
 	private String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, String projects) {
@@ -133,8 +157,8 @@ public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 
 			JSONArray projectArray = new JSONArray(projects);
 			for (Object project : projectArray) {
-				JSONObject projectMap=(JSONObject)project;
-				String projectKey=(String)projectMap.get("key");
+				JSONObject projectMap = (JSONObject) project;
+				String projectKey = (String) projectMap.get("key");
 				projectKeys.add(projectKey.toLowerCase());
 			}
 			for (Commit commit : commits) {

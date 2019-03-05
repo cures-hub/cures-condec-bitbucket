@@ -19,7 +19,7 @@
         </tr>
             {foreach $issue in $issueArray}
             <tr>
-                <td><a href="{$issue.url}">{$issue.key}</a></td>
+                <td><a target="_blank" href="{$issue.url}">{$issue.key}</a></td>
                 <td>{$issue.summary}</td>
                 <td>{$issue.description}</td>
                 <td>{$issue.type}</td>
