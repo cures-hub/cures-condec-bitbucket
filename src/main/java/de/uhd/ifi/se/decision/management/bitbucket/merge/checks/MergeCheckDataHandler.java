@@ -1,5 +1,6 @@
 package de.uhd.ifi.se.decision.management.bitbucket.merge.checks;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,7 +16,7 @@ import java.util.HashMap;
 
 public class MergeCheckDataHandler {
 
-	public Iterable<Commit> getCommitsOfPullRequest(PullRequest pullRequest, CommitService commitService ) {
+	public Iterable<Commit> getCommitsOfPullRequest(PullRequest pullRequest, CommitService commitService) {
 		CommitsBetweenRequest.Builder builder = new CommitsBetweenRequest.Builder(pullRequest);
 		CommitsBetweenRequest cbr = builder.build();
 		Page<Commit> cs = commitService.getCommitsBetween(cbr, new PageRequestImpl(0, 1048476));
@@ -31,10 +32,6 @@ public class MergeCheckDataHandler {
 		String query = "(";
 		ArrayList<String> messageList = new ArrayList<String>();
 
-		//add Branch ID
-		messageList.add(branchId);
-		//add Branch Title
-		messageList.add(branchTitle);
 
 		for (Commit commit : commits) {
 			String message = commit.getMessage();
@@ -47,16 +44,19 @@ public class MergeCheckDataHandler {
 				query = query + parts[0] + ",";
 			}
 		}
-		//remove last ,
-		query = query.substring(0, query.length() - 1);
 
+		//add Branch ID
+		query += branchId + ",";
+		//add Branch Title
+
+		query += branchTitle;
 		// add )
 		query += ")";
 		return query;
 	}
-	
- public HashMap<String,String> hasSufficientDecisions(String jsonString) {
-		HashMap<String,String> result=new HashMap<String, String>();
+
+	public HashMap<String, String> hasSufficientDecisions(String jsonString) {
+		HashMap<String, String> result = new HashMap<String, String>();
 		Boolean booleanResult = true;
 		String stringResult = "";
 		try {
@@ -67,12 +67,12 @@ public class MergeCheckDataHandler {
 				Boolean tempResult = checkIfDecisionsExists(myCurrent);
 				if (!tempResult) {
 					JSONObject firstKey = (JSONObject) myCurrent.get(0);
-					stringResult += firstKey.get("key")+" ";
+					stringResult += firstKey.get("key") + " ";
 					booleanResult = false;
 				}
 			}
 		} catch (Exception e) {
-			booleanResult =false;
+			booleanResult = false;
 		}
 		result.put("resultBoolean", booleanResult.toString());
 		result.put("resultString", stringResult);
@@ -84,20 +84,20 @@ public class MergeCheckDataHandler {
 		Boolean hasDecision = false;
 		for (Object current : decisions) {
 			JSONObject currentObject = (JSONObject) current;
-			String type= (String)currentObject.get("type");
+			String type = (String) currentObject.get("type");
 			//Issue
-			if("issue".equals(type.toLowerCase())){
-				hasIssue=true;
+			if ("issue".equals(type.toLowerCase())) {
+				hasIssue = true;
 			}
 			//Decision
-			if("decision".equals(type.toLowerCase())){
-				hasDecision=true;
+			if ("decision".equals(type.toLowerCase())) {
+				hasDecision = true;
 			}
 		}
 		return hasIssue && hasDecision;
 	}
 
-	public String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, String projects) {
+	public String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, String projects, String branchId, String branchTitle) {
 		String selectedProject = "";
 		try {
 			ArrayList<String> projectKeys = new ArrayList<String>();
@@ -108,19 +108,51 @@ public class MergeCheckDataHandler {
 				String projectKey = (String) projectMap.get("key");
 				projectKeys.add(projectKey.toLowerCase());
 			}
-			for (Commit commit : commits) {
-				String message = commit.getMessage();
-				if (message.indexOf("-") > -1) {
-					String eventuallyProjectKey = message.split("-")[0];
-					if (projectKeys.contains(eventuallyProjectKey.toLowerCase())) {
+
+			//check BranchId
+			String eventuallyBranch = splitAndReturnWithoutToLower(branchId);
+			if (notEmptyAndInProject(eventuallyBranch, projectKeys)) {
+				selectedProject = eventuallyBranch.toUpperCase();
+			}
+			// check branchTitle
+			else if (notEmptyAndInProject(branchTitle, projectKeys)) {
+				selectedProject = branchTitle.toUpperCase();
+			}
+			else {
+				for (Commit commit : commits) {
+					String eventuallyProjectKey = splitAndReturnWithoutToLower(commit.getMessage());
+					if (notEmptyAndInProject(eventuallyProjectKey, projectKeys)) {
 						selectedProject = eventuallyProjectKey.toUpperCase();
 					}
 				}
 			}
+
+
 		} catch (Exception e) {
 			return selectedProject;
 		}
 		return selectedProject;
+	}
 
+	private String splitAndReturnWithoutToLower(String toSplit) {
+		if (toSplit.indexOf("-") > -1) {
+			String splitted = toSplit.split("-")[0];
+			return splitted.toLowerCase();
+		} else {
+			return "";
+		}
+	}
+
+	private Boolean notEmptyAndInProject(String eventually, ArrayList<String> projectKeys) {
+		return (!"".equals(eventually) && projectKeys.contains(eventually.toLowerCase()));
+	}
+
+	public Boolean checkIfJsonArray(String mayBeJson){
+		try {
+			JSONArray isJsonArray=new JSONArray(mayBeJson);
+			return true;
+		}catch (Exception e){
+			return false;
+		}
 	}
 }

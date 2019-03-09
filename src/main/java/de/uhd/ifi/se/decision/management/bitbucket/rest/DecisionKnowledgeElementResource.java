@@ -19,9 +19,12 @@ public class DecisionKnowledgeElementResource {
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response getDecisionKnowledgeElement() {
 		try {
-			String jsonString= ApiLinkService.getDecisionKnowledgeFromJira(JIRA_QUERY, PROJECT_KEY );
-			return Response.status(Response.Status.OK).entity(jsonString).build();
-
+			if ((JIRA_QUERY != null) && (PROJECT_KEY != null)) {
+				String jsonString = ApiLinkService.getDecisionKnowledgeFromJira(JIRA_QUERY, PROJECT_KEY);
+				return Response.status(Response.Status.OK).entity(jsonString).build();
+			} else {
+				return Response.serverError().build();
+			}
 		} catch (Exception e) {
 			return Response.serverError().build();
 		}

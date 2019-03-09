@@ -19,6 +19,8 @@
 		xhttp.onreadystatechange = function () {
 			if (this.readyState === 4 && this.status === 200) {
 				callback(null, xhttp.responseText)
+			}else if(this.readyState === 4 &&this.status === 500){
+				callback("Error", xhttp.responseText)
 			}
 		};
 		xhttp.open("GET", url, true);
@@ -34,7 +36,6 @@
 		});
 	}
 	function getIssuesFromJira() {
-
 		var url = AJS.contextPath() + "/rest/jsonIssues/1.0/issueRest/getIssuesFromJira";
 	//	openDialog();
 		getJSON(url, function (error, data) {
@@ -50,9 +51,12 @@
 					$('.todo-list').replaceWith("<div class'todo-list'><p>None of the commit messages, branch-id or branch-title could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
 					}
 				}catch (e) {
-					showFlag("error","A server error occured: "+data);
+					showFlag("error","A server error occured");
 					$('.todo-list').replaceWith("<div class'todo-list'><p>There seems to be a problem with the connection to Jira or none of the commit messages, branch-id or branch-title could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
 				}
+			}else{
+				showFlag("error","A server error occured");
+				$('.todo-list').replaceWith("<div class'todo-list'><p>There seems to be a problem with the connection to Jira or none of the commit messages, branch-id or branch-title could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
 			}
 		});
 

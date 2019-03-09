@@ -13,7 +13,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.*;
 
 
-
 @Named("ComponentUtil")
 public class ApiLinkService {
 
@@ -28,37 +27,43 @@ public class ApiLinkService {
 	static public String getDecisionKnowledgeFromJira(String query, String projectKey) {
 		//sanitise query
 		String encodedQuery = encodeUserInputQuery(query);
-		return getResponseFromJiraWithApplicationLink("rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + encodedQuery+"&projectKey="+projectKey);
+		return getResponseFromJiraWithApplicationLink("rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + encodedQuery + "&projectKey=" + projectKey);
 	}
+
 	static public String getCurrentActiveJiraProjects() {
 		return getResponseFromJiraWithApplicationLink("rest/api/2/project");
 	}
 
 	private static String getResponseFromJiraWithApplicationLink(String jiraUrl) {
-		String responseBody = "";
+		String responseBody = "false";
 		try {
 			ApplicationLink jiraApplicationLink = applicationLinkService.getPrimaryApplicationLink(JiraApplicationType.class);
-			ApplicationLinkRequestFactory requestFactory = jiraApplicationLink.createAuthenticatedRequestFactory();
-			ApplicationLinkRequest request = requestFactory.createRequest(Request.MethodType.GET,
-				jiraUrl);
-			request.addHeader("Content-Type", "application/json");
+			if (jiraApplicationLink != null) {
+				ApplicationLinkRequestFactory requestFactory = jiraApplicationLink.createAuthenticatedRequestFactory();
+				ApplicationLinkRequest request = requestFactory.createRequest(Request.MethodType.GET,
+					jiraUrl);
+				request.addHeader("Content-Type", "application/json");
 
-			responseBody = request.executeAndReturn(new ApplicationLinkResponseHandler<String>() {
-				public String credentialsRequired(final Response response) throws ResponseException {
-					return response.getResponseBodyAsString();
-				}
+				responseBody = request.executeAndReturn(new ApplicationLinkResponseHandler<String>() {
+					public String credentialsRequired(final Response response) throws ResponseException {
+						return response.getResponseBodyAsString();
+					}
 
-				public String handle(final Response response) throws ResponseException {
-					return response.getResponseBodyAsString();
-				}
-			});
+					public String handle(final Response response) throws ResponseException {
+						return response.getResponseBodyAsString();
+					}
+				});
+
+			} else {
+				return "false";
+			}
 		} catch (CredentialsRequiredException e) {
-			responseBody=e.getMessage();
+			responseBody = e.getMessage();
 		} catch (ResponseException e) {
-			responseBody=e.getMessage();
+			responseBody = e.getMessage();
 		}
-
 		return responseBody;
+
 	}
 
 	public ApplicationLinkService getApplicationLinkService() {
