@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.atlassian.bitbucket.pull.PullRequest;
+import com.atlassian.bitbucket.pull.PullRequestRef;
+
 import com.atlassian.bitbucket.commit.CommitsBetweenRequest;
 import com.atlassian.bitbucket.commit.Commit;
 import com.atlassian.bitbucket.commit.CommitService;
@@ -51,8 +53,10 @@ public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 		//find correct query out of projects, commitMessages and BranchId
 		MergeCheckDataHandler mergeCheckDataHandler = new MergeCheckDataHandler();
 		Iterable<Commit> commits = mergeCheckDataHandler.getCommitsOfPullRequest(pullRequest, this.commitService);
-		String branchId = pullRequest.getTitle();
-		String queryWithJiraIssues = "?jql=key in " + mergeCheckDataHandler.getJiraCallQuery(commits, branchId);
+		String branchTitle = pullRequest.getTitle();
+		PullRequestRef pullRequestRef= pullRequest.getFromRef();
+		String branchId=pullRequestRef.getDisplayId();
+		String queryWithJiraIssues = "?jql=key in " + mergeCheckDataHandler.getJiraCallQuery(commits, branchTitle, branchId);
 		String projectString = ApiLinkService.getCurrentActiveJiraProjects();
 		JIRA_QUERY = queryWithJiraIssues;
 		PROJECT_KEY = mergeCheckDataHandler.getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, projectString);

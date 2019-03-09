@@ -15,7 +15,6 @@
 
 	/*REST FUNCTIONS*/
 	function getJSON(url, callback) {
-
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function () {
 			if (this.readyState === 4 && this.status === 200) {
@@ -47,10 +46,12 @@
 						$("#showDecisionKnowledgeButton").click(function(){
 							openDialog(oIssues);
 						})
+					}else{
+					$('.todo-list').replaceWith("<div class'todo-list'><p>None of the commit messages, branch-id or branch-title could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
 					}
 				}catch (e) {
 					showFlag("error","A server error occured: "+data);
-					$('.todo-list').replaceWith("<div class'todo-list'><p>There seems to be a problem with the connection to Jira or none of the commit message could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
+					$('.todo-list').replaceWith("<div class'todo-list'><p>There seems to be a problem with the connection to Jira or none of the commit messages, branch-id or branch-title could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
 				}
 			}
 		});

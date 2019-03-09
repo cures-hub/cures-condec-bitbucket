@@ -27,9 +27,15 @@ public class MergeCheckDataHandler {
 	 * @param branchId
 	 * @return String "(TEST-5, TEST-7,etc...)"
 	 */
-	public String getJiraCallQuery(Iterable<Commit> commits, String branchId) {
+	public String getJiraCallQuery(Iterable<Commit> commits, String branchId, String branchTitle) {
 		String query = "(";
 		ArrayList<String> messageList = new ArrayList<String>();
+
+		//add Branch ID
+		messageList.add(branchId);
+		//add Branch Title
+		messageList.add(branchTitle);
+
 		for (Commit commit : commits) {
 			String message = commit.getMessage();
 			messageList.add(message);
@@ -39,13 +45,11 @@ public class MergeCheckDataHandler {
 			if (message.contains(" ")) {
 				String[] parts = message.split(" ");
 				query = query + parts[0] + ",";
-			} else {
-				// just dont split the particular ticket
 			}
 		}
+		//remove last ,
+		query = query.substring(0, query.length() - 1);
 
-		//add Branch ID
-		query += branchId;
 		// add )
 		query += ")";
 		return query;
@@ -94,7 +98,7 @@ public class MergeCheckDataHandler {
 	}
 
 	public String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, String projects) {
-		String selectedProject = "TEST";
+		String selectedProject = "";
 		try {
 			ArrayList<String> projectKeys = new ArrayList<String>();
 
