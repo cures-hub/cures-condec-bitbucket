@@ -1,5 +1,9 @@
 # cures-condec-bitbucket
 
+[![Build Status](https://travis-ci.org/cures-hub/cures-condec-bitbucket.svg?branch=master)](https://travis-ci.org/cures-hub/cures-condec-bitbucket)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bd8ee189f9e7474e850c60fa81b50d11)](https://www.codacy.com/app/UHD/cures-condec-bitbucket?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cures-hub/cures-condec-bitbucket&amp;utm_campaign=Badge_Grade)
+[![Codecoverage](https://codecov.io/gh/cures-hub/cures-condec-bitbucket/branch/master/graph/badge.svg)](https://codecov.io/gh/cures-hub/cures-condec-bitbucket/branch/master)
+
 The CURES ConDec Bitbucket plugin provides decision knowledge support for pull requests. 
 A pull request and its associated feature branch are related to one (or more) JIRA issues. 
 The ConDec Bitbucket plugin enables developers to view decision knowledge relevant for the JIRA issue(s) directly within the pull request.
