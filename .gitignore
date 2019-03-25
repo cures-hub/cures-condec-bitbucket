@@ -1,2 +1,14 @@
-.idea
-target
+# Gitignore for JIRA Bitbucket plug-in
+
+# Directories
+target/
+bin/
+.idea/
+.metadata/
+
+# Files
+.classpath
+.project
+.settings
+.iml
+.class

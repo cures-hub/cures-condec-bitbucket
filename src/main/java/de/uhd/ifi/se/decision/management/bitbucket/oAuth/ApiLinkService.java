@@ -1,17 +1,22 @@
 package de.uhd.ifi.se.decision.management.bitbucket.oAuth;
 
-import com.atlassian.applinks.api.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import com.atlassian.applinks.api.ApplicationLink;
+import com.atlassian.applinks.api.ApplicationLinkRequest;
+import com.atlassian.applinks.api.ApplicationLinkRequestFactory;
+import com.atlassian.applinks.api.ApplicationLinkResponseHandler;
+import com.atlassian.applinks.api.ApplicationLinkService;
+import com.atlassian.applinks.api.CredentialsRequiredException;
 import com.atlassian.applinks.api.application.jira.JiraApplicationType;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.net.Request;
 import com.atlassian.sal.api.net.Response;
 import com.atlassian.sal.api.net.ResponseException;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.UnsupportedEncodingException;
-import java.net.*;
-
 
 @Named("ComponentUtil")
 public class ApiLinkService {
@@ -25,9 +30,11 @@ public class ApiLinkService {
 	}
 
 	static public String getDecisionKnowledgeFromJira(String query, String projectKey) {
-		//sanitise query
+		// sanitise query
 		String encodedQuery = encodeUserInputQuery(query);
-		return getResponseFromJiraWithApplicationLink("rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + encodedQuery + "&projectKey=" + projectKey);
+		return getResponseFromJiraWithApplicationLink(
+				"rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + encodedQuery + "&projectKey="
+						+ projectKey);
 	}
 
 	static public String getCurrentActiveJiraProjects() {
@@ -37,11 +44,11 @@ public class ApiLinkService {
 	private static String getResponseFromJiraWithApplicationLink(String jiraUrl) {
 		String responseBody = "false";
 		try {
-			ApplicationLink jiraApplicationLink = applicationLinkService.getPrimaryApplicationLink(JiraApplicationType.class);
+			ApplicationLink jiraApplicationLink = applicationLinkService
+					.getPrimaryApplicationLink(JiraApplicationType.class);
 			if (jiraApplicationLink != null) {
 				ApplicationLinkRequestFactory requestFactory = jiraApplicationLink.createAuthenticatedRequestFactory();
-				ApplicationLinkRequest request = requestFactory.createRequest(Request.MethodType.GET,
-					jiraUrl);
+				ApplicationLinkRequest request = requestFactory.createRequest(Request.MethodType.GET, jiraUrl);
 				request.addHeader("Content-Type", "application/json");
 
 				responseBody = request.executeAndReturn(new ApplicationLinkResponseHandler<String>() {
@@ -63,7 +70,6 @@ public class ApiLinkService {
 			responseBody = e.getMessage();
 		}
 		return responseBody;
-
 	}
 
 	public ApplicationLinkService getApplicationLinkService() {
@@ -79,8 +85,5 @@ public class ApiLinkService {
 			e.printStackTrace();
 		}
 		return encodedUrl;
-
 	}
 }
-
-

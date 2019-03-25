@@ -1,11 +1,13 @@
 package de.uhd.ifi.se.decision.management.bitbucket;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.MergeCheckDataHandler;
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
+
+import org.junit.Ignore;
+import org.junit.Test;
+
+import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.MergeCheckDataHandler;
 
 @Ignore
 public class MergeCheckHandlerUnitTests {
@@ -26,5 +28,4 @@ public class MergeCheckHandlerUnitTests {
 
 		assertEquals("The Condition should be sufficient to merge!", "false", result.get("resultBoolean"));
 	}
-
 }

@@ -1,40 +1,51 @@
-<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
-    <plugin-info>
-        <description>${project.description}</description>
-        <version>${project.version}</version>
-        <vendor name="${project.organization.name}" url="${project.organization.url}" />
-        <param name="plugin-icon">images/pluginIcon.png</param>
-        <param name="plugin-logo">images/pluginLogo.png</param>
-    </plugin-info>
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}"
+	plugins-version="2">
 
-    <!-- add our i18n resource -->
-    <resource type="i18n" name="i18n" location="management.bitbucket"/>
+	<!-- Plug-in Information -->
+	<plugin-info>
+		<description>${project.description}</description>
+		<version>${project.version}</version>
+		<vendor name="${project.organization.name}" url="${project.organization.url}" />
+		<param name="plugin-icon">images/pluginIcon.png</param>
+		<param name="plugin-logo">images/pluginLogo.png</param>
+	</plugin-info>
 
-    <rest key="issue-import-rest-resources" path="/jsonIssues" version="1.0">
-        <description>Provides the REST resource for the jsonImport.</description>
-    </rest>
-    <web-resource key="pr-overview-resources" name="pr-overview-resources">
-        <transformation extension="soy">
-            <transformer key="soyTransformer"/>
-        </transformation>
-        <resource type="download" name="pull-request-overview.soy.js" location="/soy/pull-request-overview.soy"/>
-        <resource type="soy" name="pull-request-overview" location="/soy/pull-request-overview.soy"/>
+	<!-- Internationalisation -->
+	<resource type="i18n" name="i18n" location="i18n/condec" />
 
-        <resource type="download" name="is-admin-merge-check" location="/js/has-decision-knowledge-check.js"/>
+	<rest key="issue-import-rest-resources" path="/jsonIssues" version="1.0">
+		<description>Provides the REST resource for the jsonImport.</description>
+	</rest>
+
+	<!-- Web Resources -->
+	<web-resource key="pr-overview-resources" name="pr-overview-resources">
+		<transformation extension="soy">
+			<transformer key="soyTransformer" />
+		</transformation>
+		<resource type="download" name="pull-request-overview.soy.js"
+			location="/soy/pull-request-overview.soy" />
+		<resource type="soy" name="pull-request-overview"
+			location="/soy/pull-request-overview.soy" />
+
+		<resource type="download" name="is-admin-merge-check"
+			location="/js/has-decision-knowledge-check.js" />
 
 
-        <dependency>com.atlassian.auiplugin:ajs</dependency>
-        <dependency>de.uhd.ifi.se.decision.bitbucket-web-api:pull-request-web-panels</dependency>
-        <context>bitbucket.page.pullRequest.view</context>
+		<dependency>com.atlassian.auiplugin:ajs</dependency>
+		<dependency>de.uhd.ifi.se.decision.bitbucket-web-api:pull-request-web-panels</dependency>
+		<context>bitbucket.page.pullRequest.view</context>
 
-    </web-resource>
+	</web-resource>
 
-    <repository-merge-check key="hasDecisionKnowledge" class="bean:hasDecisionKnowledgeCheck" configurable="false"/>
+	<repository-merge-check key="hasDecisionKnowledge"
+		class="bean:hasDecisionKnowledgeCheck" configurable="false" />
 
-    <client-web-panel key="decision-knowledge-overview" location="bitbucket.pull-request.links">
-        <client-context-provider>UHD.ISSUES.callInitIssues</client-context-provider>
-        <resource name="view" type="soy" location="de.uhd.ifi.se.decision.management.bitbucket:pr-overview-resources/UHD.issues.issueList" />
-        <dependency>de.uhd.ifi.se.decision.management.bitbucket:pr-overview-resources</dependency>
-    </client-web-panel>
+	<client-web-panel key="decision-knowledge-overview"
+		location="bitbucket.pull-request.links">
+		<client-context-provider>UHD.ISSUES.callInitIssues</client-context-provider>
+		<resource name="view" type="soy"
+			location="de.uhd.ifi.se.decision.management.bitbucket:pr-overview-resources/UHD.issues.issueList" />
+		<dependency>de.uhd.ifi.se.decision.management.bitbucket:pr-overview-resources</dependency>
+	</client-web-panel>
 
 </atlassian-plugin>
