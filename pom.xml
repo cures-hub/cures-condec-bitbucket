@@ -1,217 +1,221 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.uhd.ifi.se.decision</groupId>
+	<artifactId>management.bitbucket</artifactId>
+	<version>0.0.1</version>
+	<organization>
+		<name>Software Engineering Research Group, Heidelberg University</name>
+		<url>https://github.com/cures-hub</url>
+	</organization>
+	<name>Decision Knowledge Support for Pull Requests</name>
+	<description>Enables developers to view relevant decision knowledge in pull-requests. Enables to check and enforce rationale completeness.</description>
+	<developers>
+		<developer>
+			<id>fagro501</id>
+			<name>Fabian Gronert</name>
+		</developer>
+	</developers>
+	<packaging>atlassian-plugin</packaging>
 
-    <modelVersion>4.0.0</modelVersion>
-    <!--<groupId>com.mycompany.bitbucket</groupId>-->
-    <!--<artifactId>is-admin-merge-check</artifactId>-->
-    <groupId>de.uhd.ifi.se.decision</groupId>
-    <artifactId>management.bitbucket</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.atlassian.bitbucket.server</groupId>
+				<artifactId>bitbucket-parent</artifactId>
+				<version>${bitbucket.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-    <organization>
-        <name>Software Engineering Research Group, Heidelberg University</name>
-        <url>https://github.com/cures-hub</url>
-    </organization>
+	<dependencies>
+		<dependency>
+			<groupId>com.atlassian.sal</groupId>
+			<artifactId>sal-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.atlassian.bitbucket.server</groupId>
+			<artifactId>bitbucket-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.atlassian.bitbucket.server</groupId>
+			<artifactId>bitbucket-spi</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.atlassian.bitbucket.server</groupId>
+			<artifactId>bitbucket-page-objects</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+			<scope>provided</scope>
+		</dependency>
 
-    <name>Decision Knowlege Support for Pull Requests</name>
-    <description>This is a plugin that provides the possibility to show decision knowledge in Bitbucket.</description>
-    <packaging>atlassian-plugin</packaging>
+		<dependency>
+			<groupId>com.atlassian.plugin</groupId>
+			<artifactId>atlassian-spring-scanner-annotation</artifactId>
+			<version>${atlassian.spring.scanner.version}</version>
+			<scope>compile</scope>
+		</dependency>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.atlassian.bitbucket.server</groupId>
-                <artifactId>bitbucket-parent</artifactId>
-                <version>${bitbucket.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+		<dependency>
+			<groupId>com.atlassian.plugin</groupId>
+			<artifactId>atlassian-spring-scanner-runtime</artifactId>
+			<version>${atlassian.spring.scanner.version}</version>
+			<scope>runtime</scope>
+		</dependency>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.atlassian.sal</groupId>
-            <artifactId>sal-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-spi</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.bitbucket.server</groupId>
-            <artifactId>bitbucket-page-objects</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-            <scope>provided</scope>
-        </dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+			<scope>provided</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>com.atlassian.plugin</groupId>
-            <artifactId>atlassian-spring-scanner-annotation</artifactId>
-            <version>${atlassian.spring.scanner.version}</version>
-            <scope>compile</scope>
-        </dependency>
+		<!-- WIRED TEST RUNNER DEPENDENCIES -->
+		<dependency>
+			<groupId>com.atlassian.plugins</groupId>
+			<artifactId>atlassian-plugins-osgi-testrunner</artifactId>
+			<version>${plugin.testrunner.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2-atlassian-1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20180813</version>
+		</dependency>
+		<!--REST -->
+		<dependency>
+			<groupId>com.atlassian.plugins.rest</groupId>
+			<artifactId>atlassian-rest-common</artifactId>
+			<version>1.0.2</version>
+			<scope>provided</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>com.atlassian.plugin</groupId>
-            <artifactId>atlassian-spring-scanner-runtime</artifactId>
-            <version>${atlassian.spring.scanner.version}</version>
-            <scope>runtime</scope>
-        </dependency>
+		<dependency>
+			<groupId>activemq</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>20050407</version>
+			<scope>provided</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-            <scope>provided</scope>
-        </dependency>
+		<dependency>
+			<groupId>com.atlassian.applinks</groupId>
+			<artifactId>applinks-api</artifactId>
+			<version>5.4.1</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 
-        <!-- WIRED TEST RUNNER DEPENDENCIES -->
-        <dependency>
-            <groupId>com.atlassian.plugins</groupId>
-            <artifactId>atlassian-plugins-osgi-testrunner</artifactId>
-            <version>${plugin.testrunner.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>1.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.2.2-atlassian-1</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.json/json -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20180813</version>
-        </dependency>
-        <!--REST-->
-        <dependency>
-            <groupId>com.atlassian.plugins.rest</groupId>
-            <artifactId>atlassian-rest-common</artifactId>
-            <version>1.0.2</version>
-            <scope>provided</scope>
-        </dependency>
+	<build>
+		<finalName>cures-condec-bitbucket</finalName>
+		<plugins>
+			<plugin>
+				<groupId>com.atlassian.maven.plugins</groupId>
+				<artifactId>bitbucket-maven-plugin</artifactId>
+				<version>${amps.version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<jvmArgs>-Xmx4096m</jvmArgs>
+					<enableQuickReload>true</enableQuickReload>
+					<enableFastdev>false</enableFastdev>
 
-        <dependency>
-            <groupId>activemq</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>20050407</version>
-            <scope>provided</scope>
-        </dependency>
+					<products>
+						<product>
+							<id>bitbucket</id>
+							<instanceId>bitbucket</instanceId>
+							<version>${bitbucket.version}</version>
+							<dataVersion>${bitbucket.data.version}</dataVersion>
+						</product>
+					</products>
+					<instructions>
+						<Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
 
-        <dependency>
-            <groupId>com.atlassian.applinks</groupId>
-            <artifactId>applinks-api</artifactId>
-            <version>5.4.1</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+						<!-- Add package to export here -->
+						<Export-Package>
+							de.uhd.ifi.se.decision.management.bitbucket.merge.checks.api,
+						</Export-Package>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>bitbucket-maven-plugin</artifactId>
-                <version>${amps.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <jvmArgs>-Xmx4096m</jvmArgs>
-                    <enableQuickReload>true</enableQuickReload>
-                    <enableFastdev>false</enableFastdev>
+						<!-- Add package import here -->
+						<Import-Package>
+							org.springframework.osgi.*;resolution:="optional",
+							org.eclipse.gemini.blueprint.*;resolution:="optional",
+							*
+						</Import-Package>
 
-                    <products>
-                        <product>
-                            <id>bitbucket</id>
-                            <instanceId>bitbucket</instanceId>
-                            <version>${bitbucket.version}</version>
-                            <dataVersion>${bitbucket.data.version}</dataVersion>
-                        </product>  
-                    </products>
-                    <instructions>
-                        <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
+						<!-- Ensure plugin is Spring powered -->
+						<Spring-Context>*</Spring-Context>
+					</instructions>
+				</configuration>
+			</plugin>
 
-                        <!-- Add package to export here -->
-                        <Export-Package>
-                            de.uhd.ifi.se.decision.management.bitbucket.merge.checks.api,
-                        </Export-Package>
+			<plugin>
+				<groupId>com.atlassian.plugin</groupId>
+				<artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
+				<version>${atlassian.spring.scanner.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>atlassian-spring-scanner</goal>
+						</goals>
+						<phase>process-classes</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<scannedDependencies>
+						<dependency>
+							<groupId>com.atlassian.plugin</groupId>
+							<artifactId>atlassian-spring-scanner-external-jar</artifactId>
+						</dependency>
+					</scannedDependencies>
+					<verbose>false</verbose>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
-                        <!-- Add package import here -->
-                        <Import-Package>
-                            org.springframework.osgi.*;resolution:="optional",
-                            org.eclipse.gemini.blueprint.*;resolution:="optional",
-                            *
-                        </Import-Package>
+	<properties>
+		<bitbucket.version>5.2.0</bitbucket.version>
+		<bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
+		<amps.version>6.3.0-fef7990</amps.version>
+		<plugin.testrunner.version>1.2.3</plugin.testrunner.version>
+		<atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>
+		<!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to 
+			generate bundle. -->
+		<atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
+	</properties>
 
-                        <!-- Ensure plugin is Spring powered -->
-                        <Spring-Context>*</Spring-Context>
-                    </instructions>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.atlassian.plugin</groupId>
-                <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
-                <version>${atlassian.spring.scanner.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>atlassian-spring-scanner</goal>
-                        </goals>
-                        <phase>process-classes</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <scannedDependencies>
-                        <dependency>
-                            <groupId>com.atlassian.plugin</groupId>
-                            <artifactId>atlassian-spring-scanner-external-jar</artifactId>
-                        </dependency>
-                    </scannedDependencies>
-                    <verbose>false</verbose>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    
-    <properties>
-        <bitbucket.version>5.2.0</bitbucket.version>
-        <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-        <amps.version>6.3.0-fef7990</amps.version>
-        <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
-        <atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>
-        <!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to generate bundle. -->
-        <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
-    </properties>
-    
 </project>
