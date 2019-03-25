@@ -15,6 +15,8 @@
     <rest key="issue-import-rest-resources" path="/jsonIssues" version="1.0">
         <description>Provides the REST resource for the jsonImport.</description>
     </rest>
+    
+    <!-- Web Resources -->
     <web-resource key="pr-overview-resources" name="pr-overview-resources">
         <transformation extension="soy">
             <transformer key="soyTransformer"/>
