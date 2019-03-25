@@ -1,4 +1,6 @@
 <atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+    
+    <!-- Plug-in Information -->
     <plugin-info>
         <description>${project.description}</description>
         <version>${project.version}</version>
@@ -7,8 +9,8 @@
         <param name="plugin-logo">images/pluginLogo.png</param>
     </plugin-info>
 
-    <!-- add our i18n resource -->
-    <resource type="i18n" name="i18n" location="management.bitbucket"/>
+    <!-- Internationalisation -->
+	<resource type="i18n" name="i18n" location="i18n/condec" />
 
     <rest key="issue-import-rest-resources" path="/jsonIssues" version="1.0">
         <description>Provides the REST resource for the jsonImport.</description>
