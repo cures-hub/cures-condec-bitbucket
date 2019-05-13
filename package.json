@@ -1,6 +1,6 @@
 {
   "name": "cures-condec-bitbucket",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "[![Build Status](https://travis-ci.org/cures-hub/cures-condec-bitbucket.svg?branch=master)](https://travis-ci.org/cures-hub/cures-condec-bitbucket) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bd8ee189f9e7474e850c60fa81b50d11)](https://www.codacy.com/app/UHD/cures-condec-bitbucket?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cures-hub/cures-condec-bitbucket&amp;utm_campaign=Badge_Grade) [![Codecoverage](https://codecov.io/gh/cures-hub/cures-condec-bitbucket/branch/master/graph/badge.svg)](https://codecov.io/gh/cures-hub/cures-condec-bitbucket/branch/master)",
   "main": "index.js",
   "dependencies": {
@@ -8,11 +8,13 @@
   },
   "devDependencies": {
     "cz-conventional-changelog": "^2.1.0",
-    "semantic-release": "^15.13.12"
+    "semantic-release": "^15.13.12",
+    "standard-version": "^6.0.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "npx semantic-release",
+    "full-release": "npx semantic-release",
+    "release": "standard-version",
     "commit": "git cz"
   },
   "repository": {
