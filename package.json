@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "standard-release",
+    "release": "npx semantic-release",
     "commit": "git cz"
   },
   "repository": {
