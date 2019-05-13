@@ -1,0 +1,32 @@
+{
+  "name": "cures-condec-bitbucket",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.org/cures-hub/cures-condec-bitbucket.svg?branch=master)](https://travis-ci.org/cures-hub/cures-condec-bitbucket) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bd8ee189f9e7474e850c60fa81b50d11)](https://www.codacy.com/app/UHD/cures-condec-bitbucket?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cures-hub/cures-condec-bitbucket&amp;utm_campaign=Badge_Grade) [![Codecoverage](https://codecov.io/gh/cures-hub/cures-condec-bitbucket/branch/master/graph/badge.svg)](https://codecov.io/gh/cures-hub/cures-condec-bitbucket/branch/master)",
+  "main": "index.js",
+  "dependencies": {
+    "semantic-release-cli": "^5.0.0"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^2.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "standard-release",
+    "commit": "git cz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cures-hub/cures-condec-bitbucket.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cures-hub/cures-condec-bitbucket/issues"
+  },
+  "homepage": "https://github.com/cures-hub/cures-condec-bitbucket#readme",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

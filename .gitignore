@@ -12,3 +12,7 @@ bin/
 .settings
 .iml
 .class
+
+#npm
+/node_modules
+package-lock.json
