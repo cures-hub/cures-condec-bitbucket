@@ -17,15 +17,26 @@ For example, the developers responsible for implementing a task must have at lea
 ## Installation
 
 to support the release and commit standards install commitizen:
-`npm install commitizen -g`
+```
+npm install commitizen -g
+```
+Install all npm modules:
+```
+npm install
+```
 
 ## Commits and releases
 
 after staging the files run:
-`git cz`
+```
+git cz
+```
+
 
 to make a standard release:
-`npm run release`
+```
+npm run release
+```
 
 ### Prerequisites
 
