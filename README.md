@@ -48,7 +48,7 @@ The following prerequisites are necessary to compile the plug-in from source cod
 ### Compilation via Terminal
 
 The source code is compiled via terminal.
-Navigate into the cures-condec-jira folder and run the following command:
+Navigate into the cures-condec-bitbucket folder and run the following command:
 
 ```
 atlas-mvn package
