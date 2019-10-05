@@ -1,4 +1,4 @@
-package de.uhd.ifi.se.decision.management.bitbucket.oAuth;
+package de.uhd.ifi.se.decision.management.bitbucket.oauth;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -22,7 +22,7 @@ import com.atlassian.sal.api.net.ResponseException;
 public class ApiLinkService {
 
 	@ComponentImport
-	static private ApplicationLinkService applicationLinkService;
+	private static ApplicationLinkService applicationLinkService;
 
 	@Inject
 	public ApiLinkService(ApplicationLinkService oApplicationLinkService) {
@@ -64,9 +64,7 @@ public class ApiLinkService {
 			} else {
 				return "false";
 			}
-		} catch (CredentialsRequiredException e) {
-			responseBody = e.getMessage();
-		} catch (ResponseException e) {
+		} catch (CredentialsRequiredException | ResponseException e) {
 			responseBody = e.getMessage();
 		}
 		return responseBody;
@@ -80,7 +78,6 @@ public class ApiLinkService {
 		String encodedUrl = "";
 		try {
 			encodedUrl = URLEncoder.encode(query, "UTF-8");
-
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

@@ -9,24 +9,22 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.uhd.ifi.se.decision.management.bitbucket.oAuth.ApiLinkService;
+import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 
-@Path("/issueRest")
-public class DecisionKnowledgeElementResource {
+/**
+ * REST resource: Enables importing decision knowledge from Jira
+ */
+@Path("/knowledge")
+public class KnowledgeRest {
 
-	@Path("/getIssuesFromJira")
+	@Path("/getDecisionKnowledgeFromJira")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getDecisionKnowledgeElement() {
-		try {
-			if ((JIRA_QUERY != null) && (PROJECT_KEY != null)) {
-				String jsonString = ApiLinkService.getDecisionKnowledgeFromJira(JIRA_QUERY, PROJECT_KEY);
-				return Response.status(Response.Status.OK).entity(jsonString).build();
-			} else {
-				return Response.serverError().build();
-			}
-		} catch (Exception e) {
+		if (JIRA_QUERY == null && PROJECT_KEY == null) {
 			return Response.serverError().build();
 		}
+		String jsonString = ApiLinkService.getDecisionKnowledgeFromJira(JIRA_QUERY, PROJECT_KEY);
+		return Response.status(Response.Status.OK).entity(jsonString).build();
 	}
 }

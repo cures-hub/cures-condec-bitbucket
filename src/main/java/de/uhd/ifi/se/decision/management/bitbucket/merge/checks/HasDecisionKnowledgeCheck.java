@@ -17,8 +17,13 @@ import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.pull.PullRequestRef;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
-import de.uhd.ifi.se.decision.management.bitbucket.oAuth.ApiLinkService;
+import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 
+/**
+ * Enforces that pull requests can only be accepted, i.e., the respective branch
+ * can only be merged back to the maineline if the decision knowledge
+ * documentation is complete.
+ */
 @Component("hasDecisionKnowledgeCheck")
 public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 
@@ -41,35 +46,30 @@ public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 
 		// find correct query out of projects, commitMessages and BranchId
 		MergeCheckDataHandler mergeCheckDataHandler = new MergeCheckDataHandler();
-		Iterable<Commit> commits = mergeCheckDataHandler.getCommitsOfPullRequest(pullRequest, this.commitService);
+		Iterable<Commit> commits = mergeCheckDataHandler.getCommitsOfPullRequest(pullRequest, commitService);
 		String branchTitle = pullRequest.getTitle();
 		PullRequestRef pullRequestRef = pullRequest.getFromRef();
 		String branchId = pullRequestRef.getDisplayId();
 		String queryWithJiraIssues = "?jql=key in "
 				+ mergeCheckDataHandler.getJiraCallQuery(commits, branchTitle, branchId);
 		String projectString = ApiLinkService.getCurrentActiveJiraProjects();
-		if (!mergeCheckDataHandler.checkIfJsonArray(projectString)) {
-			return RepositoryHookResult.accepted();
-		} else {
-			JIRA_QUERY = queryWithJiraIssues;
-			PROJECT_KEY = mergeCheckDataHandler.getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, projectString,
-					branchId, branchTitle);
 
-			// get Issues out of Jira
-			String decisionKnowledgeIssueString = ApiLinkService.getDecisionKnowledgeFromJira(queryWithJiraIssues,
-					PROJECT_KEY);
-			HashMap<String, String> hasSufficientDecisions = mergeCheckDataHandler
-					.hasSufficientDecisions(decisionKnowledgeIssueString);
-			if (!Boolean.valueOf(hasSufficientDecisions.get("resultBoolean"))) {
-				String summaryMsg = "There are not enough Decision Elements for each Commit";
-				String detailedMsg = "Every Commit which is linked to a jira Ticket has to have at least one issue and one decision linked :"
-						+ hasSufficientDecisions.get("resultString");
+		JIRA_QUERY = queryWithJiraIssues;
+		PROJECT_KEY = mergeCheckDataHandler.getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, projectString,
+				branchId, branchTitle);
 
-				return RepositoryHookResult.rejected(summaryMsg, detailedMsg);
-			} else {
-				return RepositoryHookResult.accepted();
-			}
+		// get decision knowledge out of Jira
+		String decisionKnowledge = ApiLinkService.getDecisionKnowledgeFromJira(queryWithJiraIssues, PROJECT_KEY);
+		HashMap<String, String> hasSufficientDecisions = mergeCheckDataHandler
+				.hasSufficientDecisions(decisionKnowledge);
+		if (!Boolean.valueOf(hasSufficientDecisions.get("resultBoolean"))) {
+			String summaryMsg = "There are not enough Decision Elements for each Commit";
+			String detailedMsg = "Every Commit which is linked to a jira Ticket has to have at least one issue and one decision linked :"
+					+ hasSufficientDecisions.get("resultString");
+
+			return RepositoryHookResult.rejected(summaryMsg, detailedMsg);
 		}
+		return RepositoryHookResult.accepted();
 	}
 
 }
