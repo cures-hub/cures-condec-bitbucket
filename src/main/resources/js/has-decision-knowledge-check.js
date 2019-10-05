@@ -14,6 +14,30 @@
 
 	checkIfListIsLoaded(0);
 	
+	function checkIfListIsLoaded(iCounter) {
+		// check if inital List exists
+		if ($('.todo-list').length > 0) {
+			getIssuesFromJira();
+		} else {
+			if (iCounter < 10)
+				setTimeout(function() {
+					// max 10 times, else an error occured
+					checkIfListIsLoaded(iCounter + 1);
+				}, 3000);
+		}
+	}
+	
+	function getIssuesFromJira() {
+		conDecAPI.getDecisionKnowledgeFromJira(function(data) {
+			var oIssues = JSON.parse(data);
+			if (oIssues.length === 0) {
+				showText("None of the commit messages, branch-id or branch-title could be linked to a Jira issue.");
+				return;
+			}
+			insertDecisionKnowledgeButton(oIssues);
+		});
+	}
+	
 	function showText(text) {
 		$(".todo-list").replaceWith("<div class'todo-list'><p>" + text + "</p></div>");
 	}
@@ -46,30 +70,6 @@
 		dialog.gotoPage(0);
 		dialog.gotoPanel(0);
 		dialog.show();
-	}
-
-	function getIssuesFromJira() {
-		conDecAPI.getDecisionKnowledgeFromJira(function(data) {
-			var oIssues = JSON.parse(data);
-			if (oIssues.length === 0) {
-				showText("None of the commit messages, branch-id or branch-title could be linked to a Jira issue.");
-				return;
-			}
-			insertDecisionKnowledgeButton(oIssues);
-		});
-	}
-
-	function checkIfListIsLoaded(iCounter) {
-		// check if inital List exists
-		if ($('.todo-list').length > 0) {
-			getIssuesFromJira();
-		} else {
-			if (iCounter < 10)
-				setTimeout(function() {
-					// max 10 times, else an error occured
-					checkIfListIsLoaded(iCounter + 1);
-				}, 3000);
-		}
 	}
 
 }(AJS.$));

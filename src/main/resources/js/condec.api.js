@@ -8,7 +8,7 @@
  * ???
   
  Is referenced in HTML by
- * ???
+ * nowhere
  */
 (function(global) {
 

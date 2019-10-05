@@ -40,6 +40,8 @@
 			location="/js/has-decision-knowledge-check.js" />
 		<resource type="download" name="condec.api.js" location="/js/condec.api.js" />
 
+		<dependency>com.atlassian.auiplugin:table</dependency>
+		<dependency>com.atlassian.auiplugin:aui-table-sortable</dependency>
 		<dependency>com.atlassian.auiplugin:ajs</dependency>
 		<dependency>de.uhd.ifi.se.decision.bitbucket-web-api:pull-request-web-panels</dependency>
 		<context>bitbucket.page.pullRequest.view</context>

@@ -10,13 +10,16 @@
     <div class="todo-list">
 
         {foreach $issueArray in $objects}
-    <table class="aui aui-table-sortable jsonImportTable">
+    <table class="aui aui-table-sortable">
+    <thead>
         <tr>
-        <th>Key</th>
+        <th class="aui-table-column-issue-key">Key</th>
         <th>Summary</th>
         <th>Description</th>
         <th>Type</th>
         </tr>
+    </thead>
+    <tbody>
             {foreach $issue in $issueArray}
             <tr>
                 <td><a target="_blank" href="{$issue.url}">{$issue.key}</a></td>
@@ -25,7 +28,8 @@
                 <td>{$issue.type}</td>
             </tr>
             {/foreach}
-        </table>
+    </tbody>
+    </table>
         {ifempty}
         <h4>loading...</h4>
 
