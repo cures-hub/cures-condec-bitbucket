@@ -17,7 +17,7 @@ import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.pull.PullRequestRef;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
-import de.uhd.ifi.se.decision.management.bitbucket.oAuth.ApiLinkService;
+import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 
 @Component("hasDecisionKnowledgeCheck")
 public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
