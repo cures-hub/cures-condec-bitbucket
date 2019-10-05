@@ -7,10 +7,11 @@
  */
 {template .knowledgeElements}
 	<div class="todo-list">
+	{if isNonnull($objects)}
 	<button class="aui aui-button" id="showDecisionKnowledgeButton">Show decision knowledge</button>
 	<section id="knowledge-overview-dialog" class="aui-dialog2 aui-dialog2-xlarge aui-layer" role="dialog" aria-hidden="true">
 	<header class="aui-dialog2-header">
-		<h2 id="create-dialog-header" class="aui-dialog2-header-main">Documented Decision Knowledge for the Pull Request</h2>
+		<h2 id="create-dialog-header" class="aui-dialog2-header-main">Decision Knowledge for Pull Request</h2>
 		<a class="aui-dialog2-header-close"> 
 			<span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
 		</a>
@@ -44,6 +45,13 @@
 			<button id="knowledge-overview-dialog-cancel-button" class="aui-button aui-button-link">Cancel</button>
 		</div>
 	</footer>
-	</section>    
-    </div>
+	</section>  
+		{if length($objects) == 0}
+			<p>None of the commit messages, branch-id or branch-title could be linked to a Jira issue.</p>
+		{/if}
+	{else}
+		<p>There seems to be a problem with the connection to Jira. 
+		The commit messages, branch-id or branch-title could be linked to a Jira issue.</p>
+	{/if}
+	</div>
 {/template}

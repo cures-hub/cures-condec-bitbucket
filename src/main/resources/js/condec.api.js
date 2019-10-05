@@ -20,31 +20,27 @@
 	 * external references:
 	 */
 	ConDecAPI.prototype.getDecisionKnowledgeFromJira = function getDecisionKnowledgeFromJira(callback) {
-		var url = this.restPrefix + "/knowledge/getDecisionKnowledgeFromJira";
-		getJSON(url, function(error, knowledgeElements) {
-			if (error === null) {
-				callback(JSON.parse(knowledgeElements));
-			} else {
-				callback(null);
-			}
-		});
+		var url = this.restPrefix + "/knowledge/getDecisionKnowledgeFromJira";		
+		return getResponseAsReturnValue(url);
 	};
 
-	function getJSON(url, callback) {
+	function getResponseAsReturnValue(url) {
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", url, true);
+		xhr.open("GET", url, false);
 		xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
-		xhr.setRequestHeader("Accept", "application/json");
-		xhr.onload = function() {
-			var status = xhr.status;
-			if (status === 200) {
-				callback(null, xhr.responseText);
-			} else {
-				showFlag("error", xhr.response.error, status);
-				callback(status);
-			}
-		};
 		xhr.send();
+		var status = xhr.status;
+		if (status === 200) {
+			try {
+				var parsedResponse = JSON.parse(xhr.response);
+				return parsedResponse;
+			} catch (error) {
+				console.log(error);
+				return null;
+			}
+		}
+		showFlag("error", xhr.response.error, status);
+		return null;
 	}
 
 	function showFlag(type, message, status) {

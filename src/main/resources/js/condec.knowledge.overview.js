@@ -21,8 +21,16 @@
 	 * client-web-panel in atlassian-plugin.xml
 	 */
 	ConDec.knowledgeOverview.init = function init() {
+		knowledgeElements = conDecAPI.getDecisionKnowledgeFromJira(null);
+		console.log(knowledgeElements);
+		if (knowledgeElements === null) {
+			return {
+				objects : null
+			};
+		}
+
 		return {
-			objects : []
+			objects : knowledgeElements
 		};
 	};
 
@@ -31,7 +39,7 @@
 	function checkIfSoyTemplateIsRendered(iCounter) {
 		// check if inital List exists
 		if ($(".todo-list").length > 0) {
-			getDecisionKnowledgeFromJira();
+			setEventListeners()
 		} else {
 			if (iCounter < 10)
 				setTimeout(function() {
@@ -39,25 +47,6 @@
 					checkIfSoyTemplateIsRendered(iCounter + 1);
 				}, 3000);
 		}
-	}
-
-	function getDecisionKnowledgeFromJira() {
-		conDecAPI
-				.getDecisionKnowledgeFromJira(function(knowledgeElements) {
-					if (knowledgeElements === null) {
-						showText("There seems to be a problem with the connection to Jira "
-								+ "or none of the commit messages, branch-id or branch-title could be linked to a Jira issue.");
-					}
-					if (knowledgeElements.length === 0) {
-						showText("None of the commit messages, branch-id or branch-title could be linked to a Jira issue.");
-						return;
-					}
-					$(".todo-list").replaceWith(condec.todo.knowledgeElements({
-						objects : knowledgeElements
-					}));
-
-					setEventListeners();
-				});
 	}
 
 	function setEventListeners() {
