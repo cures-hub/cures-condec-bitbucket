@@ -27,13 +27,15 @@
 					if (error === null) {
 						callback(decisionKnowledgeElements);
 					} else {
-						$(".todo-list")
-								.replaceWith(
-										"<div class'todo-list'><p>There seems to be a problem with the connection to Jira "
-												+ "or none of the commit messages, branch-id or branch-title could be linked to a Jira issue.</p></div>")
+						showText("There seems to be a problem with the connection to Jira "
+								+ "or none of the commit messages, branch-id or branch-title could be linked to a Jira issue.");
 					}
 				});
 	};
+
+	function showText(text) {
+		$(".todo-list").replaceWith("<div class'todo-list'><p>" + text + "</p></div>");
+	}
 
 	function getJSON(url, callback) {
 		var xhr = new XMLHttpRequest();

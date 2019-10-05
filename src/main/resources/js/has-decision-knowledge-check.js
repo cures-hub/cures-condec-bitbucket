@@ -15,11 +15,11 @@
 	checkIfListIsLoaded(0);
 	
 	function showText(text) {
-		$('.todo-list').replaceWith("<div class'todo-list'><p>" + text + "</p></div>");
+		$(".todo-list").replaceWith("<div class'todo-list'><p>" + text + "</p></div>");
 	}
 
 	function insertDecisionKnowledgeButton(oIssues) {
-		$('.todo-list').replaceWith(
+		$(".todo-list").replaceWith(
 				"<button class='aui aui-button' id='showDecisionKnowledgeButton'>Show decision knowledge</button>");
 		$("#showDecisionKnowledgeButton").click(function() {
 			openDialog(oIssues);
@@ -51,7 +51,7 @@
 	function getIssuesFromJira() {
 		conDecAPI.getDecisionKnowledgeFromJira(function(data) {
 			var oIssues = JSON.parse(data);
-			if (oIssues.length == 0) {
+			if (oIssues.length === 0) {
 				showText("None of the commit messages, branch-id or branch-title could be linked to a Jira issue.");
 				return;
 			}
