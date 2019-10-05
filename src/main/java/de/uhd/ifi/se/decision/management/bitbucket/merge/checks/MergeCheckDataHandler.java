@@ -143,12 +143,4 @@ public class MergeCheckDataHandler {
 	private Boolean notEmptyAndInProject(String eventually, ArrayList<String> projectKeys) {
 		return (!"".equals(eventually) && projectKeys.contains(eventually.toLowerCase()));
 	}
-
-	public Boolean checkIfJsonArray(String mayBeJson) {
-		try {
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
 }

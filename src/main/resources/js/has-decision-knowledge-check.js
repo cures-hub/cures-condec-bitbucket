@@ -14,60 +14,26 @@
 
 	checkIfListIsLoaded(0);
 
-	/* REST FUNCTIONS */
-	function getJSON(url, callback) {
-		var xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = function() {
-			if (this.readyState === 4 && this.status === 200) {
-				callback(null, xhttp.responseText)
-			} else if (this.readyState === 4 && this.status === 500) {
-				callback("Error", xhttp.responseText)
-			}
-		};
-		xhttp.open("GET", url, true);
-		xhttp.send();
-
-	}
-	function showFlag(type, message) {
-		AJS.flag({
-			type : type,
-			close : "auto",
-			title : type.charAt(0).toUpperCase() + type.slice(1),
-			body : message
-		});
-	}
 	function getIssuesFromJira() {
-		var url = AJS.contextPath() + "/rest/condec/latest/knowledge/getDecisionKnowledgeFromJira";
-		// openDialog();
-		getJSON(
-				url,
-				function(error, data) {
-					if (error == null) {
-						try {
-							var oIssues = JSON.parse(data);
-							if (oIssues.length > 0) {
-								$('.todo-list')
-										.replaceWith(
-												"<button class='aui aui-button' id='showDecisionKnowledgeButton'>Show decision knowledge</button>");
-								$("#showDecisionKnowledgeButton").click(function() {
-									openDialog(oIssues);
-								})
-							} else {
-								$('.todo-list')
-										.replaceWith(
-												"<div class'todo-list'><p>None of the commit messages, branch-id or branch-title could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
-							}
-						} catch (e) {
-							showFlag("error", "A server error occured");
+		conDecAPI
+				.getDecisionKnowledgeFromJira(function(data) {
+					// openDialog();
+					try {
+						var oIssues = JSON.parse(data);
+						if (oIssues.length > 0) {
 							$('.todo-list')
 									.replaceWith(
-											"<div class'todo-list'><p>There seems to be a problem with the connection to Jira or none of the commit messages, branch-id or branch-title could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
+											"<button class='aui aui-button' id='showDecisionKnowledgeButton'>Show decision knowledge</button>");
+							$("#showDecisionKnowledgeButton").click(function() {
+								openDialog(oIssues);
+							})
+						} else {
+							$('.todo-list')
+									.replaceWith(
+											"<div class'todo-list'><p>None of the commit messages, branch-id or branch-title could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
 						}
-					} else {
-						showFlag("error", "A server error occured");
-						$('.todo-list')
-								.replaceWith(
-										"<div class'todo-list'><p>There seems to be a problem with the connection to Jira or none of the commit messages, branch-id or branch-title could be linked to a Jira issue. Continue with the merge on your own risk</p></div>")
+					} catch (e) {
+						$('.todo-list').replaceWith("<div class'todo-list'><p>" + data + "</p></div>")
 					}
 				});
 
