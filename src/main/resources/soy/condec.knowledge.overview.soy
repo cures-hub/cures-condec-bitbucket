@@ -1,0 +1,57 @@
+{namespace condec.todo}
+/**
+ * Renders the overview of linked decision knowledge for the pull request.
+ * 
+ * @param objects
+ * 
+ */
+{template .knowledgeElements}
+	<div class="todo-list">
+	{if isNonnull($objects)}
+	<button class="aui aui-button" id="showDecisionKnowledgeButton">Show decision knowledge</button>
+	<section id="knowledge-overview-dialog" class="aui-dialog2 aui-dialog2-xlarge aui-layer" role="dialog" aria-hidden="true">
+	<header class="aui-dialog2-header">
+		<h2 id="create-dialog-header" class="aui-dialog2-header-main">Decision Knowledge for Pull Request</h2>
+		<a class="aui-dialog2-header-close"> 
+			<span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+		</a>
+	</header>
+	<div id="create-dialog-content" class="aui-dialog2-content">
+		<form class="aui">
+		<table class="aui aui-table-sortable">
+	    <thead>
+	        <tr>
+	        <th class="aui-table-column-issue-key">Key</th>
+	        <th>Type</th>
+	        <th>Summary</th>        
+	        </tr>
+	    </thead>
+	    <tbody>
+	    	{foreach $knowledgeElements in $objects}
+	            {foreach $element in $knowledgeElements}
+	            <tr>
+	                <td><a target="_blank" href="{$element.url}">{$element.key}</a></td>
+	                <td>{$element.type}</td>
+	                <td>{$element.summary}</td>                
+	            </tr>
+	            {/foreach}
+	        {/foreach}
+	    </tbody>
+	    </table>
+		</form>
+    </div>
+	<footer class="aui-dialog2-footer">
+		<div class="aui-dialog2-footer-actions">
+			<button id="knowledge-overview-dialog-cancel-button" class="aui-button aui-button-link">Cancel</button>
+		</div>
+	</footer>
+	</section>  
+		{if length($objects) == 0}
+			<p>None of the commit messages, branch-id or branch-title could be linked to a Jira issue.</p>
+		{/if}
+	{else}
+		<p>There seems to be a problem with the connection to Jira. 
+		The commit messages, branch-id or branch-title could be linked to a Jira issue.</p>
+	{/if}
+	</div>
+{/template}
