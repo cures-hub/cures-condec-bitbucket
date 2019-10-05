@@ -37,7 +37,7 @@
 		});
 	}
 	function getIssuesFromJira() {
-		var url = AJS.contextPath() + "/rest/jsonIssues/1.0/issueRest/getIssuesFromJira";
+		var url = AJS.contextPath() + "/rest/condec/latest/knowledge/getDecisionKnowledgeFromJira";
 		// openDialog();
 		getJSON(
 				url,

@@ -212,6 +212,8 @@
 			generate bundle. -->
 		<atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
 		<url>https://github.com/cures-hub/cures-condec-bitbucket</url>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 
 </project>

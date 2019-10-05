@@ -13,8 +13,12 @@
 	<!-- Internationalisation -->
 	<resource type="i18n" name="i18n" location="i18n/condec" />
 
-	<rest key="issue-import-rest-resources" path="/jsonIssues" version="1.0">
-		<description>Provides the REST resource for the jsonImport.</description>
+	<!-- REST API -->
+	<rest name="Decision Knowledge REST" key="decision-knowledge-rest" path="/condec"
+		version="1.0">
+		<description>
+			Provides REST resources to manage decision knowledge.
+		</description>
 	</rest>
 
 	<!-- Web Resources -->

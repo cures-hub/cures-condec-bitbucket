@@ -64,9 +64,7 @@ public class ApiLinkService {
 			} else {
 				return "false";
 			}
-		} catch (CredentialsRequiredException e) {
-			responseBody = e.getMessage();
-		} catch (ResponseException e) {
+		} catch (CredentialsRequiredException | ResponseException e) {
 			responseBody = e.getMessage();
 		}
 		return responseBody;
@@ -80,7 +78,6 @@ public class ApiLinkService {
 		String encodedUrl = "";
 		try {
 			encodedUrl = URLEncoder.encode(query, "UTF-8");
-
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

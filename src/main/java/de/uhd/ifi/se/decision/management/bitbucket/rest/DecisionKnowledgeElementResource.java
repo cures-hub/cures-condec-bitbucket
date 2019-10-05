@@ -11,10 +11,10 @@ import javax.ws.rs.core.Response;
 
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 
-@Path("/issueRest")
+@Path("/knowledge")
 public class DecisionKnowledgeElementResource {
 
-	@Path("/getIssuesFromJira")
+	@Path("/getDecisionKnowledgeFromJira")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getDecisionKnowledgeElement() {
