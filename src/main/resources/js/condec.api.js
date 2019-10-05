@@ -5,7 +5,7 @@
  * nothing
     
  Is required by
- * ???
+ * condec.knowledge.overview.js
   
  Is referenced in HTML by
  * nowhere
@@ -21,22 +21,14 @@
 	 */
 	ConDecAPI.prototype.getDecisionKnowledgeFromJira = function getDecisionKnowledgeFromJira(callback) {
 		var url = this.restPrefix + "/knowledge/getDecisionKnowledgeFromJira";
-		getJSON(
-				url,
-				function(error, decisionKnowledgeElements) {
-					if (error === null) {
-						console.log(decisionKnowledgeElements);
-						callback(decisionKnowledgeElements);
-					} else {
-						showText("There seems to be a problem with the connection to Jira "
-								+ "or none of the commit messages, branch-id or branch-title could be linked to a Jira issue.");
-					}
-				});
+		getJSON(url, function(error, knowledgeElements) {
+			if (error === null) {
+				callback(JSON.parse(knowledgeElements));
+			} else {
+				callback(null);
+			}
+		});
 	};
-
-	function showText(text) {
-		$(".todo-list").replaceWith("<div class'todo-list'><p>" + text + "</p></div>");
-	}
 
 	function getJSON(url, callback) {
 		var xhr = new XMLHttpRequest();

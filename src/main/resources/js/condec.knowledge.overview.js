@@ -2,8 +2,8 @@
  This module creates the decision knowledge overview that shows the related knowledge for the pull request.
 
  Requires
- * conDecApi
- * soy
+ * condec.api.js
+ * condec.knowledge.overview.soy
     
  Is required by
  * atlassian-plugin.xml calls ConDec.knowledgeOverview.init in the client-web-panel
@@ -26,9 +26,9 @@
 		};
 	};
 
-	checkIfListIsLoaded(0);
+	checkIfSoyTemplateIsRendered(0);
 
-	function checkIfListIsLoaded(iCounter) {
+	function checkIfSoyTemplateIsRendered(iCounter) {
 		// check if inital List exists
 		if ($(".todo-list").length > 0) {
 			getDecisionKnowledgeFromJira();
@@ -36,55 +36,43 @@
 			if (iCounter < 10)
 				setTimeout(function() {
 					// max 10 times, else an error occured
-					checkIfListIsLoaded(iCounter + 1);
+					checkIfSoyTemplateIsRendered(iCounter + 1);
 				}, 3000);
 		}
 	}
 
 	function getDecisionKnowledgeFromJira() {
-		conDecAPI.getDecisionKnowledgeFromJira(function(data) {
-			var oIssues = JSON.parse(data);
-			if (oIssues.length === 0) {
-				showText("None of the commit messages, branch-id or branch-title could be linked to a Jira issue.");
-				return;
-			}
-			insertDecisionKnowledgeButton(oIssues);
+		conDecAPI
+				.getDecisionKnowledgeFromJira(function(knowledgeElements) {
+					if (knowledgeElements === null) {
+						showText("There seems to be a problem with the connection to Jira "
+								+ "or none of the commit messages, branch-id or branch-title could be linked to a Jira issue.");
+					}
+					if (knowledgeElements.length === 0) {
+						showText("None of the commit messages, branch-id or branch-title could be linked to a Jira issue.");
+						return;
+					}
+					$(".todo-list").replaceWith(condec.todo.knowledgeElements({
+						objects : knowledgeElements
+					}));
+
+					setEventListeners();
+				});
+	}
+
+	function setEventListeners() {
+		$("#showDecisionKnowledgeButton").click(function() {
+			// Show dialog
+			AJS.dialog2("#knowledge-overview-dialog").show();
+		});
+
+		$("#knowledge-overview-dialog-cancel-button").click(function() {
+			AJS.dialog2("#knowledge-overview-dialog").hide();
 		});
 	}
 
 	function showText(text) {
 		$(".todo-list").replaceWith("<div class'todo-list'><p>" + text + "</p></div>");
-	}
-
-	function insertDecisionKnowledgeButton(oIssues) {
-		$(".todo-list").replaceWith(
-				"<button class='aui aui-button' id='showDecisionKnowledgeButton'>Show decision knowledge</button>");
-		$("#showDecisionKnowledgeButton").click(function() {
-			openDialog(oIssues);
-		});
-	}
-
-	function openDialog(oIssues) {
-		// Standard sizes are 400, 600, 800 and 960 pixels wide
-		var dialog = new AJS.Dialog({
-			width : 800,
-			height : 500,
-			id : "example-dialog",
-			closeOnOutsideClick : true
-		});
-		dialog.addHeader("Decision Knowledge");
-		dialog.addPanel("Panel 1", "<div id='decisionKnowledgeTableDiv'></div>", "panel-body");
-		$("#decisionKnowledgeTableDiv").replaceWith(condec.todo.knowledgeElements({
-			objects : oIssues
-		}));
-		dialog.addButton("Close", function(dialog) {
-			dialog.hide();
-		});
-
-		dialog.gotoPage(0);
-		dialog.gotoPanel(0);
-		dialog.show();
-		// conDecDialog.showCreateDialog();
 	}
 
 }(AJS.$));
