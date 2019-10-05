@@ -25,6 +25,7 @@
 				url,
 				function(error, decisionKnowledgeElements) {
 					if (error === null) {
+						console.log(decisionKnowledgeElements);
 						callback(decisionKnowledgeElements);
 					} else {
 						showText("There seems to be a problem with the connection to Jira "

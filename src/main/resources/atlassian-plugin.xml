@@ -36,9 +36,9 @@
 		<resource type="soy" name="pull-request-overview"
 			location="/soy/pull-request-overview.soy" />
 
-		<resource type="download" name="has-decision-knowledge-check"
-			location="/js/has-decision-knowledge-check.js" />
 		<resource type="download" name="condec.api.js" location="/js/condec.api.js" />
+		<resource type="download" name="condec.knowledge.overview.js"
+			location="/js/condec.knowledge.overview.js" />
 
 		<dependency>com.atlassian.auiplugin:table</dependency>
 		<dependency>com.atlassian.auiplugin:aui-table-sortable</dependency>
