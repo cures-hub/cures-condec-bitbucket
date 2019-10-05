@@ -10,19 +10,17 @@
     <thead>
         <tr>
         <th class="aui-table-column-issue-key">Key</th>
-        <th>Summary</th>
-        <th>Description</th>
         <th>Type</th>
+        <th>Summary</th>        
         </tr>
     </thead>
     <tbody>
-    	{foreach $issueArray in $objects}
-            {foreach $issue in $issueArray}
+    	{foreach $knowledgeElements in $objects}
+            {foreach $element in $knowledgeElements}
             <tr>
-                <td><a target="_blank" href="{$issue.url}">{$issue.key}</a></td>
-                <td>{$issue.summary}</td>
-                <td>{$issue.description}</td>
-                <td>{$issue.type}</td>
+                <td><a target="_blank" href="{$element.url}">{$element.key}</a></td>
+                <td>{$element.type}</td>
+                <td>{$element.summary}</td>                
             </tr>
             {/foreach}
         {/foreach}
