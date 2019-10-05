@@ -39,13 +39,14 @@
 	function checkIfSoyTemplateIsRendered(iCounter) {
 		// check if inital List exists
 		if ($(".todo-list").length > 0) {
-			setEventListeners()
+			setEventListeners();
 		} else {
-			if (iCounter < 10)
+			if (iCounter < 10) {
 				setTimeout(function() {
 					// max 10 times, else an error occured
 					checkIfSoyTemplateIsRendered(iCounter + 1);
 				}, 3000);
+			}
 		}
 	}
 
