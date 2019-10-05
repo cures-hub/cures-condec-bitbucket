@@ -1,22 +1,36 @@
+/*
+ This module creates the decision knowledge overview that shows the related knowledge for the pull request.
+
+ Requires
+ * conDecApi
+ * soy
+    
+ Is required by
+ * atlassian-plugin.xml calls ConDec.knowledgeOverview.init in the client-web-panel
+  
+ Is referenced in HTML by
+ * nowhere
+ */
 (function($) {
 	// Set up our namespace
-	window.UHD = window.UHD || {};
-	UHD.ISSUES = UHD.ISSUES || {};
+	window.ConDec = window.ConDec || {};
+	ConDec.knowledgeOverview = ConDec.knowledgeOverview || {};
 
-	/* Expose the client-condition function */
-	function callInitIssues() {
+	/*
+	 * Exposes the client-condition function.
+	 * external references: client-web-panel in atlassian-plugin.xml 
+	 */
+	ConDec.knowledgeOverview.init = function init() {
 		return {
 			objects : []
 		};
-	}
-
-	UHD.ISSUES.callInitIssues = callInitIssues;
-
+	};
+	
 	checkIfListIsLoaded(0);
 	
 	function checkIfListIsLoaded(iCounter) {
 		// check if inital List exists
-		if ($('.todo-list').length > 0) {
+		if ($(".todo-list").length > 0) {
 			getIssuesFromJira();
 		} else {
 			if (iCounter < 10)
@@ -60,7 +74,7 @@
 		});
 		dialog.addHeader("Decision Knowledge");
 		dialog.addPanel("Panel 1", "<div id='decisionKnowledgeTableDiv'></div>", "panel-body");
-		$("#decisionKnowledgeTableDiv").replaceWith(UHD.issues.issueList({
+		$("#decisionKnowledgeTableDiv").replaceWith(condec.todo.knowledgeElements({
 			objects : oIssues
 		}));
 		dialog.addButton("Close", function(dialog) {

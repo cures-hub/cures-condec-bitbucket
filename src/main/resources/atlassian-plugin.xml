@@ -50,9 +50,9 @@
 	<!-- Decision Knowledge Overview in Pull Requests -->
 	<client-web-panel key="decision-knowledge-overview"
 		name="Decision Knowledge Overview in Pull Request" location="bitbucket.pull-request.links">
-		<client-context-provider>UHD.ISSUES.callInitIssues</client-context-provider>
+		<client-context-provider>ConDec.knowledgeOverview.init</client-context-provider>
 		<resource name="view" type="soy"
-			location="de.uhd.ifi.se.decision.management.bitbucket:decision-knowledge-in-pull-request-resources/UHD.issues.issueList" />
+			location="de.uhd.ifi.se.decision.management.bitbucket:decision-knowledge-in-pull-request-resources/condec.todo.knowledgeElements" />
 		<dependency>de.uhd.ifi.se.decision.management.bitbucket:decision-knowledge-in-pull-request-resources
 		</dependency>
 		<description>
