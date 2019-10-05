@@ -17,21 +17,21 @@
 	ConDec.knowledgeOverview = ConDec.knowledgeOverview || {};
 
 	/*
-	 * Exposes the client-condition function.
-	 * external references: client-web-panel in atlassian-plugin.xml 
+	 * Exposes the client-condition function. external references:
+	 * client-web-panel in atlassian-plugin.xml
 	 */
 	ConDec.knowledgeOverview.init = function init() {
 		return {
 			objects : []
 		};
 	};
-	
+
 	checkIfListIsLoaded(0);
-	
+
 	function checkIfListIsLoaded(iCounter) {
 		// check if inital List exists
 		if ($(".todo-list").length > 0) {
-			getIssuesFromJira();
+			getDecisionKnowledgeFromJira();
 		} else {
 			if (iCounter < 10)
 				setTimeout(function() {
@@ -40,8 +40,8 @@
 				}, 3000);
 		}
 	}
-	
-	function getIssuesFromJira() {
+
+	function getDecisionKnowledgeFromJira() {
 		conDecAPI.getDecisionKnowledgeFromJira(function(data) {
 			var oIssues = JSON.parse(data);
 			if (oIssues.length === 0) {
@@ -51,7 +51,7 @@
 			insertDecisionKnowledgeButton(oIssues);
 		});
 	}
-	
+
 	function showText(text) {
 		$(".todo-list").replaceWith("<div class'todo-list'><p>" + text + "</p></div>");
 	}
@@ -84,6 +84,7 @@
 		dialog.gotoPage(0);
 		dialog.gotoPanel(0);
 		dialog.show();
+		// conDecDialog.showCreateDialog();
 	}
 
 }(AJS.$));

@@ -5,10 +5,7 @@
  *
  */
 {template .knowledgeElements}
-
     <div class="todo-list">
-
-        {foreach $issueArray in $objects}
     <table class="aui aui-table-sortable">
     <thead>
         <tr>
@@ -19,6 +16,7 @@
         </tr>
     </thead>
     <tbody>
+    	{foreach $issueArray in $objects}
             {foreach $issue in $issueArray}
             <tr>
                 <td><a target="_blank" href="{$issue.url}">{$issue.key}</a></td>
@@ -27,11 +25,8 @@
                 <td>{$issue.type}</td>
             </tr>
             {/foreach}
+        {/foreach}
     </tbody>
     </table>
-        {ifempty}
-        <h4>loading...</h4>
-
-        {/foreach}
     </div>
 {/template}
