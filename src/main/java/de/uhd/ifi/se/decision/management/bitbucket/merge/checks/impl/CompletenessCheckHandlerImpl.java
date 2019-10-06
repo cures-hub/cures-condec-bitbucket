@@ -20,14 +20,14 @@ import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.CompletenessChec
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 
 /**
- * Class to check the completeness of the documentation of decision
- * knowledge related to a pull request.
+ * Class to check the completeness of the documentation of decision knowledge
+ * related to a pull request.
  */
 public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 
-	private PullRequest pullRequest;
 	public static String JIRA_QUERY;
 	public static String PROJECT_KEY;
+	private PullRequest pullRequest;
 	private Set<String> jiraIssuesWithIncompleteDocumentation;
 
 	public CompletenessCheckHandlerImpl(PullRequest pullRequest) {
@@ -88,30 +88,30 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 		PROJECT_KEY = getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, branchId, branchTitle);
 
 		// get decision knowledge out of Jira
-		String knowledgeElementsAsJsonString = ApiLinkService.instance.getDecisionKnowledgeFromJira(queryWithJiraIssues, PROJECT_KEY);
+		String knowledgeElementsAsJsonString = ApiLinkService.instance.getDecisionKnowledgeFromJira(queryWithJiraIssues,
+				PROJECT_KEY);
 
-		boolean booleanResult = isDocumentationComplete(knowledgeElementsAsJsonString);
-		return booleanResult;
+		return isDocumentationComplete(knowledgeElementsAsJsonString);
 	}
-	
+
 	public boolean isDocumentationComplete(String knowledgeElementsAsJsonString) {
-		boolean booleanResult = true;
+		boolean isDocumentationComplete = true;
 		try {
 			JSONArray topArray = new JSONArray(knowledgeElementsAsJsonString);
 			for (Object current : topArray) {
 
 				JSONArray myCurrent = (JSONArray) current;
-				Boolean tempResult = checkIfDecisionsExists(myCurrent);
+				boolean tempResult = checkIfDecisionsExists(myCurrent);
 				if (!tempResult) {
 					JSONObject firstKey = (JSONObject) myCurrent.get(0);
 					jiraIssuesWithIncompleteDocumentation.add((String) firstKey.get("key"));
-					booleanResult = false;
+					isDocumentationComplete = false;
 				}
 			}
 		} catch (Exception e) {
-			booleanResult = false;
+			isDocumentationComplete = false;
 		}
-		return booleanResult;
+		return isDocumentationComplete;
 	}
 
 	public boolean checkIfDecisionsExists(JSONArray decisions) {
@@ -147,7 +147,7 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 			}
 
 			// check BranchId
-			String eventuallyBranch = splitAndReturnWithoutToLower(branchId);
+			String eventuallyBranch = CompletenessCheckHandler.retrieveProjectKey(branchId);
 			if (notEmptyAndInProject(eventuallyBranch, projectKeys)) {
 				selectedProject = eventuallyBranch.toUpperCase();
 			}
@@ -156,7 +156,7 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 				selectedProject = branchTitle.toUpperCase();
 			} else {
 				for (Commit commit : commits) {
-					String eventuallyProjectKey = splitAndReturnWithoutToLower(commit.getMessage());
+					String eventuallyProjectKey = CompletenessCheckHandler.retrieveProjectKey(commit.getMessage());
 					if (notEmptyAndInProject(eventuallyProjectKey, projectKeys)) {
 						selectedProject = eventuallyProjectKey.toUpperCase();
 					}
@@ -167,15 +167,6 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 			return selectedProject;
 		}
 		return selectedProject;
-	}
-
-	private String splitAndReturnWithoutToLower(String toSplit) {
-		if (toSplit.indexOf("-") > -1) {
-			String splitted = toSplit.split("-")[0];
-			return splitted.toLowerCase();
-		} else {
-			return "";
-		}
 	}
 
 	private boolean notEmptyAndInProject(String eventually, ArrayList<String> projectKeys) {
