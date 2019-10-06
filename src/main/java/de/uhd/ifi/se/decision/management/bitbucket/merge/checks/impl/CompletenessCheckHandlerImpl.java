@@ -36,12 +36,17 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 	}
 
 	public Iterable<Commit> getCommitsOfPullRequest() {
-		CommitService commitService = ComponentLocator.getComponent(CommitService.class);
-		CommitsBetweenRequest.Builder builder = new CommitsBetweenRequest.Builder(pullRequest);
-		CommitsBetweenRequest commitsBetweenRequest = builder.build();
-		Page<Commit> pageWithCommits = commitService.getCommitsBetween(commitsBetweenRequest,
-				new PageRequestImpl(0, 1048476));
-		return pageWithCommits.getValues();
+		try {
+			CommitService commitService = ComponentLocator.getComponent(CommitService.class);
+			CommitsBetweenRequest.Builder builder = new CommitsBetweenRequest.Builder(pullRequest);
+			CommitsBetweenRequest commitsBetweenRequest = builder.build();
+			Page<Commit> pageWithCommits = commitService.getCommitsBetween(commitsBetweenRequest,
+					new PageRequestImpl(0, 1048476));
+			return pageWithCommits.getValues();
+		} catch (NullPointerException e) {
+
+		}
+		return new ArrayList<Commit>();
 	}
 
 	/**
@@ -147,7 +152,7 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 		if (isProjectKeyExisting(projectKeyInBranchName, projectKeys)) {
 			return branchTitle;
 		}
-		
+
 		// check commit messages
 		for (Commit commit : commits) {
 			String projectKeyInCommitMessage = CompletenessCheckHandler.retrieveProjectKey(commit.getMessage());

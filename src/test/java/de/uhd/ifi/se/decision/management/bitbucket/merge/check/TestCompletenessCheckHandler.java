@@ -5,13 +5,24 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import com.atlassian.bitbucket.commit.Commit;
 
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.CompletenessCheckHandler;
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.CompletenessCheckHandlerImpl;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
 
 public class TestCompletenessCheckHandler {
+
+	private static CompletenessCheckHandler completenessCheckHandler;
+
+	@BeforeClass
+	public static void setUp() {
+		completenessCheckHandler = new CompletenessCheckHandlerImpl(new MockPullRequest());
+	}
 
 	@Test
 	public void testConstructorPullRequestNull() {
@@ -20,16 +31,22 @@ public class TestCompletenessCheckHandler {
 
 	@Test
 	public void testConstructorPullRequestValid() {
-		assertNotNull(new CompletenessCheckHandlerImpl(new MockPullRequest()));
+		assertNotNull(completenessCheckHandler);
 	}
 
 	@Test
+	@Ignore
 	public void testIsDocumentationCompleteInPullRequest() {
-		CompletenessCheckHandler completenessCheckHandler = new CompletenessCheckHandlerImpl(new MockPullRequest());
-		// TODO Mock ComponentenLocator and CommitService
-		// boolean isDocumentationComplete = completenessCheckHandler
-		// .isDocumentationComplete();
-		// assertTrue(isDocumentationComplete);
+		// TODO Mock ComponententLocator, CommitService, and ApplicationLinkService
+		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete();
+		assertTrue(isDocumentationComplete);
+	}
+
+	@Test
+	public void testGetCommitsOfPullRequest() {
+		// TODO Mock ComponententLocator, CommitService, and ApplicationLinkService
+		Iterable<Commit> commits = ((CompletenessCheckHandlerImpl) completenessCheckHandler).getCommitsOfPullRequest();
+		assertEquals(false, commits.iterator().hasNext());
 	}
 
 	@Test

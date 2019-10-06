@@ -24,12 +24,12 @@ public interface CompletenessCheckHandler {
 	Set<String> getJiraIssuesWithIncompleteDocumentation();
 
 	/**
-	 * Looks for Jira issue key (e.g. CONDEC-1) in a String and returns a potential
+	 * Looks for the first Jira issue key (e.g. CONDEC-1) in a String and returns the 
 	 * Jira project key (e.g. CONDEC).
 	 * 
 	 * @param text
 	 *            that might contain a project key, e.g., a commit message, branch
-	 *            name oder branch title.
+	 *            name oder pull request title.
 	 * @return potential project key in upper case.
 	 */
 	static String retrieveProjectKey(String text) {

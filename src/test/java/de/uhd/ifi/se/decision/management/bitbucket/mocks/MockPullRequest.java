@@ -118,7 +118,6 @@ public class MockPullRequest implements PullRequest {
 		return false;
 	}
 
-	@Override
 	public Set<Watcher> getWatchers() {
 		return new HashSet<Watcher>();
 	}
