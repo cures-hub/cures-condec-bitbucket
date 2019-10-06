@@ -16,20 +16,21 @@ import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequestImpl;
 import com.atlassian.sal.api.component.ComponentLocator;
 
-import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.MergeCheckHandler;
+import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.CompletenessCheckHandler;
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 
 /**
- * Class responsible for...?
+ * Class to check the completeness of the documentation of decision
+ * knowledge related to a pull request.
  */
-public class MergeCheckHandlerImpl implements MergeCheckHandler {
+public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 
 	private PullRequest pullRequest;
 	public static String JIRA_QUERY;
 	public static String PROJECT_KEY;
 	private Set<String> jiraIssuesWithIncompleteDocumentation;
 
-	public MergeCheckHandlerImpl(PullRequest pullRequest) {
+	public CompletenessCheckHandlerImpl(PullRequest pullRequest) {
 		this.pullRequest = pullRequest;
 		this.jiraIssuesWithIncompleteDocumentation = new HashSet<String>();
 	}

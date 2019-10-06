@@ -7,7 +7,7 @@ import java.util.HashMap;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.MergeCheckHandlerImpl;
+import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.CompletenessCheckHandlerImpl;
 
 @Ignore
 public class MergeCheckHandlerUnitTests {
