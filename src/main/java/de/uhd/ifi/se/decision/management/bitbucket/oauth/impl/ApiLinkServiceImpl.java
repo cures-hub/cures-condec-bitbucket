@@ -1,4 +1,4 @@
-package de.uhd.ifi.se.decision.management.bitbucket.oauth;
+package de.uhd.ifi.se.decision.management.bitbucket.oauth.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -14,6 +14,8 @@ import com.atlassian.sal.api.component.ComponentLocator;
 import com.atlassian.sal.api.net.Request;
 import com.atlassian.sal.api.net.Response;
 import com.atlassian.sal.api.net.ResponseException;
+
+import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 
 /**
  * Class responsible for the communication between Bitbucket and Jira via

@@ -1,5 +1,7 @@
 package de.uhd.ifi.se.decision.management.bitbucket.oauth;
 
+import de.uhd.ifi.se.decision.management.bitbucket.oauth.impl.ApiLinkServiceImpl;
+
 /**
  * Interface responsible for the communication between Bitbucket and Jira via
  * application links.
@@ -20,8 +22,8 @@ public interface ApiLinkService {
 	String getDecisionKnowledgeFromJira(String query, String projectKey);
 
 	/**
-	 * Returns all Jira projects.
-	 * @return all Jira projects as a String.
+	 * Returns all Jira projects that are currently active.
+	 * @return all Jira projects as a JSON String.
 	 */
 	String getCurrentActiveJiraProjects();
 }

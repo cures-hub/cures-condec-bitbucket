@@ -13,6 +13,8 @@ import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequestImpl;
 
+import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
+
 /**
  * Class responsible for...?
  */
@@ -98,8 +100,9 @@ public class MergeCheckHandler {
 		return hasIssue && hasDecision;
 	}
 
-	public String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, String projects,
+	public String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, 
 			String branchId, String branchTitle) {
+		String projects = ApiLinkService.instance.getCurrentActiveJiraProjects();
 		String selectedProject = "";
 		try {
 			ArrayList<String> projectKeys = new ArrayList<String>();

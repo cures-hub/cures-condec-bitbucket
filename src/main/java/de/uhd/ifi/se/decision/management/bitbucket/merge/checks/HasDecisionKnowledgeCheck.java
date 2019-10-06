@@ -18,7 +18,6 @@ import com.atlassian.bitbucket.pull.PullRequestRef;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
-import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkServiceImpl;
 
 /**
  * Enforces that pull requests can only be accepted, i.e., the respective branch
@@ -53,14 +52,16 @@ public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 		String branchId = pullRequestRef.getDisplayId();
 		String queryWithJiraIssues = "?jql=key in "
 				+ mergeCheckDataHandler.getJiraCallQuery(commits, branchTitle, branchId);
-		String projectString = ApiLinkService.instance.getCurrentActiveJiraProjects();
+		// String projectString =
+		// ApiLinkService.instance.getCurrentActiveJiraProjects();
 
 		JIRA_QUERY = queryWithJiraIssues;
-		PROJECT_KEY = mergeCheckDataHandler.getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, projectString,
-				branchId, branchTitle);
+		PROJECT_KEY = mergeCheckDataHandler.getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, branchId,
+				branchTitle);
 
 		// get decision knowledge out of Jira
-		String decisionKnowledge = ApiLinkService.instance.getDecisionKnowledgeFromJira(queryWithJiraIssues, PROJECT_KEY);
+		String decisionKnowledge = ApiLinkService.instance.getDecisionKnowledgeFromJira(queryWithJiraIssues,
+				PROJECT_KEY);
 		HashMap<String, String> hasSufficientDecisions = mergeCheckDataHandler
 				.hasSufficientDecisions(decisionKnowledge);
 		if (!Boolean.valueOf(hasSufficientDecisions.get("resultBoolean"))) {
