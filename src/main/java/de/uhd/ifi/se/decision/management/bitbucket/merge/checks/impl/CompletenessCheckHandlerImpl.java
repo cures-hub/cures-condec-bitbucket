@@ -88,11 +88,16 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 		PROJECT_KEY = getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, branchId, branchTitle);
 
 		// get decision knowledge out of Jira
-		String jsonString = ApiLinkService.instance.getDecisionKnowledgeFromJira(queryWithJiraIssues, PROJECT_KEY);
+		String knowledgeElementsAsJsonString = ApiLinkService.instance.getDecisionKnowledgeFromJira(queryWithJiraIssues, PROJECT_KEY);
 
+		boolean booleanResult = isDocumentationComplete(knowledgeElementsAsJsonString);
+		return booleanResult;
+	}
+	
+	public boolean isDocumentationComplete(String knowledgeElementsAsJsonString) {
 		boolean booleanResult = true;
 		try {
-			JSONArray topArray = new JSONArray(jsonString);
+			JSONArray topArray = new JSONArray(knowledgeElementsAsJsonString);
 			for (Object current : topArray) {
 
 				JSONArray myCurrent = (JSONArray) current;
