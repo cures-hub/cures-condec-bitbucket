@@ -36,6 +36,8 @@
 
 	checkIfSoyTemplateIsRendered(0);
 
+	// TODO Get rid of this workaround
+	// @issue How can we set the event listeners without this workaround?
 	function checkIfSoyTemplateIsRendered(iCounter) {
 		// check if inital List exists
 		if ($(".todo-list").length > 0) {

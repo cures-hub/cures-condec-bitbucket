@@ -13,7 +13,10 @@ import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequestImpl;
 
-public class MergeCheckDataHandler {
+/**
+ * Class responsible for...?
+ */
+public class MergeCheckHandler {
 
 	public Iterable<Commit> getCommitsOfPullRequest(PullRequest pullRequest, CommitService commitService) {
 		CommitsBetweenRequest.Builder builder = new CommitsBetweenRequest.Builder(pullRequest);
