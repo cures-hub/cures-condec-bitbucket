@@ -4,18 +4,15 @@ import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.atlassian.bitbucket.commit.Commit;
-import com.atlassian.bitbucket.commit.CommitService;
 import com.atlassian.bitbucket.hook.repository.PreRepositoryHookContext;
 import com.atlassian.bitbucket.hook.repository.PullRequestMergeHookRequest;
 import com.atlassian.bitbucket.hook.repository.RepositoryHookResult;
 import com.atlassian.bitbucket.hook.repository.RepositoryMergeCheck;
 import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.pull.PullRequestRef;
-import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 
@@ -27,14 +24,8 @@ import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 @Component("hasDecisionKnowledgeCheck")
 public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 
-	private final CommitService commitService;
 	public static String JIRA_QUERY;
 	public static String PROJECT_KEY;
-
-	@Autowired
-	public HasDecisionKnowledgeCheck(@ComponentImport CommitService commitService) {
-		this.commitService = commitService;
-	}
 
 	@Nonnull
 	@Override
@@ -46,7 +37,7 @@ public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 
 		// find correct query out of projects, commitMessages and BranchId
 		MergeCheckHandler mergeCheckDataHandler = new MergeCheckHandler();
-		Iterable<Commit> commits = mergeCheckDataHandler.getCommitsOfPullRequest(pullRequest, commitService);
+		Iterable<Commit> commits = mergeCheckDataHandler.getCommitsOfPullRequest(pullRequest);
 		String branchTitle = pullRequest.getTitle();
 		PullRequestRef pullRequestRef = pullRequest.getFromRef();
 		String branchId = pullRequestRef.getDisplayId();

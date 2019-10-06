@@ -12,6 +12,7 @@ import com.atlassian.bitbucket.commit.CommitsBetweenRequest;
 import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequestImpl;
+import com.atlassian.sal.api.component.ComponentLocator;
 
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 
@@ -20,11 +21,12 @@ import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
  */
 public class MergeCheckHandler {
 
-	public Iterable<Commit> getCommitsOfPullRequest(PullRequest pullRequest, CommitService commitService) {
+	public Iterable<Commit> getCommitsOfPullRequest(PullRequest pullRequest) {
+		CommitService commitService = ComponentLocator.getComponent(CommitService.class);
 		CommitsBetweenRequest.Builder builder = new CommitsBetweenRequest.Builder(pullRequest);
-		CommitsBetweenRequest cbr = builder.build();
-		Page<Commit> cs = commitService.getCommitsBetween(cbr, new PageRequestImpl(0, 1048476));
-		return cs.getValues();
+		CommitsBetweenRequest commitsBetweenRequest = builder.build();
+		Page<Commit> pageWithCommits = commitService.getCommitsBetween(commitsBetweenRequest, new PageRequestImpl(0, 1048476));
+		return pageWithCommits.getValues();
 	}
 
 	/**
@@ -100,8 +102,8 @@ public class MergeCheckHandler {
 		return hasIssue && hasDecision;
 	}
 
-	public String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, 
-			String branchId, String branchTitle) {
+	public String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, String branchId,
+			String branchTitle) {
 		String projects = ApiLinkService.instance.getCurrentActiveJiraProjects();
 		String selectedProject = "";
 		try {
