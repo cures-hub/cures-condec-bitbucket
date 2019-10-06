@@ -23,28 +23,14 @@ import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
  */
 public class ApiLinkServiceImpl implements ApiLinkService {
 
-	ApplicationLink jiraApplicationLink;
+	private ApplicationLink jiraApplicationLink;
 
 	public ApiLinkServiceImpl() {
 		ApplicationLinkService applicationLinkService = ComponentLocator.getComponent(ApplicationLinkService.class);
+		// TODO
+		// @issue There might be more than one application links to Jira. Currently, we
+		// only support the first link. How can we support all links?
 		this.jiraApplicationLink = applicationLinkService.getPrimaryApplicationLink(JiraApplicationType.class);
-	}
-
-	public String getDecisionKnowledgeFromJira(String query, String projectKey) {
-		String encodedQuery = encodeUserInputQuery(query);
-		return getResponseFromJiraWithApplicationLink(
-				"rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + encodedQuery + "&projectKey="
-						+ projectKey);
-	}
-
-	private static String encodeUserInputQuery(String query) {
-		String encodedUrl = "";
-		try {
-			encodedUrl = URLEncoder.encode(query, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return encodedUrl;
 	}
 
 	public String getCurrentActiveJiraProjects() {
@@ -74,5 +60,22 @@ public class ApiLinkServiceImpl implements ApiLinkService {
 			responseBody = e.getMessage();
 		}
 		return responseBody;
+	}
+
+	public String getDecisionKnowledgeFromJira(String query, String projectKey) {
+		String encodedQuery = encodeUserInputQuery(query);
+		return getResponseFromJiraWithApplicationLink(
+				"rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + encodedQuery + "&projectKey="
+						+ projectKey);
+	}
+
+	private static String encodeUserInputQuery(String query) {
+		String encodedUrl = "";
+		try {
+			encodedUrl = URLEncoder.encode(query, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return encodedUrl;
 	}
 }

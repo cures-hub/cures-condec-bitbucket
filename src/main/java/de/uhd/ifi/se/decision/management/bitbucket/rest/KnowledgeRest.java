@@ -1,7 +1,7 @@
 package de.uhd.ifi.se.decision.management.bitbucket.rest;
 
-import static de.uhd.ifi.se.decision.management.bitbucket.merge.checks.HasDecisionKnowledgeCheck.JIRA_QUERY;
-import static de.uhd.ifi.se.decision.management.bitbucket.merge.checks.HasDecisionKnowledgeCheck.PROJECT_KEY;
+import static de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.MergeCheckHandlerImpl.JIRA_QUERY;
+import static de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.MergeCheckHandlerImpl.PROJECT_KEY;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -1,20 +1,16 @@
 package de.uhd.ifi.se.decision.management.bitbucket.merge.checks;
 
-import java.util.HashMap;
-
 import javax.annotation.Nonnull;
 
 import org.springframework.stereotype.Component;
 
-import com.atlassian.bitbucket.commit.Commit;
 import com.atlassian.bitbucket.hook.repository.PreRepositoryHookContext;
 import com.atlassian.bitbucket.hook.repository.PullRequestMergeHookRequest;
 import com.atlassian.bitbucket.hook.repository.RepositoryHookResult;
 import com.atlassian.bitbucket.hook.repository.RepositoryMergeCheck;
 import com.atlassian.bitbucket.pull.PullRequest;
-import com.atlassian.bitbucket.pull.PullRequestRef;
 
-import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
+import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.MergeCheckHandlerImpl;
 
 /**
  * Enforces that pull requests can only be accepted, i.e., the respective branch
@@ -24,45 +20,23 @@ import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
 @Component("hasDecisionKnowledgeCheck")
 public class HasDecisionKnowledgeCheck implements RepositoryMergeCheck {
 
-	public static String JIRA_QUERY;
-	public static String PROJECT_KEY;
-
 	@Nonnull
 	@Override
 	public RepositoryHookResult preUpdate(@Nonnull PreRepositoryHookContext context,
 			@Nonnull PullRequestMergeHookRequest request) {
+		PullRequest pullRequest = request.getPullRequest();
 
-		// get pullRequest
-		final PullRequest pullRequest = request.getPullRequest();
-
-		// find correct query out of projects, commitMessages and BranchId
-		MergeCheckHandler mergeCheckDataHandler = new MergeCheckHandler();
-		Iterable<Commit> commits = mergeCheckDataHandler.getCommitsOfPullRequest(pullRequest);
-		String branchTitle = pullRequest.getTitle();
-		PullRequestRef pullRequestRef = pullRequest.getFromRef();
-		String branchId = pullRequestRef.getDisplayId();
-		String queryWithJiraIssues = "?jql=key in "
-				+ mergeCheckDataHandler.getJiraCallQuery(commits, branchTitle, branchId);
-		// String projectString =
-		// ApiLinkService.instance.getCurrentActiveJiraProjects();
-
-		JIRA_QUERY = queryWithJiraIssues;
-		PROJECT_KEY = mergeCheckDataHandler.getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, branchId,
-				branchTitle);
-
-		// get decision knowledge out of Jira
-		String decisionKnowledge = ApiLinkService.instance.getDecisionKnowledgeFromJira(queryWithJiraIssues,
-				PROJECT_KEY);
-		HashMap<String, String> hasSufficientDecisions = mergeCheckDataHandler
-				.hasSufficientDecisions(decisionKnowledge);
-		if (!Boolean.valueOf(hasSufficientDecisions.get("resultBoolean"))) {
-			String summaryMsg = "There are not enough Decision Elements for each Commit";
-			String detailedMsg = "Every Commit which is linked to a jira Ticket has to have at least one issue and one decision linked :"
-					+ hasSufficientDecisions.get("resultString");
-
-			return RepositoryHookResult.rejected(summaryMsg, detailedMsg);
+		MergeCheckHandler mergeCheckDataHandler = new MergeCheckHandlerImpl(pullRequest);
+		if (mergeCheckDataHandler.hasSufficientDecisions()) {
+			return RepositoryHookResult.accepted();
 		}
-		return RepositoryHookResult.accepted();
-	}
+		String summaryMsg = "There are not enough decision knowledge elements linked to the pull request.";
+		String detailedMsg = "Every Jira ticket has to have at least one decision problem (=issue) and one decision linked. "
+				+ "Jira tickets with an incomplete documentation are:  ";
+		for (String jiraIssueKey : mergeCheckDataHandler.getJiraIssuesWithIncompleteDocumentation()) {
+			detailedMsg += jiraIssueKey + " ";
+		}
 
+		return RepositoryHookResult.rejected(summaryMsg, detailedMsg);
+	}
 }
