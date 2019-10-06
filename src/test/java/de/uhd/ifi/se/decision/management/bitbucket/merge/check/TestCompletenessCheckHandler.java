@@ -1,4 +1,4 @@
-package de.uhd.ifi.se.decision.management.bitbucket;
+package de.uhd.ifi.se.decision.management.bitbucket.merge.check;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -9,12 +9,18 @@ import org.junit.Test;
 
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.CompletenessCheckHandler;
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.CompletenessCheckHandlerImpl;
+import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
 
 public class TestCompletenessCheckHandler {
 
 	@Test 
-	public void testConstructor() {
+	public void testConstructorPullRequestNull() {
 		assertNotNull(new CompletenessCheckHandlerImpl(null));
+	}
+	
+	@Test 
+	public void testConstructorPullRequestValid() {
+		assertNotNull(new CompletenessCheckHandlerImpl(new MockPullRequest()));
 	}
 
 	@Test
@@ -40,5 +46,4 @@ public class TestCompletenessCheckHandler {
 		assertEquals("", CompletenessCheckHandler.retrieveProjectKey(""));
 		assertEquals("CONDEC", CompletenessCheckHandler.retrieveProjectKey("Example message ConDec-1 ConDec-2"));
 	}
-
 }

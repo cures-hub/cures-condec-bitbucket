@@ -2,6 +2,11 @@ package de.uhd.ifi.se.decision.management.bitbucket.oauth.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.atlassian.applinks.api.ApplicationLink;
 import com.atlassian.applinks.api.ApplicationLinkRequest;
@@ -33,8 +38,16 @@ public class ApiLinkServiceImpl implements ApiLinkService {
 		this.jiraApplicationLink = applicationLinkService.getPrimaryApplicationLink(JiraApplicationType.class);
 	}
 
-	public String getCurrentActiveJiraProjects() {
-		return getResponseFromJiraWithApplicationLink("rest/api/2/project");
+	public Set<String> getCurrentActiveJiraProjects() {
+		String projectsAsJsonString = getResponseFromJiraWithApplicationLink("rest/api/2/project");
+		Set<String> projectKeys = new HashSet<String>();
+		JSONArray projectArray = new JSONArray(projectsAsJsonString);
+		for (Object project : projectArray) {
+			JSONObject projectMap = (JSONObject) project;
+			String projectKey = (String) projectMap.get("key");
+			projectKeys.add(projectKey.toUpperCase());
+		}
+		return projectKeys;
 	}
 
 	private String getResponseFromJiraWithApplicationLink(String jiraUrl) {

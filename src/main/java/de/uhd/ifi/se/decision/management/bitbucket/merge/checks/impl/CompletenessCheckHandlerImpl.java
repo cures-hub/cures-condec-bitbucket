@@ -79,13 +79,13 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 	public boolean isDocumentationComplete() {
 		// find correct query out of projects, commitMessages and BranchId
 		Iterable<Commit> commits = getCommitsOfPullRequest();
-		String branchTitle = pullRequest.getTitle();
+		String pullRequestTitle = pullRequest.getTitle();
 		PullRequestRef pullRequestRef = pullRequest.getFromRef();
-		String branchId = pullRequestRef.getDisplayId();
-		String queryWithJiraIssues = "?jql=key in " + getJiraCallQuery(commits, branchTitle, branchId);
+		String branchName = pullRequestRef.getDisplayId();
+		String queryWithJiraIssues = "?jql=key in " + getJiraCallQuery(commits, pullRequestTitle, branchName);
 
 		JIRA_QUERY = queryWithJiraIssues;
-		PROJECT_KEY = getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, branchId, branchTitle);
+		PROJECT_KEY = getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, branchName, pullRequestTitle);
 
 		// get decision knowledge out of Jira
 		String knowledgeElementsAsJsonString = ApiLinkService.instance.getDecisionKnowledgeFromJira(queryWithJiraIssues,
@@ -134,43 +134,33 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 
 	public String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, String branchId,
 			String branchTitle) {
-		String projects = ApiLinkService.instance.getCurrentActiveJiraProjects();
-		String selectedProject = "";
-		try {
-			ArrayList<String> projectKeys = new ArrayList<String>();
+		Set<String> projectKeys = ApiLinkService.instance.getCurrentActiveJiraProjects();
 
-			JSONArray projectArray = new JSONArray(projects);
-			for (Object project : projectArray) {
-				JSONObject projectMap = (JSONObject) project;
-				String projectKey = (String) projectMap.get("key");
-				projectKeys.add(projectKey.toLowerCase());
-			}
-
-			// check BranchId
-			String eventuallyBranch = CompletenessCheckHandler.retrieveProjectKey(branchId);
-			if (notEmptyAndInProject(eventuallyBranch, projectKeys)) {
-				selectedProject = eventuallyBranch.toUpperCase();
-			}
-			// check branchTitle
-			else if (notEmptyAndInProject(branchTitle, projectKeys)) {
-				selectedProject = branchTitle.toUpperCase();
-			} else {
-				for (Commit commit : commits) {
-					String eventuallyProjectKey = CompletenessCheckHandler.retrieveProjectKey(commit.getMessage());
-					if (notEmptyAndInProject(eventuallyProjectKey, projectKeys)) {
-						selectedProject = eventuallyProjectKey.toUpperCase();
-					}
-				}
-			}
-
-		} catch (Exception e) {
-			return selectedProject;
+		// check branch name, e.g. "CONDEC-1.create.a.great.plugin"
+		String projectKey = CompletenessCheckHandler.retrieveProjectKey(branchId);
+		if (isProjectKeyExisting(projectKey, projectKeys)) {
+			return projectKey;
 		}
-		return selectedProject;
+
+		// check pull request title, e.g. "ConDec-1: Create a great plugin"
+		String projectKeyInBranchName = CompletenessCheckHandler.retrieveProjectKey(branchTitle);
+		if (isProjectKeyExisting(projectKeyInBranchName, projectKeys)) {
+			return branchTitle;
+		}
+		
+		// check commit messages
+		for (Commit commit : commits) {
+			String projectKeyInCommitMessage = CompletenessCheckHandler.retrieveProjectKey(commit.getMessage());
+			if (isProjectKeyExisting(projectKeyInCommitMessage, projectKeys)) {
+				return projectKeyInCommitMessage;
+			}
+		}
+
+		return "";
 	}
 
-	private boolean notEmptyAndInProject(String eventually, ArrayList<String> projectKeys) {
-		return !"".equals(eventually) && projectKeys.contains(eventually.toLowerCase());
+	private boolean isProjectKeyExisting(String projectKey, Set<String> projectKeys) {
+		return !projectKey.isEmpty() && projectKeys.contains(projectKey);
 	}
 
 	public Set<String> getJiraIssuesWithIncompleteDocumentation() {

@@ -1,5 +1,7 @@
 package de.uhd.ifi.se.decision.management.bitbucket.oauth;
 
+import java.util.Set;
+
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.impl.ApiLinkServiceImpl;
 
 /**
@@ -15,9 +17,9 @@ public interface ApiLinkService {
 
 	/**
 	 * Returns all Jira projects that are currently active.
-	 * @return all Jira projects as a JSON String.
+	 * @return all Jira projects as a set of project keys.
 	 */
-	String getCurrentActiveJiraProjects();
+	Set<String> getCurrentActiveJiraProjects();
 	
 	/**
 	 * Retrieves the decision knowledge elements from Jira that match a certain query and the project key.
