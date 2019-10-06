@@ -173,8 +173,8 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 		}
 	}
 
-	private Boolean notEmptyAndInProject(String eventually, ArrayList<String> projectKeys) {
-		return (!"".equals(eventually) && projectKeys.contains(eventually.toLowerCase()));
+	private boolean notEmptyAndInProject(String eventually, ArrayList<String> projectKeys) {
+		return !"".equals(eventually) && projectKeys.contains(eventually.toLowerCase());
 	}
 
 	public Set<String> getJiraIssuesWithIncompleteDocumentation() {
