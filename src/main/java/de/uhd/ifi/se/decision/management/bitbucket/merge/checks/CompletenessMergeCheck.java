@@ -29,7 +29,7 @@ public class CompletenessMergeCheck implements RepositoryMergeCheck {
 		PullRequest pullRequest = request.getPullRequest();
 
 		CompletenessCheckHandler completenessCheckHandler = new CompletenessCheckHandlerImpl(pullRequest);
-		if (completenessCheckHandler.hasSufficientDecisions()) {
+		if (completenessCheckHandler.isDocumentationComplete()) {
 			return RepositoryHookResult.accepted();
 		}
 		String summaryMessage = "There are not enough decision knowledge elements linked to the pull request.";
@@ -39,6 +39,11 @@ public class CompletenessMergeCheck implements RepositoryMergeCheck {
 			detailMessage += jiraIssueKey + " ";
 		}
 
+		// TODO
+		// @issue Should the developers be allowed to merge the branch with an
+		// incomplete decision knowledge documentation?
+		// @decision It should be configurable on a setting page whether the incomplete
+		// documentation enforces that the branch cannot be merged or not.
 		return RepositoryHookResult.rejected(summaryMessage, detailMessage);
 	}
 }

@@ -76,7 +76,7 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 	}
 
 	@Override
-	public boolean hasSufficientDecisions() {
+	public boolean isDocumentationComplete() {
 		// find correct query out of projects, commitMessages and BranchId
 		Iterable<Commit> commits = getCommitsOfPullRequest();
 		String branchTitle = pullRequest.getTitle();

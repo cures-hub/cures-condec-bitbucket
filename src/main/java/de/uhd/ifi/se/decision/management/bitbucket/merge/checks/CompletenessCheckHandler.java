@@ -13,7 +13,7 @@ public interface CompletenessCheckHandler {
 	 * 
 	 * @return true if the documentation is complete.
 	 */
-	boolean hasSufficientDecisions();
+	boolean isDocumentationComplete();
 
 	/**
 	 * Returns a set of Jira issues with an incomplete documentation.

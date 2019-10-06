@@ -188,26 +188,49 @@
 					<verbose>false</verbose>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<formats>
-						<format>html</format>
-						<format>xml</format>
-					</formats>
-					<check />
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+	<!-- Creates coverage reports in target/site/jacoco/ -->
+	<profile>
+		<id>jacoco</id>
+		<activation>
+		<activeByDefault>false</activeByDefault>
+		</activation>
+		<build>
+		<plugins>
+			<plugin>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>${jacoco-version}</version>
+			<executions>
+				<execution>
+				<goals>
+					<goal>prepare-agent</goal>
+				</goals>
+				</execution>
+				<!-- attached to Maven test phase -->
+				<execution>
+				<id>report</id>
+				<phase>test</phase>
+				<goals>
+					<goal>report</goal>
+				</goals>
+				</execution>
+			</executions>
+			</plugin>
+		</plugins>
+		</build>
+	</profile>
+	</profiles>
 
 	<properties>
 		<bitbucket.version>6.6.2</bitbucket.version>
 		<bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
 		<amps.version>8.0.2</amps.version>
 		<atlassian.spring.scanner.version>2.1.12</atlassian.spring.scanner.version>
+		<jacoco-version>0.8.4</jacoco-version>
 		<!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to 
 			generate bundle. -->
 		<atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>		
