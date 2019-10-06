@@ -8,7 +8,7 @@ import com.atlassian.bitbucket.repository.Repository;
  * Mock class for the branch linked to the pull request.
  */
 public class MockPullRequestRef implements PullRequestRef {
-	
+
 	@Override
 	public String getDisplayId() {
 		return "CONDEC-1.create.a.great.plugin";

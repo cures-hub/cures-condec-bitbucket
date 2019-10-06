@@ -13,14 +13,23 @@ import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
 
 public class TestCompletenessCheckHandler {
 
-	@Test 
+	@Test
 	public void testConstructorPullRequestNull() {
 		assertNotNull(new CompletenessCheckHandlerImpl(null));
 	}
-	
-	@Test 
+
+	@Test
 	public void testConstructorPullRequestValid() {
 		assertNotNull(new CompletenessCheckHandlerImpl(new MockPullRequest()));
+	}
+
+	@Test
+	public void testIsDocumentationCompleteInPullRequest() {
+		CompletenessCheckHandler completenessCheckHandler = new CompletenessCheckHandlerImpl(new MockPullRequest());
+		// TODO Mock ComponentenLocator and CommitService
+		// boolean isDocumentationComplete = completenessCheckHandler
+		// .isDocumentationComplete();
+		// assertTrue(isDocumentationComplete);
 	}
 
 	@Test
@@ -35,12 +44,11 @@ public class TestCompletenessCheckHandler {
 	public void testIsDocumentationCompleteFalse() {
 		String jsonString_false = "[[{'key':'CONDEC-1', 'type':'work item'}, {'type':'issue'}]]";
 		CompletenessCheckHandlerImpl completenessCheckHandler = new CompletenessCheckHandlerImpl(null);
-		boolean isDocumentationComplete = completenessCheckHandler
-				.isDocumentationComplete(jsonString_false);
+		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete(jsonString_false);
 		assertFalse(isDocumentationComplete);
 		assertEquals("CONDEC-1", completenessCheckHandler.getJiraIssuesWithIncompleteDocumentation().iterator().next());
 	}
-	
+
 	@Test
 	public void parseProjectKey() {
 		assertEquals("", CompletenessCheckHandler.retrieveProjectKey(""));
