@@ -9,6 +9,9 @@ import com.atlassian.applinks.api.ApplicationLinkService;
 import com.atlassian.applinks.api.ApplicationType;
 import com.atlassian.applinks.api.TypeNotInstalledException;
 
+/**
+ * Mock class the ApplicationLinkService.
+ */
 public class MockApplicationLinkService implements ApplicationLinkService {
 
 	private List<ApplicationLink> applicationLinks;

@@ -19,6 +19,9 @@ import com.atlassian.sal.api.net.ResponseException;
 import com.atlassian.sal.api.net.ResponseHandler;
 import com.atlassian.sal.api.net.ReturningResponseHandler;
 
+/**
+ * Mock class the for an application link to a Jira server.
+ */
 public class MockApplicationLink implements ApplicationLink {
 
 	public String mockResponseByUrl(String url) {

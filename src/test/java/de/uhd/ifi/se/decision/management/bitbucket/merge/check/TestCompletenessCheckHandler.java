@@ -40,7 +40,7 @@ public class TestCompletenessCheckHandler {
 	@Test
 	public void testIsDocumentationCompleteInPullRequest() {
 		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete();
-		assertFalse(isDocumentationComplete);
+		assertTrue(isDocumentationComplete);
 	}
 
 	@Test

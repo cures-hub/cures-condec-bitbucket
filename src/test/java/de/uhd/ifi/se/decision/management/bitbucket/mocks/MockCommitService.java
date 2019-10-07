@@ -30,6 +30,9 @@ import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequest;
 import com.atlassian.bitbucket.watcher.Watcher;
 
+/**
+ * Mock class the CommitService.
+ */
 public class MockCommitService implements CommitService {
 
 	@Override
