@@ -21,6 +21,13 @@ import com.atlassian.sal.api.net.ReturningResponseHandler;
 
 public class MockApplicationLink implements ApplicationLink {
 
+	public String mockResponseByUrl(String url) {
+		if (url.endsWith("project")) {
+			return "[ { 'key' : 'CONDEC' } ]";
+		}
+		return "[[{'type':'issue'}, {'type':'decision'}]]";
+	}
+
 	@Override
 	public ApplicationId getId() {
 		// TODO Auto-generated method stub
@@ -65,21 +72,22 @@ public class MockApplicationLink implements ApplicationLink {
 	@Override
 	public ApplicationLinkRequestFactory createAuthenticatedRequestFactory() {
 		return new ApplicationLinkRequestFactory() {
-			
+
 			@Override
 			public URI getAuthorisationURI(URI callback) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public URI getAuthorisationURI() {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
-			public ApplicationLinkRequest createRequest(MethodType methodType, String url) throws CredentialsRequiredException {
+			public ApplicationLinkRequest createRequest(MethodType methodType, String url)
+					throws CredentialsRequiredException {
 				return new ApplicationLinkRequest() {
 
 					@Override
@@ -163,7 +171,7 @@ public class MockApplicationLink implements ApplicationLink {
 					@Override
 					public void execute(ResponseHandler<? super Response> responseHandler) throws ResponseException {
 						// TODO Auto-generated method stub
-						
+
 					}
 
 					@Override
@@ -172,10 +180,11 @@ public class MockApplicationLink implements ApplicationLink {
 						return null;
 					}
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public <RET> RET executeAndReturn(ReturningResponseHandler<? super Response, RET> responseHandler)
 							throws ResponseException {
-						return (RET) "[ { 'key' : 'CONDEC' } ]";
+						return (RET) mockResponseByUrl(url);
 					}
 
 					@Override
@@ -183,7 +192,7 @@ public class MockApplicationLink implements ApplicationLink {
 						// TODO Auto-generated method stub
 						return null;
 					}
-					
+
 				};
 			}
 		};

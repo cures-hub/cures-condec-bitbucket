@@ -34,5 +34,11 @@ public class TestJiraClient {
 		Set<String> projectKeys = jiraClient.getCurrentActiveJiraProjects();
 		assertEquals(1, projectKeys.size());
 	}
+	
+	@Test
+	public void testGetDecisionKnowledgeFromJira() {
+		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJira("", "CONDEC");
+		assertEquals("[[{'type':'issue'}, {'type':'decision'}]]", decisionKnowledgeJsonString);
+	}
 
 }
