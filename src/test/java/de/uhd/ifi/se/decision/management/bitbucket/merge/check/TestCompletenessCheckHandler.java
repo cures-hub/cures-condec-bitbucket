@@ -10,9 +10,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.atlassian.bitbucket.commit.Commit;
+import com.atlassian.sal.testresources.component.MockComponentLocator;
 
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.CompletenessCheckHandler;
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.CompletenessCheckHandlerImpl;
+import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockCommitService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
 
 public class TestCompletenessCheckHandler {
@@ -21,6 +23,7 @@ public class TestCompletenessCheckHandler {
 
 	@BeforeClass
 	public static void setUp() {
+		MockComponentLocator.create(new MockCommitService());
 		completenessCheckHandler = new CompletenessCheckHandlerImpl(new MockPullRequest());
 	}
 
@@ -37,14 +40,13 @@ public class TestCompletenessCheckHandler {
 	@Test
 	@Ignore
 	public void testIsDocumentationCompleteInPullRequest() {
-		// TODO Mock ComponententLocator, CommitService, and ApplicationLinkService
+		// TODO Mock ApplicationLinkService
 		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete();
 		assertTrue(isDocumentationComplete);
 	}
 
 	@Test
 	public void testGetCommitsOfPullRequest() {
-		// TODO Mock ComponententLocator, CommitService, and ApplicationLinkService
 		Iterable<Commit> commits = ((CompletenessCheckHandlerImpl) completenessCheckHandler).getCommitsOfPullRequest();
 		assertEquals(false, commits.iterator().hasNext());
 	}

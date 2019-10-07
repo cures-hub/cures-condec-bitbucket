@@ -36,17 +36,12 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 	}
 
 	public Iterable<Commit> getCommitsOfPullRequest() {
-		try {
-			CommitService commitService = ComponentLocator.getComponent(CommitService.class);
-			CommitsBetweenRequest.Builder builder = new CommitsBetweenRequest.Builder(pullRequest);
-			CommitsBetweenRequest commitsBetweenRequest = builder.build();
-			Page<Commit> pageWithCommits = commitService.getCommitsBetween(commitsBetweenRequest,
-					new PageRequestImpl(0, 1048476));
-			return pageWithCommits.getValues();
-		} catch (NullPointerException e) {
-
-		}
-		return new ArrayList<Commit>();
+		CommitService commitService = ComponentLocator.getComponent(CommitService.class);
+		CommitsBetweenRequest.Builder builder = new CommitsBetweenRequest.Builder(pullRequest);
+		CommitsBetweenRequest commitsBetweenRequest = builder.build();
+		Page<Commit> pageWithCommits = commitService.getCommitsBetween(commitsBetweenRequest,
+				new PageRequestImpl(0, 1048476));
+		return pageWithCommits.getValues();
 	}
 
 	/**

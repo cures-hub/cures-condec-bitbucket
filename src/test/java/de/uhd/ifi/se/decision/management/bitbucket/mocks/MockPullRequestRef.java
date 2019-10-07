@@ -16,8 +16,7 @@ public class MockPullRequestRef implements PullRequestRef {
 
 	@Override
 	public Repository getRepository() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MockRepository();
 	}
 
 	@Override
@@ -34,8 +33,7 @@ public class MockPullRequestRef implements PullRequestRef {
 
 	@Override
 	public String getLatestCommit() {
-		// TODO Auto-generated method stub
-		return null;
+		return "123";
 	}
 
 }
