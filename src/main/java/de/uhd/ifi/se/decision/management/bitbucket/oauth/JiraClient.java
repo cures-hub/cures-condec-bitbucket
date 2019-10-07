@@ -2,18 +2,18 @@ package de.uhd.ifi.se.decision.management.bitbucket.oauth;
 
 import java.util.Set;
 
-import de.uhd.ifi.se.decision.management.bitbucket.oauth.impl.ApiLinkServiceImpl;
+import de.uhd.ifi.se.decision.management.bitbucket.oauth.impl.JiraClientImpl;
 
 /**
  * Interface responsible for the communication between Bitbucket and Jira via
  * application links.
  */
-public interface ApiLinkService {
+public interface JiraClient {
 
 	/**
-	 * The singleton instance of the ApiLinkService. Please use this instance.
+	 * The singleton instance of the JiraClient. Please use this instance.
 	 */
-	public ApiLinkService instance = new ApiLinkServiceImpl();
+	public JiraClient instance = new JiraClientImpl();
 
 	/**
 	 * Returns all Jira projects that are currently active.

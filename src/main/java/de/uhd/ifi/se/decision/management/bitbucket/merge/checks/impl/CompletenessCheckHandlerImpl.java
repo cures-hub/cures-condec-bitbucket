@@ -17,7 +17,7 @@ import com.atlassian.bitbucket.util.PageRequestImpl;
 import com.atlassian.sal.api.component.ComponentLocator;
 
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.CompletenessCheckHandler;
-import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
+import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
 
 /**
  * Class to check the completeness of the documentation of decision knowledge
@@ -88,7 +88,7 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 		PROJECT_KEY = getProjectKeyFromJiraAndCheckWhichOneCouldBe(commits, branchName, pullRequestTitle);
 
 		// get decision knowledge out of Jira
-		String knowledgeElementsAsJsonString = ApiLinkService.instance.getDecisionKnowledgeFromJira(queryWithJiraIssues,
+		String knowledgeElementsAsJsonString = JiraClient.instance.getDecisionKnowledgeFromJira(queryWithJiraIssues,
 				PROJECT_KEY);
 
 		return isDocumentationComplete(knowledgeElementsAsJsonString);
@@ -134,7 +134,7 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 
 	public String getProjectKeyFromJiraAndCheckWhichOneCouldBe(Iterable<Commit> commits, String branchId,
 			String branchTitle) {
-		Set<String> projectKeys = ApiLinkService.instance.getCurrentActiveJiraProjects();
+		Set<String> projectKeys = JiraClient.instance.getCurrentActiveJiraProjects();
 
 		// check branch name, e.g. "CONDEC-1.create.a.great.plugin"
 		String projectKey = CompletenessCheckHandler.retrieveProjectKey(branchId);

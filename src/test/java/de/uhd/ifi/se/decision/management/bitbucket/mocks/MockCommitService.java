@@ -2,6 +2,7 @@ package de.uhd.ifi.se.decision.management.bitbucket.mocks;
 
 import java.util.Optional;
 
+import com.atlassian.bitbucket.commit.BulkCommitsRequest;
 import com.atlassian.bitbucket.commit.Changeset;
 import com.atlassian.bitbucket.commit.ChangesetsRequest;
 import com.atlassian.bitbucket.commit.Commit;
@@ -24,6 +25,7 @@ import com.atlassian.bitbucket.content.ChangesRequest;
 import com.atlassian.bitbucket.content.DiffContentCallback;
 import com.atlassian.bitbucket.content.DiffRequest;
 import com.atlassian.bitbucket.repository.Repository;
+import com.atlassian.bitbucket.scm.bulk.BulkCommitCallback;
 import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequest;
 import com.atlassian.bitbucket.watcher.Watcher;
@@ -117,4 +119,9 @@ public class MockCommitService implements CommitService {
 		return null;
 	}
 
+	@Override
+	public void streamCommits(BulkCommitsRequest arg0, BulkCommitCallback arg1) {
+		// TODO Auto-generated method stub
+		
+	}
 }

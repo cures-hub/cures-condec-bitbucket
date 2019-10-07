@@ -1,16 +1,14 @@
 package de.uhd.ifi.se.decision.management.bitbucket.mocks;
 
+import com.atlassian.bitbucket.label.LabelableVisitor;
 import com.atlassian.bitbucket.project.Project;
 import com.atlassian.bitbucket.repository.Repository;
+import com.atlassian.bitbucket.watcher.WatchableVisitor;
 
 /**
  * Mock class for a git repository.
  */
 public class MockRepository implements Repository {
-	
-	public String getDescription() {
-		return "";
-	}
 
 	@Override
 	public String getHierarchyId() {
@@ -82,6 +80,24 @@ public class MockRepository implements Repository {
 	public boolean isPublic() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public <T> T accept(LabelableVisitor<T> arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> T accept(WatchableVisitor<T> arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

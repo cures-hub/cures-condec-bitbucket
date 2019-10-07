@@ -20,17 +20,17 @@ import com.atlassian.sal.api.net.Request;
 import com.atlassian.sal.api.net.Response;
 import com.atlassian.sal.api.net.ResponseException;
 
-import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
+import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
 
 /**
  * Class responsible for the communication between Bitbucket and Jira via
  * application links.
  */
-public class ApiLinkServiceImpl implements ApiLinkService {
+public class JiraClientImpl implements JiraClient {
 
 	private ApplicationLink jiraApplicationLink;
 
-	public ApiLinkServiceImpl() {
+	public JiraClientImpl() {
 		ApplicationLinkService applicationLinkService = ComponentLocator.getComponent(ApplicationLinkService.class);
 		// TODO
 		// @issue There might be more than one application links to Jira. Currently, we
