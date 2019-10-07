@@ -40,6 +40,9 @@ public class ApiLinkServiceImpl implements ApiLinkService {
 
 	public Set<String> getCurrentActiveJiraProjects() {
 		String projectsAsJsonString = getResponseFromJiraWithApplicationLink("rest/api/2/project");
+		if (projectsAsJsonString.isEmpty()) {
+			return new HashSet<String>();
+		}
 		Set<String> projectKeys = new HashSet<String>();
 		JSONArray projectArray = new JSONArray(projectsAsJsonString);
 		for (Object project : projectArray) {
@@ -51,7 +54,7 @@ public class ApiLinkServiceImpl implements ApiLinkService {
 	}
 
 	private String getResponseFromJiraWithApplicationLink(String jiraUrl) {
-		String responseBody = "false";
+		String responseBody = "";
 		if (jiraApplicationLink == null) {
 			return responseBody;
 		}

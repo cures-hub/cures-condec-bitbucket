@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.atlassian.bitbucket.commit.Commit;
@@ -14,6 +13,7 @@ import com.atlassian.sal.testresources.component.MockComponentLocator;
 
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.CompletenessCheckHandler;
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.CompletenessCheckHandlerImpl;
+import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockApplicationLinkService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockCommitService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
 
@@ -23,7 +23,7 @@ public class TestCompletenessCheckHandler {
 
 	@BeforeClass
 	public static void setUp() {
-		MockComponentLocator.create(new MockCommitService());
+		MockComponentLocator.create(new MockCommitService(), new MockApplicationLinkService());
 		completenessCheckHandler = new CompletenessCheckHandlerImpl(new MockPullRequest());
 	}
 
@@ -38,11 +38,9 @@ public class TestCompletenessCheckHandler {
 	}
 
 	@Test
-	@Ignore
 	public void testIsDocumentationCompleteInPullRequest() {
-		// TODO Mock ApplicationLinkService
 		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete();
-		assertTrue(isDocumentationComplete);
+		assertFalse(isDocumentationComplete);
 	}
 
 	@Test
