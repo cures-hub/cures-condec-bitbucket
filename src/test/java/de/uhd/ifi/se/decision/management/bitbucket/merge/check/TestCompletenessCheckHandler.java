@@ -62,7 +62,7 @@ public class TestCompletenessCheckHandler {
 		String jsonString_true = "abc";
 		boolean isDocumentationComplete = new CompletenessCheckHandlerImpl(null)
 				.isDocumentationComplete(jsonString_true);
-		assertTrue(isDocumentationComplete);
+		assertFalse(isDocumentationComplete);
 	}
 
 	@Test
