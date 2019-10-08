@@ -24,11 +24,16 @@ import com.atlassian.sal.api.net.ReturningResponseHandler;
  */
 public class MockApplicationLink implements ApplicationLink {
 
+	public static boolean IS_DOCUMENTATION_COMPLETE = true;
+
 	public String mockResponseByUrl(String url) {
 		if (url.endsWith("project")) {
 			return "[ { 'key' : 'CONDEC' } ]";
 		}
-		return "[[{'type':'issue'}, {'type':'decision'}]]";
+		if (IS_DOCUMENTATION_COMPLETE) {
+			return "[[{'type':'issue'}, {'type':'decision'}]]";
+		}
+		return "[[{'key' : 'CONDEC-1', 'type':'issue'}]]";
 	}
 
 	@Override
