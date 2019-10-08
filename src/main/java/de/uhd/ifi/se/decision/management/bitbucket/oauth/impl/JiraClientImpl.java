@@ -43,12 +43,20 @@ public class JiraClientImpl implements JiraClient {
 		if (projectsAsJsonString.isEmpty()) {
 			return new HashSet<String>();
 		}
+		return parseJiraProjectsJson(projectsAsJsonString);
+	}
+
+	public Set<String> parseJiraProjectsJson(String projectsAsJsonString) {
 		Set<String> projectKeys = new HashSet<String>();
-		JSONArray projectArray = new JSONArray(projectsAsJsonString);
-		for (Object project : projectArray) {
-			JSONObject projectMap = (JSONObject) project;
-			String projectKey = (String) projectMap.get("key");
-			projectKeys.add(projectKey.toUpperCase());
+		try {
+			JSONArray projectArray = new JSONArray(projectsAsJsonString);
+			for (Object project : projectArray) {
+				JSONObject projectMap = (JSONObject) project;
+				String projectKey = (String) projectMap.get("key");
+				projectKeys.add(projectKey.toUpperCase());
+			}
+		} catch (Exception e) {
+			projectKeys.add(projectsAsJsonString);
 		}
 		return projectKeys;
 	}

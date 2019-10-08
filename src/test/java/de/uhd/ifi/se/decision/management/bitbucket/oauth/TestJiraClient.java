@@ -40,5 +40,17 @@ public class TestJiraClient {
 		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJira("", "CONDEC");
 		assertEquals("[[{'type':'issue'}, {'type':'decision'}]]", decisionKnowledgeJsonString);
 	}
+	
+	@Test
+	public void testParseJiraProjectsJsonOneProject() {
+		Set<String> projects = ((JiraClientImpl) jiraClient).parseJiraProjectsJson("CONDEC");
+		assertEquals("CONDEC", projects.iterator().next());
+	}
+	
+	@Test
+	public void testParseJiraProjectsJsonManyProjects() {
+		Set<String> projects = ((JiraClientImpl) jiraClient).parseJiraProjectsJson("[ {'key' : 'TEST'}, {'key' : 'CONDEC'} ]");
+		assertEquals(2, projects.size());
+	}
 
 }
