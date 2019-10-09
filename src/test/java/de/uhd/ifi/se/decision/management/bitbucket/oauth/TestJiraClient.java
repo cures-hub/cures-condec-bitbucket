@@ -1,8 +1,10 @@
 package de.uhd.ifi.se.decision.management.bitbucket.oauth;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import org.junit.BeforeClass;
@@ -30,7 +32,7 @@ public class TestJiraClient {
 
 	@Test
 	public void testGetCurrentActiveJiraProjects() {
-		Set<String> projectKeys = jiraClient.getCurrentActiveJiraProjects();
+		Set<String> projectKeys = jiraClient.getJiraProjects();
 		assertEquals(1, projectKeys.size());
 	}
 
@@ -51,6 +53,16 @@ public class TestJiraClient {
 		Set<String> projects = ((JiraClientImpl) jiraClient)
 				.parseJiraProjectsJson("[ {'key' : 'TEST'}, {'key' : 'CONDEC'} ]");
 		assertEquals(2, projects.size());
+	}
+	
+	@Test
+	public void testParseJiraIssueKeys() {
+		Set<String> jiraIssueKeys = JiraClient.getJiraIssueKeys("ConDec-1: Initial commit ConDec-2 -hallo ConDec-3 -Great tool");
+		Iterator<String> iterator = jiraIssueKeys.iterator();
+		assertEquals("CONDEC-1", iterator.next());
+		assertEquals("CONDEC-2", iterator.next());
+		assertEquals("CONDEC-3", iterator.next());
+		assertFalse(iterator.hasNext());
 	}
 
 }

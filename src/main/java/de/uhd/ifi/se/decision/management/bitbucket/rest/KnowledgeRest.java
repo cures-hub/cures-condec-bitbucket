@@ -1,7 +1,6 @@
 package de.uhd.ifi.se.decision.management.bitbucket.rest;
 
-import static de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.CompletenessCheckHandlerImpl.JIRA_QUERY;
-import static de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.CompletenessCheckHandlerImpl.PROJECT_KEY;
+import static de.uhd.ifi.se.decision.management.bitbucket.model.MyPullRequest.JIRA_ISSUE_KEYS;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -21,10 +20,10 @@ public class KnowledgeRest {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getDecisionKnowledgeElement() {
-		if (JIRA_QUERY == null && PROJECT_KEY == null) {
+		if (JIRA_ISSUE_KEYS == null) {
 			return Response.serverError().build();
 		}
-		String jsonString = JiraClient.instance.getDecisionKnowledgeFromJira(JIRA_QUERY, PROJECT_KEY);
+		String jsonString = JiraClient.instance.getDecisionKnowledgeFromJira(JIRA_ISSUE_KEYS);
 		return Response.status(Response.Status.OK).entity(jsonString).build();
 	}
 }

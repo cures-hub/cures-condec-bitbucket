@@ -38,7 +38,7 @@ public class JiraClientImpl implements JiraClient {
 		this.jiraApplicationLink = applicationLinkService.getPrimaryApplicationLink(JiraApplicationType.class);
 	}
 
-	public Set<String> getCurrentActiveJiraProjects() {
+	public Set<String> getJiraProjects() {
 		String projectsAsJsonString = getResponseFromJiraWithApplicationLink("rest/api/2/project");
 		if (projectsAsJsonString.isEmpty()) {
 			return new HashSet<String>();
@@ -84,6 +84,13 @@ public class JiraClientImpl implements JiraClient {
 			responseBody = e.getMessage();
 		}
 		return responseBody;
+	}
+	
+	@Override
+	public String getDecisionKnowledgeFromJira(Set<String> jiraIssueKeys) {
+		String queryWithJiraIssues = JiraClient.getJiraCallQuery(jiraIssueKeys);
+		String projectKey = JiraClient.retrieveProjectKey(jiraIssueKeys);
+		return getDecisionKnowledgeFromJira(queryWithJiraIssues, projectKey);
 	}
 
 	public String getDecisionKnowledgeFromJira(String query, String projectKey) {

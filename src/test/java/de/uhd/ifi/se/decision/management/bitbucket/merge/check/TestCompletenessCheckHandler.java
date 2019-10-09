@@ -16,6 +16,7 @@ import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.Completenes
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockApplicationLinkService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockCommitService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
+import de.uhd.ifi.se.decision.management.bitbucket.model.MyPullRequest;
 
 public class TestCompletenessCheckHandler {
 
@@ -24,7 +25,8 @@ public class TestCompletenessCheckHandler {
 	@BeforeClass
 	public static void setUp() {
 		MockComponentLocator.create(new MockCommitService(), new MockApplicationLinkService());
-		completenessCheckHandler = new CompletenessCheckHandlerImpl(new MockPullRequest());
+		MyPullRequest pullRequest = new MyPullRequest(new MockPullRequest());
+		completenessCheckHandler = new CompletenessCheckHandlerImpl(pullRequest);
 	}
 
 	@Test
@@ -45,8 +47,8 @@ public class TestCompletenessCheckHandler {
 
 	@Test
 	public void testGetCommitsOfPullRequest() {
-		Iterable<Commit> commits = ((CompletenessCheckHandlerImpl) completenessCheckHandler).getCommitsOfPullRequest();
-		assertEquals(false, commits.iterator().hasNext());
+		Iterable<Commit> commits = ((CompletenessCheckHandlerImpl) completenessCheckHandler).pullRequest.getCommits();
+		assertEquals(true, commits.iterator().hasNext());
 	}
 
 	@Test
@@ -72,11 +74,5 @@ public class TestCompletenessCheckHandler {
 		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete(jsonString_false);
 		assertFalse(isDocumentationComplete);
 		assertEquals("CONDEC-1", completenessCheckHandler.getJiraIssuesWithIncompleteDocumentation().iterator().next());
-	}
-
-	@Test
-	public void parseProjectKey() {
-		assertEquals("", CompletenessCheckHandler.retrieveProjectKey(""));
-		assertEquals("CONDEC", CompletenessCheckHandler.retrieveProjectKey("Example message ConDec-1 ConDec-2"));
 	}
 }

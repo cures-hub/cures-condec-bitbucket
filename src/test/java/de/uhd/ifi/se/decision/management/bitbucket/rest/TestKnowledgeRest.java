@@ -14,6 +14,7 @@ import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.Completenes
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockApplicationLinkService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockCommitService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
+import de.uhd.ifi.se.decision.management.bitbucket.model.MyPullRequest;
 
 public class TestKnowledgeRest {
 
@@ -23,7 +24,8 @@ public class TestKnowledgeRest {
 	@BeforeClass
 	public static void setUpBeforClass() {
 		MockComponentLocator.create(new MockCommitService(), new MockApplicationLinkService());
-		completenessCheckHandler = new CompletenessCheckHandlerImpl(new MockPullRequest());
+		MyPullRequest pullRequest = new MyPullRequest(new MockPullRequest());
+		completenessCheckHandler = new CompletenessCheckHandlerImpl(pullRequest);
 		knowledgeRest = new KnowledgeRest();
 	}
 

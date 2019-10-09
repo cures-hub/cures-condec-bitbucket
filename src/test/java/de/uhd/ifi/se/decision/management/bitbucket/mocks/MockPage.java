@@ -1,6 +1,7 @@
 package de.uhd.ifi.se.decision.management.bitbucket.mocks;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.function.Function;
 
@@ -15,7 +16,9 @@ public class MockPage implements Page<Commit> {
 	
 	@Override
 	public Iterable<Commit> getValues() {
-		return new ArrayList<Commit>();
+		List<Commit> commits = new ArrayList<Commit>();
+		commits.add(new MockCommit());
+		return commits;
 	}
 
 	@Override
