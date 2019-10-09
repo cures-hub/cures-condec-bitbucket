@@ -17,33 +17,11 @@ For example, the developers responsible for implementing a task must have at lea
 
 ## Installation
 
-to support the release and commit standards install commitizen:
-```
-npm install commitizen -g
-```
-Install all npm modules:
-```
-npm install
-```
-
-## Commits and releases
-
-after staging the files run:
-```
-git cz
-```
-
-
-to make a standard release:
-```
-npm run release
-```
-
 ### Prerequisites
 
 The following prerequisites are necessary to compile the plug-in from source code:
 
-- Java 8 JDK
+- Java 11 JDK
 - [Atlassian SDK](https://developer.atlassian.com/docs/getting-started/set-up-the-atlassian-plugin-sdk-and-build-a-project)
 
 ### Compilation via Terminal
@@ -66,3 +44,38 @@ atlas-run
 ### Download of Precompiled .jar-File
 
 The precompiled .jar-File for the latest release can be found here: https://github.com/cures-hub/cures-condec-bitbucket/releases/latest
+
+## User Interface
+
+The ConDec Bitbucket plugin integrates in the pull request page.
+The branch can only be merged if at least one decision problem and one decision is documented for every associated Jira issue.
+
+![Bitbucket ConDec plug-in](https://github.com/cures-hub/cures-condec-bitbucket/raw/master/doc/merge_check_tooltip.png)
+*Pull request view with disabled merge possibiliy* 
+
+![Bitbucket ConDec plug-in](https://github.com/cures-hub/cures-condec-bitbucket/raw/master/doc/merge_check_detail.png)
+*Pull request view with detailed documentation hint* 
+
+## Contribution
+
+### Commits and Releases
+
+to support the release and commit standards install commitizen:
+```
+npm install commitizen -g
+```
+Install all npm modules:
+```
+npm install
+```
+
+after staging the files run:
+```
+git cz
+```
+
+
+to make a standard release:
+```
+npm run release
+```
