@@ -1,6 +1,6 @@
 package de.uhd.ifi.se.decision.management.bitbucket.rest;
 
-import static de.uhd.ifi.se.decision.management.bitbucket.model.MyPullRequest.JIRA_ISSUE_KEYS;
+import static de.uhd.ifi.se.decision.management.bitbucket.model.impl.PullRequestImpl.JIRA_ISSUE_KEYS;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

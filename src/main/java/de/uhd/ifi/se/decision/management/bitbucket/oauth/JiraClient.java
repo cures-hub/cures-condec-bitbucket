@@ -30,7 +30,7 @@ public interface JiraClient {
 	 * 
 	 * @param jiraIssueKeys
 	 *            as a set of strings.
-	 * @return JSON String.
+	 * @return JSON string.
 	 */
 	String getDecisionKnowledgeFromJira(Set<String> jiraIssueKeys);
 
@@ -51,7 +51,7 @@ public interface JiraClient {
 	 * 
 	 * @param message
 	 *            that might contain a Jira issue key, e.g., a commit message,
-	 *            branch name oder pull request title.
+	 *            branch name, or pull request title.
 	 * @return list of all mentioned Jira issue keys in upper case letters (is
 	 *         ordered by their appearance in the message).
 	 */

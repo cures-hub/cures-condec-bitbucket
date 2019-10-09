@@ -13,15 +13,23 @@ import com.atlassian.sal.testresources.component.MockComponentLocator;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockApplicationLinkService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockCommitService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
+import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequestMergeHookRequest;
+import de.uhd.ifi.se.decision.management.bitbucket.model.impl.PullRequestImpl;
 
 public class TestPullRequest {
 
-	private static MyPullRequest pullRequest;
+	private static PullRequest pullRequest;
 
 	@BeforeClass
 	public static void setUp() {
 		MockComponentLocator.create(new MockCommitService(), new MockApplicationLinkService());
-		pullRequest = new MyPullRequest(new MockPullRequest());
+		pullRequest = new PullRequestImpl(new MockPullRequest());
+	}
+	
+	@Test
+	public void testConstructor() {
+		PullRequest pullRequest = new PullRequestImpl(new MockPullRequestMergeHookRequest());
+		assertEquals("CONDEC", pullRequest.getProjectKey());
 	}
 
 	@Test

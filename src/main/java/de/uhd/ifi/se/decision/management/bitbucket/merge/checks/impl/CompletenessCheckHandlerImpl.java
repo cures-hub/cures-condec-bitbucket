@@ -7,7 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.CompletenessCheckHandler;
-import de.uhd.ifi.se.decision.management.bitbucket.model.MyPullRequest;
+import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
 
 /**
@@ -16,10 +16,10 @@ import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
  */
 public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 
-	public MyPullRequest pullRequest;
+	public PullRequest pullRequest;
 	private Set<String> jiraIssuesWithIncompleteDocumentation;
 
-	public CompletenessCheckHandlerImpl(MyPullRequest pullRequest) {
+	public CompletenessCheckHandlerImpl(PullRequest pullRequest) {
 		this.pullRequest = pullRequest;
 		this.jiraIssuesWithIncompleteDocumentation = new HashSet<String>();
 	}

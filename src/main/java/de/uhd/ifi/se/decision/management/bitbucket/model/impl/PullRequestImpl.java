@@ -1,4 +1,4 @@
-package de.uhd.ifi.se.decision.management.bitbucket.model;
+package de.uhd.ifi.se.decision.management.bitbucket.model.impl;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,29 +7,34 @@ import com.atlassian.bitbucket.commit.Commit;
 import com.atlassian.bitbucket.commit.CommitService;
 import com.atlassian.bitbucket.commit.CommitsBetweenRequest;
 import com.atlassian.bitbucket.hook.repository.PullRequestMergeHookRequest;
-import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.pull.PullRequestRef;
 import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequestImpl;
 import com.atlassian.sal.api.component.ComponentLocator;
 
+import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
 
-public class MyPullRequest {
+/**
+ * Class for pull requests. Helps to get the associated commits, Jira project,
+ * and Jira issues.
+ */
+public class PullRequestImpl implements PullRequest {
 
-	public PullRequest pullRequest;
+	private com.atlassian.bitbucket.pull.PullRequest internalPullRequest;
+
 	public static Set<String> JIRA_ISSUE_KEYS;
 
-	public MyPullRequest(PullRequest pullRequest) {
-		this.pullRequest = pullRequest;
+	public PullRequestImpl(com.atlassian.bitbucket.pull.PullRequest pullRequest) {
+		this.internalPullRequest = pullRequest;
 		JIRA_ISSUE_KEYS = retrieveJiraIssueKeys();
 	}
 
-	public MyPullRequest(PullRequestMergeHookRequest request) {
+	public PullRequestImpl(PullRequestMergeHookRequest request) {
 		this(request.getPullRequest());
 	}
 
-	public Set<String> retrieveJiraIssueKeys() {
+	private Set<String> retrieveJiraIssueKeys() {
 		Set<String> jiraIssueKeysLinkedToPullRequest = new HashSet<String>();
 		jiraIssueKeysLinkedToPullRequest.addAll(getJiraIssueKeysInCommitMessages());
 		jiraIssueKeysLinkedToPullRequest.addAll(getJiraIssueKeysInTitle());
@@ -47,9 +52,10 @@ public class MyPullRequest {
 		return jiraIssueKeysInCommitMessages;
 	}
 
+	@Override
 	public Iterable<Commit> getCommits() {
 		CommitService commitService = ComponentLocator.getComponent(CommitService.class);
-		CommitsBetweenRequest.Builder builder = new CommitsBetweenRequest.Builder(pullRequest);
+		CommitsBetweenRequest.Builder builder = new CommitsBetweenRequest.Builder(internalPullRequest);
 		CommitsBetweenRequest commitsBetweenRequest = builder.build();
 		Page<Commit> pageWithCommits = commitService.getCommitsBetween(commitsBetweenRequest,
 				new PageRequestImpl(0, 1048476));
@@ -57,20 +63,27 @@ public class MyPullRequest {
 	}
 
 	public Set<String> getJiraIssueKeysInTitle() {
-		String title = pullRequest.getTitle();
+		String title = internalPullRequest.getTitle();
 		return JiraClient.getJiraIssueKeys(title);
 	}
 
 	public Set<String> getJiraIssueKeysInBranchName() {
-		PullRequestRef pullRequestRef = pullRequest.getFromRef();
+		PullRequestRef pullRequestRef = internalPullRequest.getFromRef();
 		String branchName = pullRequestRef.getDisplayId();
 		return JiraClient.getJiraIssueKeys(branchName);
 	}
 
+	@Override
+	public com.atlassian.bitbucket.pull.PullRequest getInternalPullRequest() {
+		return internalPullRequest;
+	}
+
+	@Override
 	public Set<String> getJiraIssueKeys() {
 		return JIRA_ISSUE_KEYS;
 	}
 
+	@Override
 	public String getProjectKey() {
 		return JiraClient.retrieveProjectKey(JIRA_ISSUE_KEYS);
 	}
