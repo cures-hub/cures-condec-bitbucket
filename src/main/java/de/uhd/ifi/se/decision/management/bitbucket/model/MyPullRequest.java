@@ -26,7 +26,7 @@ public class MyPullRequest {
 	}
 
 	public MyPullRequest(PullRequestMergeHookRequest request) {
-		this.pullRequest = request.getPullRequest();
+		this(request.getPullRequest());
 	}
 
 	public Set<String> retrieveJiraIssueKeys() {
@@ -70,7 +70,7 @@ public class MyPullRequest {
 	public Set<String> getJiraIssueKeys() {
 		return JIRA_ISSUE_KEYS;
 	}
-	
+
 	public String getProjectKey() {
 		return JiraClient.retrieveProjectKey(JIRA_ISSUE_KEYS);
 	}
