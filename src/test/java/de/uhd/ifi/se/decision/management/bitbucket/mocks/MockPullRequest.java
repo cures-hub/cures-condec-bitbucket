@@ -85,7 +85,7 @@ public class MockPullRequest implements PullRequest {
 
 	@Override
 	public PullRequestRef getToRef() {
-		return null;
+		return new MockPullRequestRef();
 	}
 
 	@Override

@@ -20,17 +20,17 @@ import com.atlassian.sal.api.net.Request;
 import com.atlassian.sal.api.net.Response;
 import com.atlassian.sal.api.net.ResponseException;
 
-import de.uhd.ifi.se.decision.management.bitbucket.oauth.ApiLinkService;
+import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
 
 /**
  * Class responsible for the communication between Bitbucket and Jira via
  * application links.
  */
-public class ApiLinkServiceImpl implements ApiLinkService {
+public class JiraClientImpl implements JiraClient {
 
 	private ApplicationLink jiraApplicationLink;
 
-	public ApiLinkServiceImpl() {
+	public JiraClientImpl() {
 		ApplicationLinkService applicationLinkService = ComponentLocator.getComponent(ApplicationLinkService.class);
 		// TODO
 		// @issue There might be more than one application links to Jira. Currently, we
@@ -38,20 +38,31 @@ public class ApiLinkServiceImpl implements ApiLinkService {
 		this.jiraApplicationLink = applicationLinkService.getPrimaryApplicationLink(JiraApplicationType.class);
 	}
 
-	public Set<String> getCurrentActiveJiraProjects() {
+	public Set<String> getJiraProjects() {
 		String projectsAsJsonString = getResponseFromJiraWithApplicationLink("rest/api/2/project");
+		if (projectsAsJsonString.isEmpty()) {
+			return new HashSet<String>();
+		}
+		return parseJiraProjectsJson(projectsAsJsonString);
+	}
+
+	public Set<String> parseJiraProjectsJson(String projectsAsJsonString) {
 		Set<String> projectKeys = new HashSet<String>();
-		JSONArray projectArray = new JSONArray(projectsAsJsonString);
-		for (Object project : projectArray) {
-			JSONObject projectMap = (JSONObject) project;
-			String projectKey = (String) projectMap.get("key");
-			projectKeys.add(projectKey.toUpperCase());
+		try {
+			JSONArray projectArray = new JSONArray(projectsAsJsonString);
+			for (Object project : projectArray) {
+				JSONObject projectMap = (JSONObject) project;
+				String projectKey = (String) projectMap.get("key");
+				projectKeys.add(projectKey.toUpperCase());
+			}
+		} catch (Exception e) {
+			projectKeys.add(projectsAsJsonString);
 		}
 		return projectKeys;
 	}
 
 	private String getResponseFromJiraWithApplicationLink(String jiraUrl) {
-		String responseBody = "false";
+		String responseBody = "";
 		if (jiraApplicationLink == null) {
 			return responseBody;
 		}
@@ -73,6 +84,13 @@ public class ApiLinkServiceImpl implements ApiLinkService {
 			responseBody = e.getMessage();
 		}
 		return responseBody;
+	}
+	
+	@Override
+	public String getDecisionKnowledgeFromJira(Set<String> jiraIssueKeys) {
+		String queryWithJiraIssues = JiraClient.getJiraCallQuery(jiraIssueKeys);
+		String projectKey = JiraClient.retrieveProjectKey(jiraIssueKeys);
+		return getDecisionKnowledgeFromJira(queryWithJiraIssues, projectKey);
 	}
 
 	public String getDecisionKnowledgeFromJira(String query, String projectKey) {

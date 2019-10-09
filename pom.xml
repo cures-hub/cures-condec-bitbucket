@@ -42,17 +42,20 @@
 		</dependency>
 		<dependency>
 			<groupId>com.atlassian.bitbucket.server</groupId>
-			<artifactId>bitbucket-api</artifactId>
+			<artifactId>bitbucket-spi</artifactId>
+			<version>${bitbucket.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.atlassian.bitbucket.server</groupId>
-			<artifactId>bitbucket-spi</artifactId>
-			<scope>provided</scope>
+			<artifactId>bitbucket-test-util</artifactId>
+			<version>${bitbucket.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.atlassian.bitbucket.server</groupId>
 			<artifactId>bitbucket-page-objects</artifactId>
+			<version>${bitbucket.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -190,39 +193,39 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<profiles>
-	<!-- Creates coverage reports in target/site/jacoco/ -->
-	<profile>
-		<id>jacoco</id>
-		<activation>
-		<activeByDefault>false</activeByDefault>
-		</activation>
-		<build>
-		<plugins>
-			<plugin>
-			<groupId>org.jacoco</groupId>
-			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>${jacoco-version}</version>
-			<executions>
-				<execution>
-				<goals>
-					<goal>prepare-agent</goal>
-				</goals>
-				</execution>
-				<!-- attached to Maven test phase -->
-				<execution>
-				<id>report</id>
-				<phase>test</phase>
-				<goals>
-					<goal>report</goal>
-				</goals>
-				</execution>
-			</executions>
-			</plugin>
-		</plugins>
-		</build>
-	</profile>
+		<!-- Creates coverage reports in target/site/jacoco/ -->
+		<profile>
+			<id>jacoco</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco-version}</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<!-- attached to Maven test phase -->
+							<execution>
+								<id>report</id>
+								<phase>test</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 	<properties>
@@ -233,7 +236,7 @@
 		<jacoco-version>0.8.4</jacoco-version>
 		<!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to 
 			generate bundle. -->
-		<atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>		
+		<atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
