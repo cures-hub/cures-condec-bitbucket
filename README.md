@@ -51,7 +51,7 @@ The ConDec Bitbucket plugin integrates in the pull request page.
 The branch can only be merged if at least one decision problem and one decision is documented for every associated Jira issue.
 
 ![Bitbucket ConDec plug-in](https://github.com/cures-hub/cures-condec-bitbucket/raw/master/doc/merge_check_tooltip.png)
-*Pull request view with disabled merge possibiliy* 
+*Pull request view with disabled merge possibility* 
 
 ![Bitbucket ConDec plug-in](https://github.com/cures-hub/cures-condec-bitbucket/raw/master/doc/merge_check_detail.png)
 *Pull request view with detailed documentation hint* 
@@ -61,21 +61,26 @@ The branch can only be merged if at least one decision problem and one decision 
 ### Commits and Releases
 
 to support the release and commit standards install commitizen:
+
 ```
 npm install commitizen -g
 ```
+
 Install all npm modules:
+
 ```
 npm install
 ```
 
 after staging the files run:
+
 ```
 git cz
 ```
 
 
 to make a standard release:
+
 ```
 npm run release
 ```
