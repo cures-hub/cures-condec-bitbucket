@@ -1,9 +1,13 @@
 package de.uhd.ifi.se.decision.management.bitbucket.oauth;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.impl.JiraClientImpl;
 
 /**
@@ -27,6 +31,16 @@ public interface JiraClient {
 	/**
 	 * Retrieves the decision knowledge elements from Jira that match a certain
 	 * query and the project key.
+	 * 
+	 * @param pullRequest
+	 *            object of {@link PullRequest} class.
+	 * @return JSON string.
+	 */
+	String getDecisionKnowledgeFromJira(PullRequest pullRequest);
+
+	/**
+	 * Retrieves the decision knowledge elements from Jira that are associated to a
+	 * set of Jira issues.
 	 * 
 	 * @param jiraIssueKeys
 	 *            as a set of strings.
@@ -98,12 +112,27 @@ public interface JiraClient {
 		return !projectKey.isEmpty() && projectKeys.contains(projectKey);
 	}
 
-	public static String getJiraCallQuery(Set<String> messageList) {
+	public static String getJiraCallQuery(Set<String> jiraIssueKeys) {
 		String query = "?jql=key in (";
-		for (String message : messageList) {
-			query = query + message + ",";
+		Iterator<String> iterator = jiraIssueKeys.iterator();
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			query += key;
+			if (iterator.hasNext()) {
+				query += ",";
+			}
 		}
 		query += ")";
-		return query;
+		return encodeUserInputQuery(query);
+	}
+
+	private static String encodeUserInputQuery(String query) {
+		String encodedUrl = "";
+		try {
+			encodedUrl = URLEncoder.encode(query, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return encodedUrl;
 	}
 }

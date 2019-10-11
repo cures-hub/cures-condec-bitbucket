@@ -9,32 +9,32 @@ import org.junit.Test;
 
 import com.atlassian.sal.testresources.component.MockComponentLocator;
 
-import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.CompletenessCheckHandler;
-import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.CompletenessCheckHandlerImpl;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockApplicationLinkService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockCommitService;
-import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
-import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
-import de.uhd.ifi.se.decision.management.bitbucket.model.impl.PullRequestImpl;
+import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequestService;
 
 public class TestKnowledgeRest {
 
 	private static KnowledgeRest knowledgeRest;
-	private static CompletenessCheckHandler completenessCheckHandler;
 
 	@BeforeClass
 	public static void setUpBeforClass() {
-		MockComponentLocator.create(new MockCommitService(), new MockApplicationLinkService());
-		PullRequest pullRequest = new PullRequestImpl(new MockPullRequest());
-		completenessCheckHandler = new CompletenessCheckHandlerImpl(pullRequest);
+		MockComponentLocator.create(new MockCommitService(), new MockApplicationLinkService(),
+				new MockPullRequestService());
 		knowledgeRest = new KnowledgeRest();
 	}
 
 	@Test
 	public void testGetDecisionKnowledgeFromJira() {
-		completenessCheckHandler.isDocumentationComplete();
-		Response response = knowledgeRest.getDecisionKnowledgeElement();
+		Response response = knowledgeRest.getDecisionKnowledgeElement(1, 1);
 		assertEquals(200, response.getStatus());
+		assertEquals("[[{'type':'issue'}, {'type':'decision'}]]", response.getEntity());
 	}
 
+	@Test
+	public void testGetDecisionKnowledgeFromJiraPullRequestNull() {
+		Response response = knowledgeRest.getDecisionKnowledgeElement(-1, -1);
+		assertEquals(500, response.getStatus());
+		assertEquals("The pull request cannot be found.", response.getEntity());
+	}
 }

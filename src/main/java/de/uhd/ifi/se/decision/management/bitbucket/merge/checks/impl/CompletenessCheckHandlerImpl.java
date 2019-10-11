@@ -26,7 +26,8 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 
 	@Override
 	public boolean isDocumentationComplete() {
-		String knowledgeElementsAsJsonString = JiraClient.instance.getDecisionKnowledgeFromJira(pullRequest.getJiraIssueKeys());
+		String knowledgeElementsAsJsonString = JiraClient.instance
+				.getDecisionKnowledgeFromJira(pullRequest.getJiraIssueKeys());
 		return isDocumentationComplete(knowledgeElementsAsJsonString);
 	}
 

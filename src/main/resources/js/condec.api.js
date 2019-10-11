@@ -17,11 +17,25 @@
 	};
 
 	/*
-	 * external references:
+	 * external references: condec.knowledge.overview
 	 */
 	ConDecAPI.prototype.getDecisionKnowledgeFromJira = function getDecisionKnowledgeFromJira(callback) {
-		var url = this.restPrefix + "/knowledge/getDecisionKnowledgeFromJira";		
-		return getResponseAsReturnValue(url);
+
+		var pullRequest = require("bitbucket/internal/model/page-state").getPullRequest();
+		console.log("conDecAPI getDecisionKnowledgeFromJira");
+		console.log(pullRequest);
+		
+		var pullRequestId = pullRequest["id"];
+		console.log(pullRequestId);
+		var repositoryId = pullRequest.attributes.fromRef.attributes.repository.id;
+		console.log(repositoryId);
+
+		var url = this.restPrefix + "/knowledge/getDecisionKnowledgeFromJira?repositoryId=" + repositoryId
+				+ "&pullRequestId=" + pullRequestId;
+		
+		var response = getResponseAsReturnValue(url);
+		console.log(response);
+		return response;
 	};
 
 	function getResponseAsReturnValue(url) {
@@ -41,6 +55,24 @@
 		}
 		showFlag("error", xhr.response.error, status);
 		return null;
+	}
+
+	function getJSON(url, callback) {
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", url, true);
+		xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+		xhr.setRequestHeader("Accept", "application/json");
+		xhr.responseType = "json";
+		xhr.onload = function() {
+			var status = xhr.status;
+			if (status === 200) {
+				callback(null, xhr.response);
+			} else {
+				showFlag("error", xhr.response.error, status);
+				callback(status);
+			}
+		};
+		xhr.send();
 	}
 
 	function showFlag(type, message, status) {

@@ -71,7 +71,7 @@
 	<!-- Checking and Enforcement of the Completeness of the Documentation -->
 	<repository-merge-check key="decision-knowledge-completeness-merge-check"
 		name="Decision Knowledge Completeness Check" class="bean:completenessMergeCheck"
-		configurable="false">
+		configurable="true">
 		<description>
 			Enforces that pull requests can only be accepted, i.e., the respective branch can
 			only be merged

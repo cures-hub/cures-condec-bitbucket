@@ -1,6 +1,7 @@
 package de.uhd.ifi.se.decision.management.bitbucket.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class TestPullRequest {
 		MockComponentLocator.create(new MockCommitService(), new MockApplicationLinkService());
 		pullRequest = new PullRequestImpl(new MockPullRequest());
 	}
-	
+
 	@Test
 	public void testConstructor() {
 		PullRequest pullRequest = new PullRequestImpl(new MockPullRequestMergeHookRequest());
@@ -39,14 +40,27 @@ public class TestPullRequest {
 	}
 
 	@Test
+	public void testGetCommitsInternalPullRequestNull() {
+		PullRequest pullRequest = new PullRequestImpl((com.atlassian.bitbucket.pull.PullRequest) null);
+		Iterable<Commit> commits = pullRequest.getCommits();
+		assertFalse(commits.iterator().hasNext());
+	}
+
+	@Test
 	public void testJiraIssueKeysInCommitMessages() {
 		Set<String> jiraIssueKeysInCommitMessages = pullRequest.getJiraIssueKeys();
 		assertEquals("CONDEC-1", jiraIssueKeysInCommitMessages.iterator().next());
 	}
-	
+
 	@Test
 	public void testGetProjectKey() {
 		String projectKey = pullRequest.getProjectKey();
 		assertEquals("CONDEC", projectKey);
+	}
+	
+	@Test
+	public void testGetInternalPullRequest() {
+		com.atlassian.bitbucket.pull.PullRequest internalPullRequest = pullRequest.getInternalPullRequest();
+		assertEquals(internalPullRequest.getTitle(), pullRequest.getTitle());
 	}
 }

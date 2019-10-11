@@ -1,5 +1,6 @@
 package de.uhd.ifi.se.decision.management.bitbucket.model.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,12 +23,14 @@ import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
 public class PullRequestImpl implements PullRequest {
 
 	private com.atlassian.bitbucket.pull.PullRequest internalPullRequest;
-
-	public static Set<String> JIRA_ISSUE_KEYS;
+	public Set<String> jiraIssueKeys;
 
 	public PullRequestImpl(com.atlassian.bitbucket.pull.PullRequest pullRequest) {
 		this.internalPullRequest = pullRequest;
-		JIRA_ISSUE_KEYS = retrieveJiraIssueKeys();
+		if (pullRequest == null) {
+			return;
+		}
+		jiraIssueKeys = retrieveJiraIssueKeys();
 	}
 
 	public PullRequestImpl(PullRequestMergeHookRequest request) {
@@ -54,6 +57,9 @@ public class PullRequestImpl implements PullRequest {
 
 	@Override
 	public Iterable<Commit> getCommits() {
+		if (internalPullRequest == null) {
+			return new ArrayList<Commit>();
+		}
 		CommitService commitService = ComponentLocator.getComponent(CommitService.class);
 		CommitsBetweenRequest.Builder builder = new CommitsBetweenRequest.Builder(internalPullRequest);
 		CommitsBetweenRequest commitsBetweenRequest = builder.build();
@@ -63,14 +69,11 @@ public class PullRequestImpl implements PullRequest {
 	}
 
 	public Set<String> getJiraIssueKeysInTitle() {
-		String title = internalPullRequest.getTitle();
-		return JiraClient.getJiraIssueKeys(title);
+		return JiraClient.getJiraIssueKeys(getTitle());
 	}
 
 	public Set<String> getJiraIssueKeysInBranchName() {
-		PullRequestRef pullRequestRef = internalPullRequest.getFromRef();
-		String branchName = pullRequestRef.getDisplayId();
-		return JiraClient.getJiraIssueKeys(branchName);
+		return JiraClient.getJiraIssueKeys(getBranchName());
 	}
 
 	@Override
@@ -80,11 +83,22 @@ public class PullRequestImpl implements PullRequest {
 
 	@Override
 	public Set<String> getJiraIssueKeys() {
-		return JIRA_ISSUE_KEYS;
+		return jiraIssueKeys;
 	}
 
 	@Override
 	public String getProjectKey() {
-		return JiraClient.retrieveProjectKey(JIRA_ISSUE_KEYS);
+		return JiraClient.retrieveProjectKey(jiraIssueKeys);
+	}
+
+	@Override
+	public String getTitle() {
+		return internalPullRequest.getTitle();
+	}
+
+	@Override
+	public String getBranchName() {
+		PullRequestRef pullRequestRef = internalPullRequest.getFromRef();
+		return pullRequestRef.getDisplayId();
 	}
 }

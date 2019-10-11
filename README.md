@@ -45,9 +45,13 @@ atlas-run
 
 The precompiled .jar-File for the latest release can be found here: https://github.com/cures-hub/cures-condec-bitbucket/releases/latest
 
-## User Interface
+## Usage
 
 The ConDec Bitbucket plugin integrates in the pull request page.
+The merge check can be enabled for single repositories.
+![Configuration of the merge check](https://github.com/cures-hub/cures-condec-bitbucket/raw/master/doc/repository_settings.png)
+*Configuration possibility of the decision knowledge completeness merge check in the repository settings* 
+
 The branch can only be merged if at least one decision problem and one decision is documented for every associated Jira issue.
 
 ![Bitbucket ConDec plug-in](https://github.com/cures-hub/cures-condec-bitbucket/raw/master/doc/merge_check_tooltip.png)

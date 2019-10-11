@@ -79,7 +79,7 @@ public class TestJiraClient {
 
 	@Test
 	public void testRetrieveProjectKeys() {
-		Set<String> jiraIssueKeys = new HashSet<>();
+		Set<String> jiraIssueKeys = new HashSet<String>();
 		assertEquals("", JiraClient.retrieveProjectKey(jiraIssueKeys));
 		jiraIssueKeys.add("UNKNOWNPROJECT-1");
 		assertEquals("", JiraClient.retrieveProjectKey(jiraIssueKeys));
@@ -87,6 +87,14 @@ public class TestJiraClient {
 		jiraIssueKeys.add("CONDEC-1");
 		jiraIssueKeys.add("CONDEC-2");
 		assertEquals("CONDEC", JiraClient.retrieveProjectKey(jiraIssueKeys));
+	}
+	
+	@Test
+	public void testGetJiraCallQuery() {
+		Set<String> jiraIssueKeys = new HashSet<String>();
+		jiraIssueKeys.add("CONDEC-1");
+		jiraIssueKeys.add("CONDEC-2");
+		assertEquals("%3Fjql%3Dkey+in+%28CONDEC-2%2CCONDEC-1%29", JiraClient.getJiraCallQuery(jiraIssueKeys));
 	}
 
 }
