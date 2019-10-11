@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.impl.JiraClientImpl;
 
 /**
@@ -27,6 +28,16 @@ public interface JiraClient {
 	/**
 	 * Retrieves the decision knowledge elements from Jira that match a certain
 	 * query and the project key.
+	 * 
+	 * @param pullRequest
+	 *            object of {@link PullRequest} class.
+	 * @return JSON string.
+	 */
+	String getDecisionKnowledgeFromJira(PullRequest pullRequest);
+
+	/**
+	 * Retrieves the decision knowledge elements from Jira that are associated to a
+	 * set of Jira issues.
 	 * 
 	 * @param jiraIssueKeys
 	 *            as a set of strings.

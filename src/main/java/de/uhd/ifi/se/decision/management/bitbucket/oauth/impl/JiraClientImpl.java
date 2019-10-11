@@ -20,6 +20,7 @@ import com.atlassian.sal.api.net.Request;
 import com.atlassian.sal.api.net.Response;
 import com.atlassian.sal.api.net.ResponseException;
 
+import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
 
 /**
@@ -85,7 +86,13 @@ public class JiraClientImpl implements JiraClient {
 		}
 		return responseBody;
 	}
-	
+
+	@Override
+	public String getDecisionKnowledgeFromJira(PullRequest pullRequest) {
+		Set<String> jiraIssueKeys = pullRequest.getJiraIssueKeys();
+		return getDecisionKnowledgeFromJira(jiraIssueKeys);
+	}
+
 	@Override
 	public String getDecisionKnowledgeFromJira(Set<String> jiraIssueKeys) {
 		String queryWithJiraIssues = JiraClient.getJiraCallQuery(jiraIssueKeys);

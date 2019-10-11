@@ -2,12 +2,17 @@ package de.uhd.ifi.se.decision.management.bitbucket.model;
 
 import java.util.Set;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
 import com.atlassian.bitbucket.commit.Commit;
+
+import de.uhd.ifi.se.decision.management.bitbucket.model.impl.PullRequestImpl;
 
 /**
  * Interface for pull requests. Helps to get the associated commits, Jira
  * project, and Jira issues.
  */
+@JsonDeserialize(as = PullRequestImpl.class)
 public interface PullRequest {
 
 	/**
@@ -39,4 +44,18 @@ public interface PullRequest {
 	 * @see com.atlassian.bitbucket.pull.PullRequest
 	 */
 	com.atlassian.bitbucket.pull.PullRequest getInternalPullRequest();
+
+	/**
+	 * Returns the title of the pull request.
+	 * 
+	 * @return title as a string.
+	 */
+	String getTitle();
+
+	/**
+	 * Returns the branch name (display id) of the branch (fromRef).
+	 * 
+	 * @return branch name as a string.
+	 */
+	String getBranchName();
 }
