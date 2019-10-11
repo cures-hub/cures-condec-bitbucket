@@ -1,7 +1,5 @@
 package de.uhd.ifi.se.decision.management.bitbucket.oauth.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -101,19 +99,8 @@ public class JiraClientImpl implements JiraClient {
 	}
 
 	public String getDecisionKnowledgeFromJira(String query, String projectKey) {
-		String encodedQuery = encodeUserInputQuery(query);
 		return getResponseFromJiraWithApplicationLink(
-				"rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + encodedQuery + "&projectKey="
+				"rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + query + "&projectKey="
 						+ projectKey);
-	}
-
-	private static String encodeUserInputQuery(String query) {
-		String encodedUrl = "";
-		try {
-			encodedUrl = URLEncoder.encode(query, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return encodedUrl;
 	}
 }
