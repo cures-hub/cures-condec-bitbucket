@@ -62,24 +62,30 @@ The branch can only be merged if at least one decision problem and one decision 
 
 ## Contribution
 
-### Commits and Releases
-
-to support the release and commit standards install commitizen:
-
-```
-npm install commitizen -g
-```
-
+### General Dev setup
 Install all npm modules:
 
 ```
 npm install
 ```
 
-after staging the files run:
+#### Commits and Releases
+
+to support the release and commit standards you may install commitizen globally:
+
+```
+npm install commitizen -g
+```
+and after staging the files run:
 
 ```
 git cz
+```
+
+or use it locally via:
+
+```
+npm run commit
 ```
 
 
@@ -88,3 +94,53 @@ to make a standard release:
 ```
 npm run release
 ```
+
+#### Setup of Coding styling
+
+##### esLint
+if npm install doesn't show you the esLint errors try the following:
+
+first install eslint to get linting errors shown globally
+```
+npm install eslint -g
+```
+then:
+```
+eslint --init
+```
+which will create a .eslintrc file
+now some code should be appear with errors like unused variables etc
+eventually some Eslint plugin has to be installed for your editor of choice
+
+##### Prettier
+Next we want the code to autoformat on save.
+For this we use Prettier, but with the rules from esLint and the defined rules from the .prettierc file.
+This step depends on the editor but for visual studio code you don't need to install the prettier plugin.
+just use the following settings:
+```
+{
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.formatOnSave": false,
+    },
+    "eslint.autoFixOnSave": true,
+    "eslint.validate": [
+        "javascript"
+    ],
+}
+```
+This ensures that javascript files are formated with esLint and not with the editor.
+
+#### PreCommit hook
+Husky should ensure that only correctly linted code will be commited and pushed.
+This also works when commiting with commitizen.
+The pre-commit hook does only throw an error if one exists.
+To display potential errors run:
+```
+npm run lint-js
+```
+and to fix them:
+```
+npm run lint-fix
+```
+The fixed files have to be staged again before commiting.
