@@ -11,7 +11,6 @@
  * nowhere
  */
 (function(global) {
-
 	var ConDecAPI = function ConDecAPI() {
 		this.restPrefix = AJS.contextPath() + "/rest/condec/latest";
 	};
@@ -19,20 +18,26 @@
 	/*
 	 * external references: condec.knowledge.overview
 	 */
-	ConDecAPI.prototype.getDecisionKnowledgeFromJira = function getDecisionKnowledgeFromJira(callback) {
-
+	ConDecAPI.prototype.getDecisionKnowledgeFromJira = function getDecisionKnowledgeFromJira(
+		callback
+	) {
 		var pullRequest = require("bitbucket/internal/model/page-state").getPullRequest();
 		console.log("conDecAPI getDecisionKnowledgeFromJira");
 		console.log(pullRequest);
-		
+
 		var pullRequestId = pullRequest["id"];
 		console.log(pullRequestId);
-		var repositoryId = pullRequest.attributes.fromRef.attributes.repository.id;
+		var repositoryId =
+			pullRequest.attributes.fromRef.attributes.repository.id;
 		console.log(repositoryId);
 
-		var url = this.restPrefix + "/knowledge/getDecisionKnowledgeFromJira?repositoryId=" + repositoryId
-				+ "&pullRequestId=" + pullRequestId;
-		
+		var url =
+			this.restPrefix +
+			"/knowledge/getDecisionKnowledgeFromJira?repositoryId=" +
+			repositoryId +
+			"&pullRequestId=" +
+			pullRequestId;
+
 		var response = getResponseAsReturnValue(url);
 		console.log(response);
 		return response;
@@ -41,11 +46,15 @@
 	function getResponseAsReturnValue(url) {
 		var xhr = new XMLHttpRequest();
 		xhr.open("GET", url, false);
-		xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+		xhr.setRequestHeader(
+			"Content-type",
+			"application/json; charset=utf-8"
+		);
 		xhr.send();
 		var status = xhr.status;
 		if (status === 200) {
 			try {
+				console.log(xhr.response);
 				var parsedResponse = JSON.parse(xhr.response);
 				return parsedResponse;
 			} catch (error) {
@@ -60,7 +69,10 @@
 	function getJSON(url, callback) {
 		var xhr = new XMLHttpRequest();
 		xhr.open("GET", url, true);
-		xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+		xhr.setRequestHeader(
+			"Content-type",
+			"application/json; charset=utf-8"
+		);
 		xhr.setRequestHeader("Accept", "application/json");
 		xhr.responseType = "json";
 		xhr.onload = function() {
@@ -80,10 +92,14 @@
 			status = "";
 		}
 		AJS.flag({
-			type : type,
-			close : "auto",
-			title : type.charAt(0).toUpperCase() + type.slice(1) + " " + status,
-			body : message
+			type: type,
+			close: "auto",
+			title:
+				type.charAt(0).toUpperCase() +
+				type.slice(1) +
+				" " +
+				status,
+			body: message
 		});
 	}
 

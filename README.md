@@ -62,7 +62,7 @@ The branch can only be merged if at least one decision problem and one decision 
 
 ## Contribution
 
-### General Dev setup
+### General Development Setup
 Install all npm modules:
 
 ```
@@ -95,19 +95,23 @@ to make a standard release:
 npm run release
 ```
 
-#### Setup of Coding styling
+#### Setup of Coding Styling
 
 ##### esLint
 if npm install doesn't show you the esLint errors try the following:
 
 first install eslint to get linting errors shown globally
+
 ```
 npm install eslint -g
 ```
+
 then:
+
 ```
 eslint --init
 ```
+
 which will create a .eslintrc file
 now some code should be appear with errors like unused variables etc
 eventually some Eslint plugin has to be installed for your editor of choice
@@ -117,6 +121,7 @@ Next we want the code to autoformat on save.
 For this we use Prettier, but with the rules from esLint and the defined rules from the .prettierc file.
 This step depends on the editor but for visual studio code you don't need to install the prettier plugin.
 just use the following settings:
+
 ```
 {
     "editor.formatOnSave": true,
@@ -129,18 +134,23 @@ just use the following settings:
     ],
 }
 ```
+
 This ensures that javascript files are formated with esLint and not with the editor.
 
-#### PreCommit hook
+#### PreCommit Hook
 Husky should ensure that only correctly linted code will be commited and pushed.
 This also works when commiting with commitizen.
 The pre-commit hook does only throw an error if one exists.
 To display potential errors run:
+
 ```
-npm run lint-js
+npm run lint:js
 ```
+
 and to fix them:
+
 ```
-npm run lint-fix
+npm run lint:fix
 ```
+
 The fixed files have to be staged again before commiting.
