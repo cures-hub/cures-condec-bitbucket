@@ -47,6 +47,12 @@ The precompiled .jar-File for the latest release can be found here: https://gith
 
 ## Usage
 
+### Application Link between Bitbucket and Jira
+To share decision knowledge between Jira and Bitbucket, they need to be linked via an [application link](https://confluence.atlassian.com/adminjiraserver/using-applinks-to-link-to-other-applications-938846918.html).
+The authentication type needs to be **OAuth (impersonation)**.
+
+### Pull Requests
+
 The ConDec Bitbucket plugin integrates in the pull request page.
 The merge check can be enabled for single repositories.
 ![Configuration of the merge check](https://github.com/cures-hub/cures-condec-bitbucket/raw/master/doc/repository_settings.png)
