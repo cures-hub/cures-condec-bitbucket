@@ -21,16 +21,18 @@
 	 * client-web-panel in atlassian-plugin.xml
 	 */
 	ConDec.knowledgeOverview.init = function init() {
-		knowledgeElements = conDecAPI.getDecisionKnowledgeFromJira(null);
+		knowledgeElements = conDecAPI.getDecisionKnowledgeFromJira(
+			null
+		);
 		console.log(knowledgeElements);
 		if (knowledgeElements === null) {
 			return {
-				objects : null
+				objects: null
 			};
 		}
 
 		return {
-			objects : knowledgeElements
+			objects: knowledgeElements
 		};
 	};
 
@@ -58,13 +60,16 @@
 			AJS.dialog2("#knowledge-overview-dialog").show();
 		});
 
-		$("#knowledge-overview-dialog-cancel-button").click(function() {
-			AJS.dialog2("#knowledge-overview-dialog").hide();
-		});
+		$("#knowledge-overview-dialog-cancel-button").click(
+			function() {
+				AJS.dialog2("#knowledge-overview-dialog").hide();
+			}
+		);
 	}
 
 	function showText(text) {
-		$(".todo-list").replaceWith("<div class'todo-list'><p>" + text + "</p></div>");
+		$(".todo-list").replaceWith(
+			"<div class'todo-list'><p>" + text + "</p></div>"
+		);
 	}
-
-}(AJS.$));
+})(AJS.$);

@@ -7,7 +7,16 @@
     "semantic-release-cli": "^5.0.0"
   },
   "devDependencies": {
+    "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^2.1.0",
+    "cz-jira-commit": "^0.2.3",
+    "eslint": "^6.5.1",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
+    "prettier": "^1.18.2",
+    "prettier-plugin-java": "^0.4.0",
     "semantic-release": "^15.13.12",
     "standard-version": "^6.0.1"
   },
@@ -15,7 +24,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "full-release": "npx semantic-release",
     "release": "standard-version",
-    "commit": "git cz"
+    "commit": "git cz",
+    "lint:js": "eslint . --ext .js",
+    "lint:fix": "npm run lint:js -- --fix"
   },
   "repository": {
     "type": "git",
@@ -29,7 +40,18 @@
   "homepage": "https://github.com/cures-hub/cures-condec-bitbucket#readme",
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "./node_modules/cz-jira-commit"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js}": [
+      "eslint . --ext .js",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
     }
   }
 }
