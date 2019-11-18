@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.uhd.ifi.se.decision</groupId>
 	<artifactId>management.bitbucket</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.2</version>
 	<organization>
 		<name>Software Engineering Research Group, Heidelberg University</name>
 		<url>https://github.com/cures-hub</url>
@@ -190,6 +190,27 @@
 					</scannedDependencies>
 					<verbose>false</verbose>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M2</version>
+				<executions>
+					<execution>
+						<id>enforce-java</id>
+						<phase>package</phase>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireJavaVersion>
+									<version>1.8</version>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
