@@ -73,15 +73,25 @@ public interface JiraClient {
 		Set<String> keys = new LinkedHashSet<String>();
 		String[] words = message.split("[\\s,:]+");
 		String projectKey = null;
+		String number = "";
 		for (String word : words) {
-			word = word.toUpperCase(Locale.ENGLISH);
-			if (word.contains("-")) {
-				if (projectKey == null) {
-					projectKey = word.split("-")[0];
+			try {
+				word = word.toUpperCase(Locale.ENGLISH);
+				if (word.contains("-")) {
+					if (projectKey == null) {
+						projectKey = word.split("-")[0];
+						number = word.split("-")[1];
+						word = projectKey + "-" + number;
+					}
+					if (word.startsWith(projectKey)) {
+						if (word.contains("/")) {
+							word = word.split("/")[1];
+						}
+						keys.add(word);
+					}
 				}
-				if (word.startsWith(projectKey)) {
-					keys.add(word);
-				}
+			} catch (Exception e) {
+
 			}
 		}
 		return keys;
