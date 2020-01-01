@@ -37,6 +37,7 @@ public class JiraClientImpl implements JiraClient {
 		this.jiraApplicationLink = applicationLinkService.getPrimaryApplicationLink(JiraApplicationType.class);
 	}
 
+	@Override
 	public Set<String> getJiraProjects() {
 		String projectsAsJsonString = getResponseFromJiraWithApplicationLink("rest/api/2/project");
 		if (projectsAsJsonString.isEmpty()) {
@@ -71,10 +72,12 @@ public class JiraClientImpl implements JiraClient {
 			request.addHeader("Content-Type", "application/json");
 
 			responseBody = request.executeAndReturn(new ApplicationLinkResponseHandler<String>() {
+				@Override
 				public String credentialsRequired(final Response response) throws ResponseException {
 					return response.getResponseBodyAsString();
 				}
 
+				@Override
 				public String handle(final Response response) throws ResponseException {
 					return response.getResponseBodyAsString();
 				}
@@ -98,9 +101,9 @@ public class JiraClientImpl implements JiraClient {
 		return getDecisionKnowledgeFromJira(queryWithJiraIssues, projectKey);
 	}
 
+	@Override
 	public String getDecisionKnowledgeFromJira(String query, String projectKey) {
 		return getResponseFromJiraWithApplicationLink(
-				"rest/decisions/latest/decisions/getElements.json?allTrees=true&query=" + query + "&projectKey="
-						+ projectKey);
+				"rest/decisions/latest/decisions/getElements.json?query=" + query + "&projectKey=" + projectKey);
 	}
 }

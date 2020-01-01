@@ -34,16 +34,12 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 	public boolean isDocumentationComplete(String knowledgeElementsAsJsonString) {
 		boolean isDocumentationComplete = true;
 		try {
-			JSONArray topArray = new JSONArray(knowledgeElementsAsJsonString);
-			for (Object current : topArray) {
-
-				JSONArray myCurrent = (JSONArray) current;
-				boolean tempResult = checkIfDecisionsExists(myCurrent);
-				if (!tempResult) {
-					JSONObject firstKey = (JSONObject) myCurrent.get(0);
-					jiraIssuesWithIncompleteDocumentation.add((String) firstKey.get("key"));
-					isDocumentationComplete = false;
-				}
+			JSONArray jsonArray = new JSONArray(knowledgeElementsAsJsonString);
+			boolean tempResult = checkIfDecisionsExists(jsonArray);
+			if (!tempResult) {
+				JSONObject firstKey = (JSONObject) jsonArray.get(0);
+				jiraIssuesWithIncompleteDocumentation.add((String) firstKey.get("key"));
+				isDocumentationComplete = false;
 			}
 		} catch (Exception e) {
 			isDocumentationComplete = false;
@@ -69,6 +65,7 @@ public class CompletenessCheckHandlerImpl implements CompletenessCheckHandler {
 		return hasIssue && hasDecision;
 	}
 
+	@Override
 	public Set<String> getJiraIssuesWithIncompleteDocumentation() {
 		return jiraIssuesWithIncompleteDocumentation;
 	}

@@ -27,14 +27,12 @@
 	        </tr>
 	    </thead>
 	    <tbody>
-	    	{foreach $knowledgeElements in $objects}
-	            {foreach $element in $knowledgeElements}
+	    	{foreach $element in $objects}
 	            <tr>
 	                <td><a target="_blank" href="{$element.url}">{$element.key}</a></td>
 	                <td>{$element.type}</td>
 	                <td>{$element.summary}</td>                
 	            </tr>
-	            {/foreach}
 	        {/foreach}
 	    </tbody>
 	    </table>
