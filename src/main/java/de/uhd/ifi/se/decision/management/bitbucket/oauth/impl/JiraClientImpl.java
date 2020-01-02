@@ -104,6 +104,6 @@ public class JiraClientImpl implements JiraClient {
 	@Override
 	public String getDecisionKnowledgeFromJira(String query, String projectKey) {
 		return getResponseFromJiraWithApplicationLink(
-				"rest/decisions/latest/decisions/getElements.json?query=" + query + "&projectKey=" + projectKey);
+				"rest/condec/latest/knowledge/getElements.json?query=" + query + "&projectKey=" + projectKey);
 	}
 }
