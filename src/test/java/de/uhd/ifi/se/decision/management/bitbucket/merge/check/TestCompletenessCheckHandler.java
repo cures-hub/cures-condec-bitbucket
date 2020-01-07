@@ -54,12 +54,12 @@ public class TestCompletenessCheckHandler {
 
 	@Test
 	public void testIsDocumentationCompleteTrue() {
-		String jsonString_true = "[[{'type':'issue'}, {'type':'decision'}]]";
+		String jsonString_true = "[{'type':'issue'}, {'type':'decision'}]";
 		boolean isDocumentationComplete = new CompletenessCheckHandlerImpl(null)
 				.isDocumentationComplete(jsonString_true);
 		assertTrue(isDocumentationComplete);
 	}
-	
+
 	@Test
 	public void testIsDocumentationCompleteNonJsonArray() {
 		String jsonString_true = "abc";
@@ -70,7 +70,7 @@ public class TestCompletenessCheckHandler {
 
 	@Test
 	public void testIsDocumentationCompleteFalse() {
-		String jsonString_false = "[[{'key':'CONDEC-1', 'type':'work item'}, {'type':'issue'}]]";
+		String jsonString_false = "[{'key':'CONDEC-1', 'type':'work item'}, {'type':'issue'}]";
 		CompletenessCheckHandlerImpl completenessCheckHandler = new CompletenessCheckHandlerImpl(null);
 		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete(jsonString_false);
 		assertFalse(isDocumentationComplete);

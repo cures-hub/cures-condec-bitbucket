@@ -38,7 +38,7 @@ public class TestJiraClient {
 	@Test
 	public void testGetDecisionKnowledgeFromJira() {
 		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJira("", "CONDEC");
-		assertEquals("[[{'type':'issue'}, {'type':'decision'}]]", decisionKnowledgeJsonString);
+		assertEquals("[{'type':'issue'}, {'type':'decision'}]", decisionKnowledgeJsonString);
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class TestJiraClient {
 		jiraIssueKeys.add("CONDEC-2");
 
 		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJira(jiraIssueKeys);
-		assertEquals("[[{'type':'issue'}, {'type':'decision'}]]", decisionKnowledgeJsonString);
+		assertEquals("[{'type':'issue'}, {'type':'decision'}]", decisionKnowledgeJsonString);
 	}
 
 	@Test
