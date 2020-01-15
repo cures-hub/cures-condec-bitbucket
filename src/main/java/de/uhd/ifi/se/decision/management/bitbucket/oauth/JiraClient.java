@@ -118,7 +118,7 @@ public interface JiraClient {
 		return "";
 	}
 
-	private static boolean isProjectKeyExisting(String projectKey, Set<String> projectKeys) {
+	public static boolean isProjectKeyExisting(String projectKey, Set<String> projectKeys) {
 		return !projectKey.isEmpty() && projectKeys.contains(projectKey);
 	}
 
@@ -136,7 +136,7 @@ public interface JiraClient {
 		return encodeUserInputQuery(query);
 	}
 
-	private static String encodeUserInputQuery(String query) {
+	public static String encodeUserInputQuery(String query) {
 		String encodedUrl = "";
 		try {
 			encodedUrl = URLEncoder.encode(query, "UTF-8");
