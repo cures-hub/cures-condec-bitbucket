@@ -43,7 +43,6 @@
 
 		<!-- Javascript files -->
 		<resource type="download" name="condec.api.js" location="/js/condec.api.js" />
-		<resource type="download" name="condec.dialog.js" location="/js/condec.dialog.js" />
 		<resource type="download" name="condec.knowledge.overview.js"
 			location="/js/condec.knowledge.overview.js" />
 
