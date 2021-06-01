@@ -254,7 +254,7 @@
 		<bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
 		<amps.version>8.0.2</amps.version>
 		<atlassian.spring.scanner.version>2.1.12</atlassian.spring.scanner.version>
-		<jacoco-version>0.8.4</jacoco-version>
+		<jacoco-version>0.8.7</jacoco-version>
 		<!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to 
 			generate bundle. -->
 		<atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
