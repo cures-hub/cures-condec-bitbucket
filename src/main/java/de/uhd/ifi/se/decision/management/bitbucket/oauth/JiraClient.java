@@ -177,10 +177,6 @@ public class JiraClient {
 		return null;
 	}
 
-	public static boolean isProjectKeyExisting(String projectKey, Set<String> projectKeys) {
-		return !projectKey.isEmpty() && projectKeys.contains(projectKey);
-	}
-
 	public static String getJiraCallQuery(Set<String> jiraIssueKeys) {
 		String query = "?jql=key in (";
 		Iterator<String> iterator = jiraIssueKeys.iterator();

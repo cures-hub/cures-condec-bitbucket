@@ -53,11 +53,15 @@ public interface JiraIssueKeyParser {
 		}
 		for (String jiraIssueKey : jiraIssueKeys) {
 			String potentialProjectKey = jiraIssueKey.split("-")[0];
-			if (JiraClient.isProjectKeyExisting(potentialProjectKey, projectKeys)) {
+			if (JiraIssueKeyParser.isProjectKeyExisting(potentialProjectKey, projectKeys)) {
 				return potentialProjectKey;
 			}
 		}
 		return "";
+	}
+
+	static boolean isProjectKeyExisting(String projectKey, Set<String> existingProjectKeys) {
+		return !projectKey.isEmpty() && existingProjectKeys.contains(projectKey);
 	}
 
 }
