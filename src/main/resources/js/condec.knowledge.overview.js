@@ -1,4 +1,4 @@
-/*
+/**
  This module creates the decision knowledge overview that shows the related knowledge for the pull request.
 
  Requires
@@ -6,7 +6,7 @@
  * condec.knowledge.overview.soy
     
  Is required by
- * atlassian-plugin.xml calls ConDec.knowledgeOverview.init in the client-web-panel
+ * atlassian-plugin.xml calls ConDecKnowledgeOverview.init in the client-web-panel
   
  Is referenced in HTML by
  * nowhere

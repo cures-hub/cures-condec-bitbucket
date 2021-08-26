@@ -8,6 +8,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.core.MediaType;
 
@@ -165,7 +167,7 @@ public class JiraClient {
 		}
 		request.setRequestBody(
 				"{\"projectKey\":\"" + projectKey + "\",\"searchTerm\":\"" + searchTerm + "\","
-						+ "\"selectedElement\":\"" + selectedElement + "\",\"createTransitiveLinks\":false}",
+						+ "\"selectedElement\":\"" + selectedElement + "\",\"createTransitiveLinks\":true}",
 				MediaType.APPLICATION_JSON);
 		return receiveResponseFromJiraWithApplicationLink(request);
 	}
@@ -184,48 +186,36 @@ public class JiraClient {
 	}
 
 	/**
-	 * Returns all Jira issue keys mentioned in a message.
-	 * 
 	 * @param message
 	 *            that might contain a Jira issue key, e.g., a commit message,
 	 *            branch name, or pull request title.
-	 * @return list of all mentioned Jira issue keys in upper case letters (is
+	 * @return set of all mentioned Jira issue keys in upper case letters (is
 	 *         ordered by their appearance in the message).
+	 * 
+	 * @issue How to identify the Jira issue key(s) in a commit message?
+	 * @decision Use the well known regex ((?<!([A-Z]{1,10})-?)[A-Z0-9]+-\\d+) to
+	 *           identify all Jira issue keys in a commit message!
+	 * @pro Works for all known cases.
+	 * @alternative Assume that the Jira issue key is the first word in the commit
+	 *              message and split the message using
+	 *              commitMessage.split("[\\s,:]+").
+	 * @con This assumption could be wrong for other projects than the ConDec
+	 *      development projects.
 	 */
 	public static Set<String> getJiraIssueKeys(String message) {
 		Set<String> keys = new LinkedHashSet<String>();
-		String[] words = message.split("[\\s,:]+");
-		String projectKey = null;
-		String number = "";
-		for (String word : words) {
-			try {
-				word = word.toUpperCase(Locale.ENGLISH);
-				if (word.contains("-")) {
-					if (projectKey == null) {
-						projectKey = word.split("-")[0];
-						number = word.split("-")[1];
-						word = projectKey + "-" + number;
-					}
-					if (word.startsWith(projectKey)) {
-						if (word.contains("/")) {
-							word = word.split("/")[1];
-						}
-						keys.add(word);
-					}
-				}
-			} catch (Exception e) {
-
-			}
+		Pattern pattern = Pattern.compile("((?<!([A-Z]{1,10})-?)[A-Z0-9]+-\\d+)", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(message);
+		while (matcher.find()) {
+			keys.add(matcher.group(1).toUpperCase(Locale.ENGLISH));
 		}
 		return keys;
 	}
 
 	/**
-	 * Returns the Jira project key (e.g. CONDEC).
-	 * 
 	 * @param jiraIssueKeys
 	 *            as a set of strings.
-	 * @return potential project key.
+	 * @return potential Jira project key (e.g. CONDEC).
 	 */
 	public static String retrieveProjectKey(Set<String> jiraIssueKeys) {
 		Set<String> projectKeys = JiraClient.instance.getJiraProjects();

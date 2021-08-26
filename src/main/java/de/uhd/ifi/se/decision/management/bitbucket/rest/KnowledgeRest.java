@@ -17,6 +17,10 @@ import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
 @Path("/knowledge")
 public class KnowledgeRest {
 
+	/**
+	 * @issue The knowledge overview is not working anymore in Bitbucket version 7.
+	 *        How can we extend the UI now?
+	 */
 	@Path("/decisionKnowledgeFromJira")
 	@GET
 	public Response getDecisionKnowledgeElement(@QueryParam("repositoryId") int repositoryId,
