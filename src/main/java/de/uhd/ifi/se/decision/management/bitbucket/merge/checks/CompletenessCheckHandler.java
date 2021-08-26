@@ -30,7 +30,7 @@ public class CompletenessCheckHandler {
 	 */
 	public boolean isDocumentationComplete() {
 		String knowledgeElementsAsJsonString = JiraClient.instance
-				.getDecisionKnowledgeFromJira(pullRequest.getJiraIssueKeys());
+				.getDecisionKnowledgeFromJiraAsJsonString(pullRequest.getJiraIssueKeys());
 		return isDocumentationComplete(knowledgeElementsAsJsonString);
 	}
 

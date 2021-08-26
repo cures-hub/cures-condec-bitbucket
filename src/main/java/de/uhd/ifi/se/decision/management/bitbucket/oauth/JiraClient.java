@@ -5,11 +5,16 @@ import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.ws.rs.core.MediaType;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.atlassian.applinks.api.ApplicationLink;
 import com.atlassian.applinks.api.ApplicationLinkRequest;
@@ -32,6 +37,7 @@ import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
 public class JiraClient {
 
 	private ApplicationLink jiraApplicationLink;
+	private static final Logger LOGGER = LoggerFactory.getLogger(JiraClient.class);
 
 	/**
 	 * The singleton instance of the JiraClient. Please use this instance.
@@ -58,6 +64,14 @@ public class JiraClient {
 		return parseJiraProjectsJson(projectsAsJsonString);
 	}
 
+	private String getResponseFromJiraWithApplicationLink(String jiraUrl) {
+		ApplicationLinkRequest request = createRequest(Request.MethodType.GET, jiraUrl);
+		if (request == null) {
+			return "";
+		}
+		return receiveResponseFromJiraWithApplicationLink(request);
+	}
+
 	public Set<String> parseJiraProjectsJson(String projectsAsJsonString) {
 		Set<String> projectKeys = new HashSet<String>();
 		try {
@@ -73,16 +87,10 @@ public class JiraClient {
 		return projectKeys;
 	}
 
-	private String getResponseFromJiraWithApplicationLink(String jiraUrl) {
+	private String receiveResponseFromJiraWithApplicationLink(ApplicationLinkRequest request) {
 		String responseBody = "";
-		if (jiraApplicationLink == null) {
-			return responseBody;
-		}
 		try {
-			ApplicationLinkRequestFactory requestFactory = jiraApplicationLink.createAuthenticatedRequestFactory();
-			ApplicationLinkRequest request = requestFactory.createRequest(Request.MethodType.GET, jiraUrl);
 			request.addHeader("Content-Type", "application/json");
-
 			responseBody = request.executeAndReturn(new ApplicationLinkResponseHandler<String>() {
 				@Override
 				public String credentialsRequired(final Response response) throws ResponseException {
@@ -94,7 +102,8 @@ public class JiraClient {
 					return response.getResponseBodyAsString();
 				}
 			});
-		} catch (CredentialsRequiredException | ResponseException e) {
+		} catch (ResponseException e) {
+			LOGGER.error(e.getMessage());
 			responseBody = e.getMessage();
 		}
 		return responseBody;
@@ -108,9 +117,9 @@ public class JiraClient {
 	 *            object of {@link PullRequest} class.
 	 * @return JSON string.
 	 */
-	public String getDecisionKnowledgeFromJira(PullRequest pullRequest) {
+	public String getDecisionKnowledgeFromJiraAsJsonString(PullRequest pullRequest) {
 		Set<String> jiraIssueKeys = pullRequest.getJiraIssueKeys();
-		return getDecisionKnowledgeFromJira(jiraIssueKeys);
+		return getDecisionKnowledgeFromJiraAsJsonString(jiraIssueKeys);
 	}
 
 	/**
@@ -121,10 +130,12 @@ public class JiraClient {
 	 *            as a set of strings.
 	 * @return JSON string.
 	 */
-	public String getDecisionKnowledgeFromJira(Set<String> jiraIssueKeys) {
-		String queryWithJiraIssues = getJiraCallQuery(jiraIssueKeys);
+	public String getDecisionKnowledgeFromJiraAsJsonString(Set<String> jiraIssueKeys) {
+		if (!jiraIssueKeys.iterator().hasNext()) {
+			return "";
+		}
 		String projectKey = retrieveProjectKey(jiraIssueKeys);
-		return getDecisionKnowledgeFromJira(queryWithJiraIssues, projectKey);
+		return getDecisionKnowledgeFromJiraAsJsonString("", projectKey, jiraIssueKeys.iterator().next());
 	}
 
 	/**
@@ -137,9 +148,39 @@ public class JiraClient {
 	 *            of the Jira project.
 	 * @return JSON String.
 	 */
-	public String getDecisionKnowledgeFromJira(String query, String projectKey) {
-		return getResponseFromJiraWithApplicationLink(
-				"rest/condec/latest/knowledge/getElements.json?query=" + query + "&projectKey=" + projectKey);
+	private String getDecisionKnowledgeFromJiraAsJsonString(String query, String projectKey, String selectedElement) {
+		return postResponseFromJiraWithApplicationLink("rest/condec/latest/knowledge/knowledgeElements.json",
+				encodeUserInputQuery(query), projectKey, selectedElement);
+	}
+
+	public static String convertToJsonArray(List<String> list) {
+		return new JSONArray(list).toString();
+	}
+
+	private String postResponseFromJiraWithApplicationLink(String jiraUrl, String searchTerm, String projectKey,
+			String selectedElement) {
+		ApplicationLinkRequest request = createRequest(Request.MethodType.POST, jiraUrl);
+		if (request == null) {
+			return "";
+		}
+		request.setRequestBody(
+				"{\"projectKey\":\"" + projectKey + "\",\"searchTerm\":\"" + searchTerm + "\","
+						+ "\"selectedElement\":\"" + selectedElement + "\",\"createTransitiveLinks\":false}",
+				MediaType.APPLICATION_JSON);
+		return receiveResponseFromJiraWithApplicationLink(request);
+	}
+
+	private ApplicationLinkRequest createRequest(Request.MethodType type, String url) {
+		if (jiraApplicationLink == null) {
+			return null;
+		}
+		ApplicationLinkRequestFactory requestFactory = jiraApplicationLink.createAuthenticatedRequestFactory();
+		try {
+			return requestFactory.createRequest(type, url);
+		} catch (CredentialsRequiredException e) {
+			LOGGER.error(e.getMessage());
+		}
+		return null;
 	}
 
 	/**

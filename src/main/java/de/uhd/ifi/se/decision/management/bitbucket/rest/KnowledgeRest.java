@@ -30,7 +30,7 @@ public class KnowledgeRest {
 		PullRequestService pullRequestService = ComponentLocator.getComponent(PullRequestService.class);
 		PullRequest pullRequest = new PullRequest(pullRequestService.getById(repositoryId, pullRequestId));
 
-		String jsonString = JiraClient.instance.getDecisionKnowledgeFromJira(pullRequest);
+		String jsonString = JiraClient.instance.getDecisionKnowledgeFromJiraAsJsonString(pullRequest);
 		return Response.status(Response.Status.OK).entity(jsonString).build();
 	}
 }
