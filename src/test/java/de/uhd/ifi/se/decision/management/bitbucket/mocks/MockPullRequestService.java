@@ -2,10 +2,12 @@ package de.uhd.ifi.se.decision.management.bitbucket.mocks;
 
 import java.util.Set;
 
+import com.atlassian.bitbucket.comment.CommentThread;
 import com.atlassian.bitbucket.commit.Commit;
 import com.atlassian.bitbucket.commit.CommitCallback;
 import com.atlassian.bitbucket.content.ChangeCallback;
 import com.atlassian.bitbucket.content.DiffContentCallback;
+import com.atlassian.bitbucket.io.TypeAwareOutputSupplier;
 import com.atlassian.bitbucket.pull.DeletePullRequestMergeConfigRequest;
 import com.atlassian.bitbucket.pull.GetPullRequestMergeConfigRequest;
 import com.atlassian.bitbucket.pull.PullRequest;
@@ -19,7 +21,9 @@ import com.atlassian.bitbucket.pull.PullRequestCreateRequest;
 import com.atlassian.bitbucket.pull.PullRequestDeclineRequest;
 import com.atlassian.bitbucket.pull.PullRequestDeleteRequest;
 import com.atlassian.bitbucket.pull.PullRequestDiffRequest;
+import com.atlassian.bitbucket.pull.PullRequestDiscardReviewRequest;
 import com.atlassian.bitbucket.pull.PullRequestEntityType;
+import com.atlassian.bitbucket.pull.PullRequestFinishReviewRequest;
 import com.atlassian.bitbucket.pull.PullRequestMergeConfig;
 import com.atlassian.bitbucket.pull.PullRequestMergeRequest;
 import com.atlassian.bitbucket.pull.PullRequestMergeability;
@@ -40,6 +44,7 @@ import com.atlassian.bitbucket.util.PageRequest;
 /**
  * Mock class for the PullRequestService.
  */
+@SuppressWarnings("deprecation")
 public class MockPullRequestService implements PullRequestService {
 
 	@Override
@@ -244,6 +249,30 @@ public class MockPullRequestService implements PullRequestService {
 	public PullRequest update(PullRequestUpdateRequest arg0) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void discardReview(PullRequestDiscardReviewRequest request) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public int finishReview(PullRequestFinishReviewRequest request) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Page<CommentThread> getReviewThreads(int repositoryId, long pullRequestId, PageRequest pageRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void streamDiff(PullRequestDiffRequest request, TypeAwareOutputSupplier outputSupplier) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

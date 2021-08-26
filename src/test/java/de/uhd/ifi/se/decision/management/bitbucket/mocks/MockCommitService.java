@@ -24,6 +24,7 @@ import com.atlassian.bitbucket.content.ChangeCallback;
 import com.atlassian.bitbucket.content.ChangesRequest;
 import com.atlassian.bitbucket.content.DiffContentCallback;
 import com.atlassian.bitbucket.content.DiffRequest;
+import com.atlassian.bitbucket.io.TypeAwareOutputSupplier;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.scm.bulk.BulkCommitCallback;
 import com.atlassian.bitbucket.util.Page;
@@ -125,6 +126,12 @@ public class MockCommitService implements CommitService {
 	@Override
 	public void streamCommits(BulkCommitsRequest arg0, BulkCommitCallback arg1) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public void streamDiff(DiffRequest request, TypeAwareOutputSupplier outputSupplier) {
+		// TODO Auto-generated method stub
+
 	}
 }
