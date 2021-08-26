@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
@@ -133,7 +134,19 @@ public class JiraClient {
 			return "";
 		}
 		String projectKey = JiraIssueKeyParser.retrieveProjectKey(jiraIssueKeys);
-		return getDecisionKnowledgeFromJiraAsJsonString("", projectKey, jiraIssueKeys.iterator().next());
+		JSONArray decisionKnowledgeFromJiraAsJsonArray = new JSONArray();
+		for (String jiraIssueKey : jiraIssueKeys) {
+			String jsonString = getDecisionKnowledgeFromJiraAsJsonString("", projectKey, jiraIssueKey);
+			decisionKnowledgeFromJiraAsJsonArray = concatArray(decisionKnowledgeFromJiraAsJsonArray,
+					new JSONArray(jsonString));
+		}
+		return decisionKnowledgeFromJiraAsJsonArray.toString();
+	}
+
+	private static JSONArray concatArray(JSONArray jsArr1, JSONArray jsArr2) {
+		List<Object> list = jsArr1.toList();
+		list.addAll(jsArr2.toList());
+		return new JSONArray(list);
 	}
 
 	/**

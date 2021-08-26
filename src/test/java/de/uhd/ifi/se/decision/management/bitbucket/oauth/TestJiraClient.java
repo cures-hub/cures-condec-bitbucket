@@ -56,7 +56,8 @@ public class TestJiraClient {
 		jiraIssueKeys.add("CONDEC-2");
 
 		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJsonString(jiraIssueKeys);
-		assertEquals("[{'type':'issue'}, {'type':'decision'}]", decisionKnowledgeJsonString);
+		assertEquals("[{\"type\":\"issue\"},{\"type\":\"decision\"},{\"type\":\"issue\"},{\"type\":\"decision\"}]",
+				decisionKnowledgeJsonString);
 	}
 
 	@Test
