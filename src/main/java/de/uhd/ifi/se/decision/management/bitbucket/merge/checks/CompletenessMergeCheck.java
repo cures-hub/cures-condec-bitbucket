@@ -11,7 +11,6 @@ import com.atlassian.bitbucket.hook.repository.RepositoryMergeCheck;
 
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.CompletenessCheckHandlerImpl;
 import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
-import de.uhd.ifi.se.decision.management.bitbucket.model.impl.PullRequestImpl;
 
 /**
  * Enforces that pull requests can only be accepted, i.e., the respective branch
@@ -27,7 +26,7 @@ public class CompletenessMergeCheck implements RepositoryMergeCheck {
 	@Override
 	public RepositoryHookResult preUpdate(@Nonnull PreRepositoryHookContext context,
 			@Nonnull PullRequestMergeHookRequest request) {
-		PullRequest pullRequest = new PullRequestImpl(request);
+		PullRequest pullRequest = new PullRequest(request);
 
 		CompletenessCheckHandler completenessCheckHandler = new CompletenessCheckHandlerImpl(pullRequest);
 		if (completenessCheckHandler.isDocumentationComplete()) {

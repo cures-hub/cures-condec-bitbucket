@@ -17,7 +17,6 @@ import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockApplicationLinkServ
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockCommitService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
 import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
-import de.uhd.ifi.se.decision.management.bitbucket.model.impl.PullRequestImpl;
 
 public class TestCompletenessCheckHandler {
 
@@ -26,7 +25,7 @@ public class TestCompletenessCheckHandler {
 	@BeforeClass
 	public static void setUp() {
 		MockComponentLocator.create(new MockCommitService(), new MockApplicationLinkService());
-		PullRequest pullRequest = new PullRequestImpl(new MockPullRequest());
+		PullRequest pullRequest = new PullRequest(new MockPullRequest());
 		completenessCheckHandler = new CompletenessCheckHandlerImpl(pullRequest);
 	}
 

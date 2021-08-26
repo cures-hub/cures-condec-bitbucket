@@ -11,7 +11,6 @@ import com.atlassian.bitbucket.pull.PullRequestService;
 import com.atlassian.sal.api.component.ComponentLocator;
 
 import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
-import de.uhd.ifi.se.decision.management.bitbucket.model.impl.PullRequestImpl;
 import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
 
 /**
@@ -29,7 +28,7 @@ public class KnowledgeRest {
 			return Response.serverError().entity("The pull request cannot be found.").build();
 		}
 		PullRequestService pullRequestService = ComponentLocator.getComponent(PullRequestService.class);
-		PullRequest pullRequest = new PullRequestImpl(pullRequestService.getById(repositoryId, pullRequestId));
+		PullRequest pullRequest = new PullRequest(pullRequestService.getById(repositoryId, pullRequestId));
 
 		String jsonString = JiraClient.instance.getDecisionKnowledgeFromJira(pullRequest);
 		return Response.status(Response.Status.OK).entity(jsonString).build();

@@ -15,7 +15,6 @@ import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockApplicationLinkServ
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockCommitService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequestMergeHookRequest;
-import de.uhd.ifi.se.decision.management.bitbucket.model.impl.PullRequestImpl;
 
 public class TestPullRequest {
 
@@ -24,12 +23,12 @@ public class TestPullRequest {
 	@BeforeClass
 	public static void setUp() {
 		MockComponentLocator.create(new MockCommitService(), new MockApplicationLinkService());
-		pullRequest = new PullRequestImpl(new MockPullRequest());
+		pullRequest = new PullRequest(new MockPullRequest());
 	}
 
 	@Test
 	public void testConstructor() {
-		PullRequest pullRequest = new PullRequestImpl(new MockPullRequestMergeHookRequest());
+		PullRequest pullRequest = new PullRequest(new MockPullRequestMergeHookRequest());
 		assertEquals("CONDEC", pullRequest.getProjectKey());
 	}
 
@@ -41,7 +40,7 @@ public class TestPullRequest {
 
 	@Test
 	public void testGetCommitsInternalPullRequestNull() {
-		PullRequest pullRequest = new PullRequestImpl((com.atlassian.bitbucket.pull.PullRequest) null);
+		PullRequest pullRequest = new PullRequest((com.atlassian.bitbucket.pull.PullRequest) null);
 		Iterable<Commit> commits = pullRequest.getCommits();
 		assertFalse(commits.iterator().hasNext());
 	}
