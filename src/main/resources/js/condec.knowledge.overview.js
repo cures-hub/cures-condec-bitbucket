@@ -11,16 +11,14 @@
  Is referenced in HTML by
  * nowhere
  */
-(function($) {
-	// Set up our namespace
-	window.ConDec = window.ConDec || {};
-	ConDec.knowledgeOverview = ConDec.knowledgeOverview || {};
-
+console.log("conDecKnowledgeOverview file");
+var ConDecKnowledgeOverview = {
 	/*
 	 * Exposes the client-condition function. external references:
 	 * client-web-panel in atlassian-plugin.xml
 	 */
-	ConDec.knowledgeOverview.init = function init() {
+	init : function() {
+		console.log("conDecKnowledgeOverview init");
 		knowledgeElements = conDecAPI.getDecisionKnowledgeFromJira(
 			null
 		);
@@ -30,31 +28,7 @@
 				objects: null
 			};
 		}
-
-		return {
-			objects: knowledgeElements
-		};
-	};
-
-	checkIfSoyTemplateIsRendered(0);
-
-	// TODO Get rid of this workaround
-	// @issue How can we set the event listeners without this workaround?
-	function checkIfSoyTemplateIsRendered(iCounter) {
-		// check if inital List exists
-		if ($(".todo-list").length > 0) {
-			setEventListeners();
-		} else {
-			if (iCounter < 10) {
-				setTimeout(function() {
-					// max 10 times, else an error occured
-					checkIfSoyTemplateIsRendered(iCounter + 1);
-				}, 3000);
-			}
-		}
-	}
-
-	function setEventListeners() {
+		
 		$("#showDecisionKnowledgeButton").click(function() {
 			// Show dialog
 			AJS.dialog2("#knowledge-overview-dialog").show();
@@ -65,11 +39,9 @@
 				AJS.dialog2("#knowledge-overview-dialog").hide();
 			}
 		);
-	}
 
-	function showText(text) {
-		$(".todo-list").replaceWith(
-			"<div class'todo-list'><p>" + text + "</p></div>"
-		);
+		return {
+			objects: knowledgeElements
+		};
 	}
-})(AJS.$);
+};
