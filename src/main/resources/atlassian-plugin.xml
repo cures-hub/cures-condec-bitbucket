@@ -27,9 +27,6 @@
 			request.
 		</description>
 		<context>bitbucket.page.pullRequest.detail</context>
-	
-        <directory location="/js/" />
-        <directory location="/soy/" />
 
 		<!-- transform Soy templates into JS -->
 		<transformation extension="soy">
@@ -44,18 +41,17 @@
 		<resource type="download" name="condec.knowledge.overview.js" location="/js/condec.knowledge.overview.js" />
 
 		<dependency>com.atlassian.auiplugin:ajs</dependency>
-		<dependency>de.uhd.ifi.se.decision.bitbucket-web-api:pull-request-web-panels</dependency>
 		<dependency>com.atlassian.auiplugin:table</dependency>
 		<dependency>com.atlassian.auiplugin:aui-table-sortable</dependency>
 	</web-resource>
 
 	<!-- Decision Knowledge Overview in Pull Requests -->
 	<client-web-panel key="decision-knowledge-overview" name="Decision Knowledge Overview in Pull Request"
-		location="bitbucket.ui.pullrequest.overview.summary">
+		location="bitbucket.pull-request.links">
 		<client-context-provider>ConDecKnowledgeOverview.init</client-context-provider>
 
-		<!-- Velocity templates -->
-		<resource name="view" type="soy" location="de.uhd.ifi.se.decision.management.bitbucket:decision-knowledge-in-pull-request-resources/condec.knowledge.overview.soy.knowledgeElements" />
+		<resource name="view" type="soy"
+			location="de.uhd.ifi.se.decision.management.bitbucket:decision-knowledge-in-pull-request-resources/condec.knowledge.overview.soy.knowledgeElements" />
 		<dependency>
 			de.uhd.ifi.se.decision.management.bitbucket:decision-knowledge-in-pull-request-resources
 		</dependency>
@@ -69,8 +65,7 @@
 		name="Decision Knowledge Completeness Check" class="bean:completenessMergeCheck" configurable="true">
 		<description>
 			Enforces that pull requests can only be accepted, i.e., the respective branch can
-			only be merged
-			back to
+			only be merged back to
 			the maineline if the decision knowledge documentation is complete.
 		</description>
 	</repository-merge-check>
