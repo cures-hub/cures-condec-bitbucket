@@ -12,7 +12,6 @@ import org.junit.Test;
 import com.atlassian.sal.testresources.component.MockComponentLocator;
 
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockApplicationLinkService;
-import de.uhd.ifi.se.decision.management.bitbucket.oauth.impl.JiraClientImpl;
 
 public class TestJiraClient {
 
@@ -21,12 +20,12 @@ public class TestJiraClient {
 	@BeforeClass
 	public static void setUp() {
 		MockComponentLocator.create(new MockApplicationLinkService());
-		jiraClient = new JiraClientImpl();
+		jiraClient = new JiraClient();
 	}
 
 	@Test
 	public void testConstructor() {
-		assertNotNull(new JiraClientImpl());
+		assertNotNull(new JiraClient());
 	}
 
 	@Test
@@ -53,13 +52,13 @@ public class TestJiraClient {
 
 	@Test
 	public void testParseJiraProjectsJsonOneProject() {
-		Set<String> projects = ((JiraClientImpl) jiraClient).parseJiraProjectsJson("CONDEC");
+		Set<String> projects = ((JiraClient) jiraClient).parseJiraProjectsJson("CONDEC");
 		assertEquals("CONDEC", projects.iterator().next());
 	}
 
 	@Test
 	public void testParseJiraProjectsJsonManyProjects() {
-		Set<String> projects = ((JiraClientImpl) jiraClient)
+		Set<String> projects = ((JiraClient) jiraClient)
 				.parseJiraProjectsJson("[ {'key' : 'TEST'}, {'key' : 'CONDEC'} ]");
 		assertEquals(2, projects.size());
 	}
