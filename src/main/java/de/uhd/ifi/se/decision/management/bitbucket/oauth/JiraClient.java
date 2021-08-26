@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
@@ -150,10 +149,6 @@ public class JiraClient {
 	private String getDecisionKnowledgeFromJiraAsJsonString(String query, String projectKey, String selectedElement) {
 		return postResponseFromJiraWithApplicationLink("rest/condec/latest/knowledge/knowledgeElements.json",
 				encodeUserInputQuery(query), projectKey, selectedElement);
-	}
-
-	public static String convertToJsonArray(List<String> list) {
-		return new JSONArray(list).toString();
 	}
 
 	private String postResponseFromJiraWithApplicationLink(String jiraUrl, String searchTerm, String projectKey,

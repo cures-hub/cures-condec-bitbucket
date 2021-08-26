@@ -45,13 +45,20 @@ public class TestJiraClient {
 	}
 
 	@Test
-	public void testGetDecisionKnowledgeFromJiraByKeys() {
+	public void testGetDecisionKnowledgeFromJiraByKeysValid() {
 		Set<String> jiraIssueKeys = new HashSet<>();
 		jiraIssueKeys.add("CONDEC-1");
 		jiraIssueKeys.add("CONDEC-2");
 
 		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJsonString(jiraIssueKeys);
 		assertEquals("[{'type':'issue'}, {'type':'decision'}]", decisionKnowledgeJsonString);
+	}
+
+	@Test
+	public void testGetDecisionKnowledgeFromJiraByKeysEmpty() {
+		Set<String> jiraIssueKeys = new HashSet<>();
+		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJsonString(jiraIssueKeys);
+		assertEquals("", decisionKnowledgeJsonString);
 	}
 
 	@Test

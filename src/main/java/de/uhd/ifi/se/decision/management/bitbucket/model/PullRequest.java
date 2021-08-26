@@ -55,8 +55,6 @@ public class PullRequest {
 	}
 
 	/**
-	 * Returns the commits associated with the pull request.
-	 * 
 	 * @return commits associated with the pull request as an iterable collection.
 	 */
 	public Iterable<Commit> getCommits() {
@@ -97,9 +95,7 @@ public class PullRequest {
 	}
 
 	/**
-	 * Returns the Jira project associated with the pull request.
-	 * 
-	 * @return Jira project key as a string.
+	 * @return Jira project key associated with the pull request as a string.
 	 */
 	public String getProjectKey() {
 		return JiraIssueKeyParser.retrieveProjectKey(jiraIssueKeys);
