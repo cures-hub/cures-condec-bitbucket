@@ -12,7 +12,6 @@ import com.atlassian.bitbucket.commit.Commit;
 import com.atlassian.sal.testresources.component.MockComponentLocator;
 
 import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.CompletenessCheckHandler;
-import de.uhd.ifi.se.decision.management.bitbucket.merge.checks.impl.CompletenessCheckHandlerImpl;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockApplicationLinkService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockCommitService;
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockPullRequest;
@@ -26,12 +25,12 @@ public class TestCompletenessCheckHandler {
 	public static void setUp() {
 		MockComponentLocator.create(new MockCommitService(), new MockApplicationLinkService());
 		PullRequest pullRequest = new PullRequest(new MockPullRequest());
-		completenessCheckHandler = new CompletenessCheckHandlerImpl(pullRequest);
+		completenessCheckHandler = new CompletenessCheckHandler(pullRequest);
 	}
 
 	@Test
 	public void testConstructorPullRequestNull() {
-		assertNotNull(new CompletenessCheckHandlerImpl(null));
+		assertNotNull(new CompletenessCheckHandler(null));
 	}
 
 	@Test
@@ -47,30 +46,28 @@ public class TestCompletenessCheckHandler {
 
 	@Test
 	public void testGetCommitsOfPullRequest() {
-		Iterable<Commit> commits = ((CompletenessCheckHandlerImpl) completenessCheckHandler).pullRequest.getCommits();
+		Iterable<Commit> commits = ((CompletenessCheckHandler) completenessCheckHandler).pullRequest.getCommits();
 		assertEquals(true, commits.iterator().hasNext());
 	}
 
 	@Test
 	public void testIsDocumentationCompleteTrue() {
 		String jsonString_true = "[{'type':'issue'}, {'type':'decision'}]";
-		boolean isDocumentationComplete = new CompletenessCheckHandlerImpl(null)
-				.isDocumentationComplete(jsonString_true);
+		boolean isDocumentationComplete = new CompletenessCheckHandler(null).isDocumentationComplete(jsonString_true);
 		assertTrue(isDocumentationComplete);
 	}
 
 	@Test
 	public void testIsDocumentationCompleteNonJsonArray() {
 		String jsonString_true = "abc";
-		boolean isDocumentationComplete = new CompletenessCheckHandlerImpl(null)
-				.isDocumentationComplete(jsonString_true);
+		boolean isDocumentationComplete = new CompletenessCheckHandler(null).isDocumentationComplete(jsonString_true);
 		assertFalse(isDocumentationComplete);
 	}
 
 	@Test
 	public void testIsDocumentationCompleteFalse() {
 		String jsonString_false = "[{'key':'CONDEC-1', 'type':'work item'}, {'type':'issue'}]";
-		CompletenessCheckHandlerImpl completenessCheckHandler = new CompletenessCheckHandlerImpl(null);
+		CompletenessCheckHandler completenessCheckHandler = new CompletenessCheckHandler(null);
 		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete(jsonString_false);
 		assertFalse(isDocumentationComplete);
 		assertEquals("CONDEC-1", completenessCheckHandler.getJiraIssuesWithIncompleteDocumentation().iterator().next());
