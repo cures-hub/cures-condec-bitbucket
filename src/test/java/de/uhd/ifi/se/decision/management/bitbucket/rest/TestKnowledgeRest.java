@@ -30,7 +30,7 @@ public class TestKnowledgeRest {
 		Response response = knowledgeRest.getDecisionKnowledgeElement(1, 1);
 		assertEquals(200, response.getStatus());
 		JSONArray expected = new JSONArray(
-				"[[{'key' : 'CONDEC-1', 'type':'issue'}, {'key' : 'CONDEC-2', 'type':'decision'}]]");
+				"[{'key' : 'CONDEC-1', 'type':'issue'}, {'key' : 'CONDEC-2', 'type':'decision'}]");
 
 		assertEquals(expected.toString(), response.getEntity().toString());
 	}

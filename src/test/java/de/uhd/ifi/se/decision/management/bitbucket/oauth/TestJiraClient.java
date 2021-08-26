@@ -57,9 +57,9 @@ public class TestJiraClient {
 		Set<String> jiraIssueKeys = new HashSet<>();
 		jiraIssueKeys.add("CONDEC-1");
 		jiraIssueKeys.add("CONDEC-2");
-		JSONArray decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJson(jiraIssueKeys);
+		JSONArray decisionKnowledgeJson = jiraClient.getDecisionKnowledgeFromJiraAsJson(jiraIssueKeys);
 
-		assertEquals(2, decisionKnowledgeJsonString.length());
+		assertEquals(4, decisionKnowledgeJson.length());
 	}
 
 	@Test
