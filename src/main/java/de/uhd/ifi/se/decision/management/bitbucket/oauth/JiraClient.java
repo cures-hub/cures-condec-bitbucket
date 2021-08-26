@@ -34,7 +34,7 @@ import de.uhd.ifi.se.decision.management.bitbucket.parser.JiraIssueKeyParser;
  */
 public class JiraClient {
 
-	private ApplicationLink jiraApplicationLink;
+	public ApplicationLink jiraApplicationLink;
 	private static final Logger LOGGER = LoggerFactory.getLogger(JiraClient.class);
 
 	/**
@@ -146,7 +146,7 @@ public class JiraClient {
 	 *            of the Jira project.
 	 * @return JSON String.
 	 */
-	private String getDecisionKnowledgeFromJiraAsJsonString(String query, String projectKey, String selectedElement) {
+	public String getDecisionKnowledgeFromJiraAsJsonString(String query, String projectKey, String selectedElement) {
 		return postResponseFromJiraWithApplicationLink("rest/condec/latest/knowledge/knowledgeElements.json",
 				encodeUserInputQuery(query), projectKey, selectedElement);
 	}

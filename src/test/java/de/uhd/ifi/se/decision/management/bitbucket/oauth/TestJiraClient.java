@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.atlassian.sal.testresources.component.MockComponentLocator;
@@ -30,18 +29,24 @@ public class TestJiraClient {
 	}
 
 	@Test
+	public void testApplicationLinkNull() {
+		jiraClient.jiraApplicationLink = null;
+		assertEquals(0, jiraClient.getJiraProjects().size());
+		assertEquals("", jiraClient.getDecisionKnowledgeFromJiraAsJsonString("", "CONDEC", "CONDEC-1"));
+		jiraClient = new JiraClient();
+	}
+
+	@Test
 	public void testGetCurrentActiveJiraProjects() {
 		Set<String> projectKeys = jiraClient.getJiraProjects();
 		assertEquals(1, projectKeys.size());
 	}
 
 	@Test
-	@Ignore
-	public void testGetDecisionKnowledgeFromJira() {
-		// String decisionKnowledgeJsonString =
-		// jiraClient.getDecisionKnowledgeFromJira("", "CONDEC");
-		// assertEquals("[{'type':'issue'}, {'type':'decision'}]",
-		// decisionKnowledgeJsonString);
+	public void testGetDecisionKnowledgeFromJiraByFilterSettingsValid() {
+		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJsonString("", "CONDEC",
+				"CONDEC-1");
+		assertEquals("[{'type':'issue'}, {'type':'decision'}]", decisionKnowledgeJsonString);
 	}
 
 	@Test
