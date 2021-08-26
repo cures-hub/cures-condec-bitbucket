@@ -5,6 +5,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONArray;
+
 import com.atlassian.bitbucket.pull.PullRequestService;
 import com.atlassian.sal.api.component.ComponentLocator;
 
@@ -31,7 +33,7 @@ public class KnowledgeRest {
 		PullRequestService pullRequestService = ComponentLocator.getComponent(PullRequestService.class);
 		PullRequest pullRequest = new PullRequest(pullRequestService.getById(repositoryId, pullRequestId));
 
-		String jsonString = JiraClient.instance.getDecisionKnowledgeFromJiraAsJsonString(pullRequest);
+		JSONArray jsonString = JiraClient.instance.getDecisionKnowledgeFromJiraAsJson(pullRequest);
 		return Response.status(Response.Status.OK).entity(jsonString).build();
 	}
 }

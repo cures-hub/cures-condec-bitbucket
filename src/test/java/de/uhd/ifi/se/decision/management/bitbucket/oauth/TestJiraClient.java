@@ -2,10 +2,12 @@ package de.uhd.ifi.se.decision.management.bitbucket.oauth;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.json.JSONArray;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,7 +34,7 @@ public class TestJiraClient {
 	public void testApplicationLinkNull() {
 		jiraClient.jiraApplicationLink = null;
 		assertEquals(0, jiraClient.getJiraProjects().size());
-		assertEquals("", jiraClient.getDecisionKnowledgeFromJiraAsJsonString("", "CONDEC", "CONDEC-1"));
+		assertTrue(jiraClient.getDecisionKnowledgeFromJiraAsJson("", "CONDEC", "CONDEC-1").isEmpty());
 		jiraClient = new JiraClient();
 	}
 
@@ -44,9 +46,10 @@ public class TestJiraClient {
 
 	@Test
 	public void testGetDecisionKnowledgeFromJiraByFilterSettingsValid() {
-		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJsonString("", "CONDEC",
-				"CONDEC-1");
-		assertEquals("[{'type':'issue'}, {'type':'decision'}]", decisionKnowledgeJsonString);
+		JSONArray decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJson("", "CONDEC", "CONDEC-1");
+		JSONArray expected = new JSONArray(
+				"[{'key' : 'CONDEC-1', 'type':'issue'}, {'key' : 'CONDEC-2', 'type':'decision'}]");
+		assertEquals(expected.toString(), decisionKnowledgeJsonString.toString());
 	}
 
 	@Test
@@ -54,17 +57,16 @@ public class TestJiraClient {
 		Set<String> jiraIssueKeys = new HashSet<>();
 		jiraIssueKeys.add("CONDEC-1");
 		jiraIssueKeys.add("CONDEC-2");
+		JSONArray decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJson(jiraIssueKeys);
 
-		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJsonString(jiraIssueKeys);
-		assertEquals("[{\"type\":\"issue\"},{\"type\":\"decision\"},{\"type\":\"issue\"},{\"type\":\"decision\"}]",
-				decisionKnowledgeJsonString);
+		assertEquals(2, decisionKnowledgeJsonString.length());
 	}
 
 	@Test
 	public void testGetDecisionKnowledgeFromJiraByKeysEmpty() {
 		Set<String> jiraIssueKeys = new HashSet<>();
-		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJsonString(jiraIssueKeys);
-		assertEquals("", decisionKnowledgeJsonString);
+		JSONArray decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJson(jiraIssueKeys);
+		assertTrue(decisionKnowledgeJsonString.isEmpty());
 	}
 
 	@Test

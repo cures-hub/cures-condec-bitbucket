@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import javax.ws.rs.core.Response;
 
+import org.json.JSONArray;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,7 +29,10 @@ public class TestKnowledgeRest {
 	public void testGetDecisionKnowledgeFromJira() {
 		Response response = knowledgeRest.getDecisionKnowledgeElement(1, 1);
 		assertEquals(200, response.getStatus());
-		assertEquals("[{\"type\":\"issue\"},{\"type\":\"decision\"}]", response.getEntity());
+		JSONArray expected = new JSONArray(
+				"[[{'key' : 'CONDEC-1', 'type':'issue'}, {'key' : 'CONDEC-2', 'type':'decision'}]]");
+
+		assertEquals(expected.toString(), response.getEntity().toString());
 	}
 
 	@Test

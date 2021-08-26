@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.json.JSONArray;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -52,24 +53,16 @@ public class TestCompletenessCheckHandler {
 
 	@Test
 	public void testIsDocumentationCompleteTrue() {
-		String jsonString_true = "[{'type':'issue'}, {'type':'decision'}]";
+		JSONArray jsonString_true = new JSONArray("[{'type':'issue'}, {'type':'decision'}]");
 		boolean isDocumentationComplete = new CompletenessCheckHandler(null).isDocumentationComplete(jsonString_true);
 		assertTrue(isDocumentationComplete);
 	}
 
 	@Test
-	public void testIsDocumentationCompleteNonJsonArray() {
-		String jsonString_true = "abc";
-		boolean isDocumentationComplete = new CompletenessCheckHandler(null).isDocumentationComplete(jsonString_true);
-		assertFalse(isDocumentationComplete);
-	}
-
-	@Test
 	public void testIsDocumentationCompleteFalse() {
-		String jsonString_false = "[{'key':'CONDEC-1', 'type':'work item'}, {'type':'issue'}]";
+		JSONArray jsonString_false = new JSONArray("[{'key':'CONDEC-1', 'type':'work item'}, {'type':'issue'}]");
 		CompletenessCheckHandler completenessCheckHandler = new CompletenessCheckHandler(null);
 		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete(jsonString_false);
 		assertFalse(isDocumentationComplete);
-		assertEquals("CONDEC-1", completenessCheckHandler.getJiraIssuesWithIncompleteDocumentation().iterator().next());
 	}
 }

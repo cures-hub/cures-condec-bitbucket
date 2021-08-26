@@ -29,31 +29,35 @@ public class CompletenessCheckHandler {
 	 * @return true if the documentation is complete.
 	 */
 	public boolean isDocumentationComplete() {
-		String knowledgeElementsAsJsonString = JiraClient.instance
-				.getDecisionKnowledgeFromJiraAsJsonString(pullRequest.getJiraIssueKeys());
-		return isDocumentationComplete(knowledgeElementsAsJsonString);
-	}
-
-	public boolean isDocumentationComplete(String knowledgeElementsAsJsonString) {
 		boolean isDocumentationComplete = true;
-		try {
-			JSONArray jsonArray = new JSONArray(knowledgeElementsAsJsonString);
-			boolean tempResult = checkIfDecisionsExists(jsonArray);
-			if (!tempResult) {
-				JSONObject firstKey = (JSONObject) jsonArray.get(0);
-				jiraIssuesWithIncompleteDocumentation.add((String) firstKey.get("key"));
+		for (String jiraIssueKey : pullRequest.getJiraIssueKeys()) {
+			Set<String> subset = new HashSet<>();
+			subset.add(jiraIssueKey);
+			JSONArray knowledgeElementsAsJson = JiraClient.instance.getDecisionKnowledgeFromJiraAsJson(subset);
+			if (!isDocumentationComplete(knowledgeElementsAsJson)) {
 				isDocumentationComplete = false;
+				jiraIssuesWithIncompleteDocumentation.add(jiraIssueKey);
 			}
-		} catch (Exception e) {
-			isDocumentationComplete = false;
 		}
 		return isDocumentationComplete;
 	}
 
-	public boolean checkIfDecisionsExists(JSONArray decisions) {
+	public boolean isDocumentationComplete(JSONArray knowledgeElementsAsJson) {
+		boolean isDocumentationComplete = true;
+		try {
+			isDocumentationComplete &= checkIfDecisionsExists(knowledgeElementsAsJson);
+		} catch (Exception e) {
+			System.err.println(e);
+			isDocumentationComplete = false;
+		}
+		System.out.println(isDocumentationComplete);
+		return isDocumentationComplete;
+	}
+
+	public boolean checkIfDecisionsExists(JSONArray knowledgeElementsAsJson) {
 		boolean hasIssue = false;
 		boolean hasDecision = false;
-		for (Object current : decisions) {
+		for (Object current : knowledgeElementsAsJson) {
 			JSONObject currentObject = (JSONObject) current;
 			String type = (String) currentObject.get("type");
 			// Issue
