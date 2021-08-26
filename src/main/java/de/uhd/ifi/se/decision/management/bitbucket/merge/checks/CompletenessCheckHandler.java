@@ -57,11 +57,11 @@ public class CompletenessCheckHandler {
 			JSONObject currentObject = (JSONObject) current;
 			String type = (String) currentObject.get("type");
 			// Issue
-			if ("issue".equals(type.toLowerCase())) {
+			if ("issue".equalsIgnoreCase(type)) {
 				hasIssue = true;
 			}
 			// Decision
-			if ("decision".equals(type.toLowerCase())) {
+			if ("decision".equalsIgnoreCase(type)) {
 				hasDecision = true;
 			}
 		}

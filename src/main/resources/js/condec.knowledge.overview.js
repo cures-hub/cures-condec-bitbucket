@@ -17,7 +17,7 @@ var ConDecKnowledgeOverview = {
 	 * Exposes the client-condition function. external references:
 	 * client-web-panel in atlassian-plugin.xml
 	 */
-	init : function() {
+	init: function() {
 		console.log("conDecKnowledgeOverview init");
 		knowledgeElements = conDecAPI.getDecisionKnowledgeFromJira(
 			null
@@ -28,12 +28,10 @@ var ConDecKnowledgeOverview = {
 				objects: null
 			};
 		}
-		
 		$("#showDecisionKnowledgeButton").click(function() {
 			// Show dialog
 			AJS.dialog2("#knowledge-overview-dialog").show();
 		});
-
 		$("#knowledge-overview-dialog-cancel-button").click(
 			function() {
 				AJS.dialog2("#knowledge-overview-dialog").hide();
