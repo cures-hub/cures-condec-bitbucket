@@ -18,11 +18,9 @@
 	/*
 	 * external references: condec.knowledge.overview
 	 */
-	ConDecAPI.prototype.getDecisionKnowledgeFromJira = function getDecisionKnowledgeFromJira(
-		callback
-	) {
-		var pullRequest = require("bitbucket/internal/model/page-state").getPullRequest();
+	ConDecAPI.prototype.getDecisionKnowledgeFromJira = function getDecisionKnowledgeFromJira(callback) {
 		console.log("conDecAPI getDecisionKnowledgeFromJira");
+		var pullRequest = require("bitbucket/internal/model/page-state").getPullRequest();		
 		console.log(pullRequest);
 
 		var pullRequestId = pullRequest["id"];
@@ -33,7 +31,7 @@
 
 		var url =
 			this.restPrefix +
-			"/knowledge/getDecisionKnowledgeFromJira?repositoryId=" +
+			"/knowledge/decisionKnowledgeFromJira?repositoryId=" +
 			repositoryId +
 			"&pullRequestId=" +
 			pullRequestId;

@@ -28,7 +28,7 @@ public class TestKnowledgeRest {
 	public void testGetDecisionKnowledgeFromJira() {
 		Response response = knowledgeRest.getDecisionKnowledgeElement(1, 1);
 		assertEquals(200, response.getStatus());
-		assertEquals("[{'type':'issue'}, {'type':'decision'}]", response.getEntity());
+		assertEquals("[{\"type\":\"issue\"},{\"type\":\"decision\"}]", response.getEntity());
 	}
 
 	@Test

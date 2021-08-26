@@ -1,4 +1,4 @@
-package de.uhd.ifi.se.decision.management.bitbucket.oauth;
+package de.uhd.ifi.se.decision.management.bitbucket.parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -22,7 +22,7 @@ public class TestGetJiraIssueKeys {
 
 	@Test
 	public void testMultipleJiraIssueKeys() {
-		Set<String> jiraIssueKeys = JiraClient
+		Set<String> jiraIssueKeys = JiraIssueKeyParser
 				.getJiraIssueKeys("ConDec-1: Initial commit ConDec-2 -hallo ConDec-3 -Great tool");
 		Iterator<String> iterator = jiraIssueKeys.iterator();
 		assertEquals("CONDEC-1", iterator.next());
@@ -33,7 +33,7 @@ public class TestGetJiraIssueKeys {
 
 	@Test
 	public void testParseJiraIssueKeyStartingWithDifferentWord() {
-		Set<String> jiraIssueKeys = JiraClient.getJiraIssueKeys("Feature/CONDEC-1 link to detail view");
+		Set<String> jiraIssueKeys = JiraIssueKeyParser.getJiraIssueKeys("Feature/CONDEC-1 link to detail view");
 		Iterator<String> iterator = jiraIssueKeys.iterator();
 		assertEquals("CONDEC-1", iterator.next());
 		assertFalse(iterator.hasNext());
@@ -41,7 +41,7 @@ public class TestGetJiraIssueKeys {
 
 	@Test
 	public void testParseJiraIssueKeysSeparatedWithHypen() {
-		Set<String> jiraIssueKeys = JiraClient.getJiraIssueKeys("CONDEC-1-link-to-detail-view");
+		Set<String> jiraIssueKeys = JiraIssueKeyParser.getJiraIssueKeys("CONDEC-1-link-to-detail-view");
 		Iterator<String> iterator = jiraIssueKeys.iterator();
 		assertEquals("CONDEC-1", iterator.next());
 		assertFalse(iterator.hasNext());

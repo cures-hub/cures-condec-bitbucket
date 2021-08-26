@@ -12,7 +12,6 @@ import org.junit.Test;
 import com.atlassian.sal.testresources.component.MockComponentLocator;
 
 import de.uhd.ifi.se.decision.management.bitbucket.mocks.MockApplicationLinkService;
-import de.uhd.ifi.se.decision.management.bitbucket.oauth.impl.JiraClientImpl;
 
 public class TestJiraClient {
 
@@ -21,12 +20,20 @@ public class TestJiraClient {
 	@BeforeClass
 	public static void setUp() {
 		MockComponentLocator.create(new MockApplicationLinkService());
-		jiraClient = new JiraClientImpl();
+		jiraClient = new JiraClient();
 	}
 
 	@Test
 	public void testConstructor() {
-		assertNotNull(new JiraClientImpl());
+		assertNotNull(new JiraClient());
+	}
+
+	@Test
+	public void testApplicationLinkNull() {
+		jiraClient.jiraApplicationLink = null;
+		assertEquals(0, jiraClient.getJiraProjects().size());
+		assertEquals("", jiraClient.getDecisionKnowledgeFromJiraAsJsonString("", "CONDEC", "CONDEC-1"));
+		jiraClient = new JiraClient();
 	}
 
 	@Test
@@ -36,44 +43,41 @@ public class TestJiraClient {
 	}
 
 	@Test
-	public void testGetDecisionKnowledgeFromJira() {
-		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJira("", "CONDEC");
+	public void testGetDecisionKnowledgeFromJiraByFilterSettingsValid() {
+		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJsonString("", "CONDEC",
+				"CONDEC-1");
 		assertEquals("[{'type':'issue'}, {'type':'decision'}]", decisionKnowledgeJsonString);
 	}
 
 	@Test
-	public void testGetDecisionKnowledgeFromJiraByKeys() {
+	public void testGetDecisionKnowledgeFromJiraByKeysValid() {
 		Set<String> jiraIssueKeys = new HashSet<>();
 		jiraIssueKeys.add("CONDEC-1");
 		jiraIssueKeys.add("CONDEC-2");
 
-		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJira(jiraIssueKeys);
-		assertEquals("[{'type':'issue'}, {'type':'decision'}]", decisionKnowledgeJsonString);
+		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJsonString(jiraIssueKeys);
+		assertEquals("[{\"type\":\"issue\"},{\"type\":\"decision\"},{\"type\":\"issue\"},{\"type\":\"decision\"}]",
+				decisionKnowledgeJsonString);
+	}
+
+	@Test
+	public void testGetDecisionKnowledgeFromJiraByKeysEmpty() {
+		Set<String> jiraIssueKeys = new HashSet<>();
+		String decisionKnowledgeJsonString = jiraClient.getDecisionKnowledgeFromJiraAsJsonString(jiraIssueKeys);
+		assertEquals("", decisionKnowledgeJsonString);
 	}
 
 	@Test
 	public void testParseJiraProjectsJsonOneProject() {
-		Set<String> projects = ((JiraClientImpl) jiraClient).parseJiraProjectsJson("CONDEC");
+		Set<String> projects = ((JiraClient) jiraClient).parseJiraProjectsJson("CONDEC");
 		assertEquals("CONDEC", projects.iterator().next());
 	}
 
 	@Test
 	public void testParseJiraProjectsJsonManyProjects() {
-		Set<String> projects = ((JiraClientImpl) jiraClient)
+		Set<String> projects = ((JiraClient) jiraClient)
 				.parseJiraProjectsJson("[ {'key' : 'TEST'}, {'key' : 'CONDEC'} ]");
 		assertEquals(2, projects.size());
-	}
-
-	@Test
-	public void testRetrieveProjectKeys() {
-		Set<String> jiraIssueKeys = new HashSet<String>();
-		assertEquals("", JiraClient.retrieveProjectKey(jiraIssueKeys));
-		jiraIssueKeys.add("UNKNOWNPROJECT-1");
-		assertEquals("", JiraClient.retrieveProjectKey(jiraIssueKeys));
-
-		jiraIssueKeys.add("CONDEC-1");
-		jiraIssueKeys.add("CONDEC-2");
-		assertEquals("CONDEC", JiraClient.retrieveProjectKey(jiraIssueKeys));
 	}
 
 	@Test
