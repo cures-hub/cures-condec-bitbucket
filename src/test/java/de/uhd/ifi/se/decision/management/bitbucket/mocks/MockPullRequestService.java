@@ -44,6 +44,7 @@ import com.atlassian.bitbucket.util.PageRequest;
 /**
  * Mock class for the PullRequestService.
  */
+@SuppressWarnings("deprecation")
 public class MockPullRequestService implements PullRequestService {
 
 	@Override
