@@ -68,18 +68,6 @@ public class TestJiraClient {
 	}
 
 	@Test
-	public void testRetrieveProjectKeys() {
-		Set<String> jiraIssueKeys = new HashSet<String>();
-		assertEquals("", JiraClient.retrieveProjectKey(jiraIssueKeys));
-		jiraIssueKeys.add("UNKNOWNPROJECT-1");
-		assertEquals("", JiraClient.retrieveProjectKey(jiraIssueKeys));
-
-		jiraIssueKeys.add("CONDEC-1");
-		jiraIssueKeys.add("CONDEC-2");
-		assertEquals("CONDEC", JiraClient.retrieveProjectKey(jiraIssueKeys));
-	}
-
-	@Test
 	public void testGetJiraCallQuery() {
 		Set<String> jiraIssueKeys = new HashSet<String>();
 		jiraIssueKeys.add("CONDEC-1");

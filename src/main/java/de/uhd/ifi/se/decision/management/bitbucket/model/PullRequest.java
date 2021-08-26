@@ -13,7 +13,7 @@ import com.atlassian.bitbucket.util.Page;
 import com.atlassian.bitbucket.util.PageRequestImpl;
 import com.atlassian.sal.api.component.ComponentLocator;
 
-import de.uhd.ifi.se.decision.management.bitbucket.oauth.JiraClient;
+import de.uhd.ifi.se.decision.management.bitbucket.parser.JiraIssueKeyParser;
 
 /**
  * Class for pull requests. Helps to get the associated commits, Jira project,
@@ -49,7 +49,7 @@ public class PullRequest {
 		Iterable<Commit> commits = getCommits();
 		for (Commit commit : commits) {
 			String message = commit.getMessage();
-			jiraIssueKeysInCommitMessages.addAll(JiraClient.getJiraIssueKeys(message));
+			jiraIssueKeysInCommitMessages.addAll(JiraIssueKeyParser.getJiraIssueKeys(message));
 		}
 		return jiraIssueKeysInCommitMessages;
 	}
@@ -72,11 +72,11 @@ public class PullRequest {
 	}
 
 	public Set<String> getJiraIssueKeysInTitle() {
-		return JiraClient.getJiraIssueKeys(getTitle());
+		return JiraIssueKeyParser.getJiraIssueKeys(getTitle());
 	}
 
 	public Set<String> getJiraIssueKeysInBranchName() {
-		return JiraClient.getJiraIssueKeys(getBranchName());
+		return JiraIssueKeyParser.getJiraIssueKeys(getBranchName());
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class PullRequest {
 	 * @return Jira project key as a string.
 	 */
 	public String getProjectKey() {
-		return JiraClient.retrieveProjectKey(jiraIssueKeys);
+		return JiraIssueKeyParser.retrieveProjectKey(jiraIssueKeys);
 	}
 
 	/**
