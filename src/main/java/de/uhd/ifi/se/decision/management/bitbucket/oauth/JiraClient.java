@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
@@ -56,17 +55,17 @@ public class JiraClient {
 	 *         project keys.
 	 */
 	public Set<String> getJiraProjects() {
-		String projectsAsJsonString = getResponseFromJiraWithApplicationLink("rest/api/2/project");
-		if (projectsAsJsonString.isEmpty()) {
+		JSONArray projectsAsJson = getResponseFromJiraWithApplicationLink("rest/api/2/project");
+		if (projectsAsJson.isEmpty()) {
 			return new HashSet<String>();
 		}
-		return parseJiraProjectsJson(projectsAsJsonString);
+		return parseJiraProjectsJson(projectsAsJson.toString());
 	}
 
-	private String getResponseFromJiraWithApplicationLink(String jiraUrl) {
+	private JSONArray getResponseFromJiraWithApplicationLink(String jiraUrl) {
 		ApplicationLinkRequest request = createRequest(Request.MethodType.GET, jiraUrl);
 		if (request == null) {
-			return "";
+			return new JSONArray();
 		}
 		return receiveResponseFromJiraWithApplicationLink(request);
 	}
@@ -86,7 +85,7 @@ public class JiraClient {
 		return projectKeys;
 	}
 
-	private String receiveResponseFromJiraWithApplicationLink(ApplicationLinkRequest request) {
+	private JSONArray receiveResponseFromJiraWithApplicationLink(ApplicationLinkRequest request) {
 		String responseBody = "";
 		try {
 			request.addHeader("Content-Type", "application/json");
@@ -105,7 +104,7 @@ public class JiraClient {
 			LOGGER.error(e.getMessage());
 			responseBody = e.getMessage();
 		}
-		return responseBody;
+		return new JSONArray(responseBody);
 	}
 
 	/**
@@ -114,11 +113,11 @@ public class JiraClient {
 	 * 
 	 * @param pullRequest
 	 *            object of {@link PullRequest} class.
-	 * @return JSON string.
+	 * @return JSON array.
 	 */
-	public String getDecisionKnowledgeFromJiraAsJsonString(PullRequest pullRequest) {
+	public JSONArray getDecisionKnowledgeFromJiraAsJson(PullRequest pullRequest) {
 		Set<String> jiraIssueKeys = pullRequest.getJiraIssueKeys();
-		return getDecisionKnowledgeFromJiraAsJsonString(jiraIssueKeys);
+		return getDecisionKnowledgeFromJiraAsJson(jiraIssueKeys);
 	}
 
 	/**
@@ -127,26 +126,19 @@ public class JiraClient {
 	 * 
 	 * @param jiraIssueKeys
 	 *            as a set of strings.
-	 * @return JSON string.
+	 * @return JSON array.
 	 */
-	public String getDecisionKnowledgeFromJiraAsJsonString(Set<String> jiraIssueKeys) {
+	public JSONArray getDecisionKnowledgeFromJiraAsJson(Set<String> jiraIssueKeys) {
 		if (!jiraIssueKeys.iterator().hasNext()) {
-			return "";
+			return new JSONArray();
 		}
 		String projectKey = JiraIssueKeyParser.retrieveProjectKey(jiraIssueKeys);
 		JSONArray decisionKnowledgeFromJiraAsJsonArray = new JSONArray();
 		for (String jiraIssueKey : jiraIssueKeys) {
-			String jsonString = getDecisionKnowledgeFromJiraAsJsonString("", projectKey, jiraIssueKey);
-			decisionKnowledgeFromJiraAsJsonArray = concatArray(decisionKnowledgeFromJiraAsJsonArray,
-					new JSONArray(jsonString));
+			decisionKnowledgeFromJiraAsJsonArray
+					.putAll(getDecisionKnowledgeFromJiraAsJson("", projectKey, jiraIssueKey));
 		}
-		return decisionKnowledgeFromJiraAsJsonArray.toString();
-	}
-
-	private static JSONArray concatArray(JSONArray jsArr1, JSONArray jsArr2) {
-		List<Object> list = jsArr1.toList();
-		list.addAll(jsArr2.toList());
-		return new JSONArray(list);
+		return decisionKnowledgeFromJiraAsJsonArray;
 	}
 
 	/**
@@ -157,18 +149,18 @@ public class JiraClient {
 	 *            JQL query.
 	 * @param projectKey
 	 *            of the Jira project.
-	 * @return JSON String.
+	 * @return JSON array.
 	 */
-	public String getDecisionKnowledgeFromJiraAsJsonString(String query, String projectKey, String selectedElement) {
+	public JSONArray getDecisionKnowledgeFromJiraAsJson(String query, String projectKey, String selectedElement) {
 		return postResponseFromJiraWithApplicationLink("rest/condec/latest/knowledge/knowledgeElements.json",
 				encodeUserInputQuery(query), projectKey, selectedElement);
 	}
 
-	private String postResponseFromJiraWithApplicationLink(String jiraUrl, String searchTerm, String projectKey,
+	private JSONArray postResponseFromJiraWithApplicationLink(String jiraUrl, String searchTerm, String projectKey,
 			String selectedElement) {
 		ApplicationLinkRequest request = createRequest(Request.MethodType.POST, jiraUrl);
 		if (request == null) {
-			return "";
+			return new JSONArray();
 		}
 		request.setRequestBody(
 				"{\"projectKey\":\"" + projectKey + "\",\"searchTerm\":\"" + searchTerm + "\","

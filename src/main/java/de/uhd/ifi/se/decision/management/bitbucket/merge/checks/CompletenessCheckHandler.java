@@ -24,39 +24,34 @@ public class CompletenessCheckHandler {
 	}
 
 	/**
-	 * Checks whether the documentation is complete.
-	 * 
-	 * @return true if the documentation is complete.
+	 * @return true if the documentation of the entire pull request is complete
+	 *         (checks the decision coverage).
 	 */
 	public boolean isDocumentationComplete() {
-		String knowledgeElementsAsJsonString = JiraClient.instance
-				.getDecisionKnowledgeFromJiraAsJsonString(pullRequest.getJiraIssueKeys());
-		return isDocumentationComplete(knowledgeElementsAsJsonString);
-	}
-
-	public boolean isDocumentationComplete(String knowledgeElementsAsJsonString) {
 		boolean isDocumentationComplete = true;
-		try {
-			JSONArray jsonArray = new JSONArray(knowledgeElementsAsJsonString);
-			boolean tempResult = checkIfDecisionsExists(jsonArray);
-			if (!tempResult) {
-				JSONObject firstKey = (JSONObject) jsonArray.get(0);
-				jiraIssuesWithIncompleteDocumentation.add((String) firstKey.get("key"));
+		for (String jiraIssueKey : pullRequest.getJiraIssueKeys()) {
+			Set<String> subset = new HashSet<>();
+			subset.add(jiraIssueKey);
+			JSONArray knowledgeElementsAsJson = JiraClient.instance.getDecisionKnowledgeFromJiraAsJson(subset);
+			if (!isDocumentationComplete(knowledgeElementsAsJson)) {
 				isDocumentationComplete = false;
+				jiraIssuesWithIncompleteDocumentation.add(jiraIssueKey);
 			}
-		} catch (Exception e) {
-			isDocumentationComplete = false;
 		}
 		return isDocumentationComplete;
 	}
 
-	public boolean checkIfDecisionsExists(JSONArray decisions) {
+	/**
+	 * @return true if the documentation of the given knowledge elements is complete
+	 *         (checks the decision coverage).
+	 */
+	public boolean isDocumentationComplete(JSONArray knowledgeElementsAsJson) {
 		boolean hasIssue = false;
 		boolean hasDecision = false;
-		for (Object current : decisions) {
+		for (Object current : knowledgeElementsAsJson) {
 			JSONObject currentObject = (JSONObject) current;
-			String type = (String) currentObject.get("type");
-			// Issue
+			String type = currentObject.getString("type");
+			// Decision problem
 			if ("issue".equalsIgnoreCase(type)) {
 				hasIssue = true;
 			}

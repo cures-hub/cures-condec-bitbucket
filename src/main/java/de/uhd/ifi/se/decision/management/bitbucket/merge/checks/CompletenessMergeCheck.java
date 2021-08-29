@@ -17,6 +17,10 @@ import de.uhd.ifi.se.decision.management.bitbucket.model.PullRequest;
  * documentation is complete. The completeness is determined in the
  * {@link CompletenessCheckHandler}.
  * 
+ * @issue Should the developers be allowed to merge the branch with an
+ *        incomplete decision knowledge documentation?
+ * @decision It is configurable on a setting page whether the incomplete
+ *           documentation enforces that the branch cannot be merged or not!
  */
 @Component("completenessMergeCheck")
 public class CompletenessMergeCheck implements RepositoryMergeCheck {
@@ -38,11 +42,6 @@ public class CompletenessMergeCheck implements RepositoryMergeCheck {
 			detailMessage += jiraIssueKey + " ";
 		}
 
-		// TODO
-		// @issue Should the developers be allowed to merge the branch with an
-		// incomplete decision knowledge documentation?
-		// @decision It should be configurable on a setting page whether the incomplete
-		// documentation enforces that the branch cannot be merged or not.
 		return RepositoryHookResult.rejected(summaryMessage, detailMessage);
 	}
 }
