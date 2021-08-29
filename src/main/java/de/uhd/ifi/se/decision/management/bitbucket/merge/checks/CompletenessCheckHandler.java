@@ -24,9 +24,8 @@ public class CompletenessCheckHandler {
 	}
 
 	/**
-	 * Checks whether the documentation is complete.
-	 * 
-	 * @return true if the documentation is complete.
+	 * @return true if the documentation of the entire pull request is complete
+	 *         (checks the decision coverage).
 	 */
 	public boolean isDocumentationComplete() {
 		boolean isDocumentationComplete = true;
@@ -42,25 +41,17 @@ public class CompletenessCheckHandler {
 		return isDocumentationComplete;
 	}
 
+	/**
+	 * @return true if the documentation of the given knowledge elements is complete
+	 *         (checks the decision coverage).
+	 */
 	public boolean isDocumentationComplete(JSONArray knowledgeElementsAsJson) {
-		boolean isDocumentationComplete = true;
-		try {
-			isDocumentationComplete &= checkIfDecisionsExists(knowledgeElementsAsJson);
-		} catch (Exception e) {
-			System.err.println(e);
-			isDocumentationComplete = false;
-		}
-		System.out.println(isDocumentationComplete);
-		return isDocumentationComplete;
-	}
-
-	public boolean checkIfDecisionsExists(JSONArray knowledgeElementsAsJson) {
 		boolean hasIssue = false;
 		boolean hasDecision = false;
 		for (Object current : knowledgeElementsAsJson) {
 			JSONObject currentObject = (JSONObject) current;
-			String type = (String) currentObject.get("type");
-			// Issue
+			String type = currentObject.getString("type");
+			// Decision problem
 			if ("issue".equalsIgnoreCase(type)) {
 				hasIssue = true;
 			}

@@ -47,7 +47,7 @@ public class TestCompletenessCheckHandler {
 
 	@Test
 	public void testGetCommitsOfPullRequest() {
-		Iterable<Commit> commits = ((CompletenessCheckHandler) completenessCheckHandler).pullRequest.getCommits();
+		Iterable<Commit> commits = completenessCheckHandler.pullRequest.getCommits();
 		assertEquals(true, commits.iterator().hasNext());
 	}
 
@@ -59,8 +59,16 @@ public class TestCompletenessCheckHandler {
 	}
 
 	@Test
-	public void testIsDocumentationCompleteFalse() {
+	public void testIsDocumentationCompleteFalseOnlyIssue() {
 		JSONArray jsonString_false = new JSONArray("[{'key':'CONDEC-1', 'type':'work item'}, {'type':'issue'}]");
+		CompletenessCheckHandler completenessCheckHandler = new CompletenessCheckHandler(null);
+		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete(jsonString_false);
+		assertFalse(isDocumentationComplete);
+	}
+
+	@Test
+	public void testIsDocumentationCompleteFalseOnlyDecision() {
+		JSONArray jsonString_false = new JSONArray("[{'key':'CONDEC-1', 'type':'work item'}, {'type':'decision'}]");
 		CompletenessCheckHandler completenessCheckHandler = new CompletenessCheckHandler(null);
 		boolean isDocumentationComplete = completenessCheckHandler.isDocumentationComplete(jsonString_false);
 		assertFalse(isDocumentationComplete);
