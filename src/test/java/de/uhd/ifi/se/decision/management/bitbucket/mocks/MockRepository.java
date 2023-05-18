@@ -16,6 +16,26 @@ public class MockRepository implements Repository {
 		return null;
 	}
 
+	public boolean isRemote() {
+		return true;
+	}
+
+	public boolean isReadOnly() {
+		return true;
+	}
+
+	public boolean isOffline() {
+		return true;
+	}
+
+	public boolean isLocal() {
+		return false;
+	}
+
+	public boolean isArchived() {
+		return false;
+	}
+
 	@Override
 	public int getId() {
 		// TODO Auto-generated method stub
